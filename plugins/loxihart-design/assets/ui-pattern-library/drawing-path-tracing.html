@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Drawing Path Tracing</title>
+<!--
+  PATTERN: Drawing Path Tracing
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Low
+
+  WHAT THIS IS: an SVG path that animates as if hand-drawn, via
+  stroke-dasharray/stroke-dashoffset driven by the path's ACTUAL length
+  (computed at runtime with getTotalLength() — hardcoding a dash length
+  only works for the one path you tested against).
+
+  ADAPT THIS BY:
+    - Swapping the <path d="..."> for your own illustration/icon path.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - getTotalLength() call — do not hardcode stroke-dasharray to a guessed
+      number; it will look wrong (or invisible) for any path with a
+      different length than the one you eyeballed it against.
+    - The SVG is aria-hidden with a real adjacent label describing what
+      the icon/illustration actually is.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 0.75rem;
+    flex-direction: column;
+  }
+  svg.trace-icon { width: 120px; height: 120px; }
+  .trace-icon path {
+    fill: none; stroke: #0f172a; stroke-width: 3;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .caption { font-size: 0.875rem; color: #475569; }
+</style>
+</head>
+<body>
+  <svg class="trace-icon" viewBox="0 0 100 100" aria-hidden="true">
+    <path id="tracePath" d="M20,60 Q30,20 50,40 T80,30 L90,60 Q60,90 20,60 Z" />
+  </svg>
+  <p class="caption" id="caption">Hand-drawn reveal of a decorative mark</p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const path = /** @type {any} */ (document.getElementById('tracePath'));
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const length = path.getTotalLength(); // never hardcode this
+      path.style.strokeDasharray = String(length);
+
+      if (reduceMotion) {
+        path.style.strokeDashoffset = '0'; // show fully drawn immediately
+      } else {
+        path.style.strokeDashoffset = String(length);
+        path.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.65,0,0.35,1)';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => { path.style.strokeDashoffset = '0'; });
+        });
+      }
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(length > 0, '[smoke] path length computed at runtime, not hardcoded');
+      console.assert(document.querySelector('svg').getAttribute('aria-hidden') === 'true'
+        && document.getElementById('caption').textContent.length > 0,
+        '[smoke] decorative SVG is aria-hidden; a real adjacent text label describes it instead');
+    })();
+  </script>
+</body>
+</html>

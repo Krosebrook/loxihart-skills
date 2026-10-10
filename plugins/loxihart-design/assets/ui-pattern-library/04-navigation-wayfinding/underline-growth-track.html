@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Underline Growth Track</title>
+<!--
+  PATTERN: Underline Growth Track
+  CATEGORY: Navigation & Wayfinding
+  PRIORITY: High  |  RISK: Low
+
+  WHAT THIS IS: an underline that scales in under nav text on hover/focus.
+  Pure CSS, no JS required.
+
+  ADAPT THIS BY:
+    - Applying .grow-underline to any nav link.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - :focus-visible is styled identically to :hover — a keyboard user
+      gets the same signal a mouse user gets.
+    - Reduced motion keeps the underline's static end-state (it's a
+      one-time state change, not continuous motion) but collapses the
+      transition duration near-instant.
+-->
+<style>
+  :root { --dur-grow: 220ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  nav { display: flex; gap: 2rem; }
+  a.grow-underline {
+    position: relative;
+    color: #0f172a; text-decoration: none; font-weight: 600;
+    padding-bottom: 4px;
+  }
+  a.grow-underline::after {
+    content: "";
+    position: absolute; left: 0; bottom: 0;
+    width: 100%; height: 2px;
+    background: #2563eb;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-grow) cubic-bezier(0.4,0,0.2,1);
+  }
+  a.grow-underline:hover::after,
+  a.grow-underline:focus-visible::after {
+    transform: scaleX(1);
+  }
+  a.grow-underline:focus-visible { outline: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.grow-underline::after { transition-duration: 1ms; }
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <a class="grow-underline" href="#">Products</a>
+    <a class="grow-underline" href="#">Pricing</a>
+    <a class="grow-underline" href="#">Docs</a>
+  </nav>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      document.querySelectorAll('a.grow-underline').forEach(a => {
+        console.assert(a.tagName === 'A' && a.hasAttribute('href'),
+          '[smoke] real anchor with href, not a styled span pretending to be a link');
+      });
+    })();
+  </script>
+</body>
+</html>

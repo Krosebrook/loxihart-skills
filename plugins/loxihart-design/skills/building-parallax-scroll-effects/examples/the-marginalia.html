@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Marginalia — Essays on the Slow Second Read</title>
+<!--
+  SMOKE TEST: page loads with the kicker + headline visible in their RESTING
+  state (not stuck invisible). Scroll past the hero — the headline should
+  reveal via a widening clip-path. Scroll into "A Note on Attention" — the
+  pull-quote should stick in the left column while the essay excerpt scrolls
+  in the right column, then release once the excerpt ends. Toggle OS
+  "reduce motion" — the clip-path reveal and pin release must both still
+  show final, readable content with zero animation. Resize to ~380px wide —
+  the two-column pin section should stack to one column and the sticky
+  behavior degrades to normal flow (this is intentional, not a bug).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,500&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4EFE4;
+    --paper-2: #ECE3CE;
+    --ink: #241F1A;
+    --ink-soft: #5B534A;
+    --accent: #7A2E2A;
+    --accent-soft: rgba(122, 46, 42, 0.12);
+    --rule: rgba(36, 31, 26, 0.14);
+    --space-1: 8px;  --space-2: 16px; --space-3: 24px; --space-4: 32px;
+    --space-5: 48px; --space-6: 64px; --space-7: 96px; --space-8: 128px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2, .display {
+    font-family: "Newsreader", Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  a { color: inherit; }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 10;
+  }
+  header .wordmark { font-family: "IBM Plex Mono", monospace; font-size: 0.8rem; letter-spacing: 0.1em; }
+  nav { display: flex; gap: var(--space-4); }
+  nav a { font-size: 0.85rem; text-decoration: none; color: var(--ink-soft); }
+  nav a:hover, nav a:focus-visible { color: var(--accent); }
+  nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  /* ---------- hero / reveal ---------- */
+  .hero { padding: var(--space-8) var(--space-5) var(--space-7); max-width: 880px; }
+  .hero .kicker { display: block; margin-bottom: var(--space-3); }
+  .hero-headline {
+    font-size: clamp(2.2rem, 6vw, 4.2rem);
+    line-height: 1.08;
+  }
+  .hero-headline em { color: var(--accent); font-style: italic; }
+  .hero-deck {
+    margin-top: var(--space-4);
+    max-width: 46ch;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+
+  @supports (animation-timeline: view()) {
+    .hero-headline {
+      animation: clip-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 45%;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .hero-headline {
+      clip-path: inset(0 100% 0 0);
+      opacity: 0.4;
+      transition: clip-path 0.9s ease, opacity 0.9s ease;
+    }
+    .hero-headline.is-visible { clip-path: inset(0 0 0 0); opacity: 1; }
+  }
+  @keyframes clip-reveal {
+    from { clip-path: inset(0 100% 0 0); opacity: 0.4; }
+    to   { clip-path: inset(0 0 0 0);   opacity: 1; }
+  }
+
+  /* ---------- sticky pin + pass-through ---------- */
+  .pin-section {
+    border-top: 1px solid var(--rule);
+    background: var(--paper-2);
+    padding: var(--space-7) var(--space-5);
+  }
+  .pin-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: var(--space-6);
+  }
+  .pin-col { align-self: start; position: sticky; top: 120px; }
+  .pin-col .kicker { margin-bottom: var(--space-2); }
+  .pin-col blockquote {
+    margin: 0;
+    font-family: "Newsreader", serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .pin-col cite {
+    display: block;
+    margin-top: var(--space-3);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    font-style: normal;
+  }
+  .scroll-col p { max-width: 58ch; margin: 0 0 var(--space-4); color: var(--ink-soft); }
+  .scroll-col p strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .pin-grid { grid-template-columns: 1fr; }
+    .pin-col { position: static; margin-bottom: var(--space-5); }
+  }
+
+  /* ---------- reveal list ---------- */
+  .dispatches { padding: var(--space-7) var(--space-5); max-width: 880px; margin: 0 auto; }
+  .dispatches .kicker { margin-bottom: var(--space-4); }
+  .dispatch { padding: var(--space-4) 0; border-top: 1px solid var(--rule); }
+  .dispatch:first-of-type { border-top: none; }
+  .dispatch h2 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); font-weight: 500; }
+  .dispatch p { color: var(--ink-soft); margin: var(--space-2) 0 0; max-width: 56ch; }
+  .dispatch .meta { font-family: "IBM Plex Mono", monospace; font-size: 0.7rem; color: var(--accent); }
+
+  [data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  [data-reveal].is-visible { opacity: 1; transform: none; }
+
+  /* ---------- footer ---------- */
+  footer {
+    padding: var(--space-5);
+    border-top: 1px solid var(--rule);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* ---------- reduced motion: off, not smaller ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-headline {
+      animation: none !important;
+      transition: none !important;
+      clip-path: inset(0 0 0 0) !important;
+      opacity: 1 !important;
+    }
+    [data-reveal] {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    .pin-col { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="wordmark">THE MARGINALIA</span>
+  <nav>
+    <a href="#dispatches">Issues</a>
+    <a href="#about">About</a>
+    <a href="#subscribe">Subscribe</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="kicker">Issue No. 14 — On Returning</span>
+    <h1 class="hero-headline">Essays on the <em>slow</em> second read.</h1>
+    <p class="hero-deck">A quarterly for writing that asks to be read twice — once for what it says, once for what it withholds.</p>
+  </section>
+
+  <section class="pin-section" id="about">
+    <div class="pin-grid">
+      <div class="pin-col">
+        <span class="kicker">A Note on Attention</span>
+        <blockquote>Words hold their shape only if you leave room around them.</blockquote>
+        <cite>— From the editor's note, Issue No. 14</cite>
+      </div>
+      <div class="scroll-col">
+        <p><strong>Most writing asks to be consumed once.</strong> This issue doesn't. Every piece in it survived a rule we set two years ago and have broken exactly never: nothing runs unless it changes on a second read.</p>
+        <p>That's a higher bar than "well-written." A well-written paragraph can still spend its whole meaning on the first pass. What we're after is the opposite — a line that means one thing at ten in the morning and something quieter at midnight, without a single word changing.</p>
+        <p>We don't think that's a taste preference. We think it's the difference between writing that fills time and writing that survives being reread on a bad week, a good week, five years from now.</p>
+        <p>Fourteen issues in, the rule has cost us more drafts than it's kept. That's the point of having it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dispatches" id="dispatches">
+    <span class="kicker">In This Issue</span>
+
+    <article class="dispatch" data-reveal>
+      <span class="meta">ESSAY</span>
+      <h2>What the Footnote Knows</h2>
+      <p>A defense of the aside, the digression, the paragraph that admits it might be wrong — and why the main text keeps getting duller as footnotes get rarer.</p>
+    </article>
+
+    <article class="dispatch" data-reveal>
+      <span class="meta">CRITICISM</span>
+      <h2>Rereading as an Act of Disagreement</h2>
+      <p>You didn't misread it the first time. You read a different book, written by a person you were before this year happened to you.</p>
+    </article>
+
+    <article class="dispatch" data-reveal>
+      <span class="meta">DISPATCH</span>
+      <h2>Notes From a Desk That Faces a Wall</h2>
+      <p>On the specific, unglamorous discipline of writing somewhere with nothing to look at — and what a view actually costs a sentence.</p>
+    </article>
+  </section>
+</main>
+
+<footer id="subscribe">
+  The Marginalia — set in Newsreader &amp; Public Sans — printed quarterly, read slowly.
+</footer>
+
+<script>
+  // Reveal on scroll: IntersectionObserver adds .is-visible. The CSS above
+  // only *uses* that class inside @supports not(animation-timeline: view()),
+  // so on browsers with native support this class is added but does
+  // nothing — safe to run unconditionally rather than feature-detecting twice.
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReduced) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('[data-reveal], .hero-headline').forEach((el) => io.observe(el));
+  } else {
+    // Reduced motion is also enforced in CSS, but skip the observer
+    // entirely rather than doing pointless work that CSS will override.
+    document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  }
+</script>
+
+</body>
+</html>

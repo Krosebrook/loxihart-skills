@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Tabs</title>
+<!--
+  PATTERN: Tabs
+  CATEGORY: Composite Widgets (WAI-ARIA APG)
+  PRIORITY: High  |  RISK: Medium
+
+  WHAT THIS IS: a tablist with automatic activation, following the WAI-ARIA
+  Authoring Practices tabs pattern.
+
+  ADAPT THIS BY:
+    - Add matching [role=tab] / [role=tabpanel] pairs; wiring is automatic.
+    - Set data-manual on the tablist for manual activation (arrow keys move
+      focus, Enter/Space activates) — required if switching a tab is
+      expensive, e.g. it triggers a fetch.
+
+  DO NOT STRIP WHEN ADAPTING — the roving tabindex is the whole pattern:
+    - Exactly ONE tab has tabindex="0"; every other tab has tabindex="-1".
+      This makes the entire tablist a single Tab stop, so a keyboard user
+      tabs *past* the widget instead of through every tab. Leave them all
+      focusable and a 9-tab list becomes 9 tab stops. This is the single
+      most commonly botched part of the pattern.
+    - Arrow keys move between tabs; Tab moves OUT of the tablist to the
+      panel. Do not trap Tab.
+    - Each panel needs tabindex="0" so keyboard users can scroll a panel
+      whose content is not itself focusable.
+    - aria-selected on the tab, aria-controls tab -> panel,
+      aria-labelledby panel -> tab. All four, or assistive tech cannot
+      describe the relationship.
+-->
+<style>
+  :root { --tab-accent: #2563eb; --tab-border: #cbd5e1; --dur: 180ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 2rem;
+  }
+  .tabs { width: min(560px, 100%); }
+  [role="tablist"] { display: flex; gap: 0.25rem; border-bottom: 2px solid var(--tab-border); }
+  [role="tab"] {
+    appearance: none; border: none; background: transparent; font: inherit;
+    padding: 0.7rem 1.1rem; min-height: 44px; cursor: pointer; color: #475569;
+    font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -2px;
+    transition: color var(--dur) ease, border-color var(--dur) ease;
+  }
+  [role="tab"]:hover { color: #0f172a; }
+  [role="tab"][aria-selected="true"] { color: var(--tab-accent); border-bottom-color: var(--tab-accent); }
+  [role="tab"]:focus-visible { outline: 2px solid var(--tab-accent); outline-offset: -2px; border-radius: 4px 4px 0 0; }
+  [role="tabpanel"] {
+    padding: 1.25rem 0.25rem; font-size: 0.9375rem; line-height: 1.6;
+  }
+  [role="tabpanel"]:focus-visible { outline: 2px solid var(--tab-accent); outline-offset: 4px; border-radius: 6px; }
+  [role="tabpanel"] p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) { [role="tab"] { transition: none; } }
+</style>
+</head>
+<body>
+  <div class="tabs">
+    <div role="tablist" aria-label="Account settings" id="tablist">
+      <button role="tab" id="tab-profile" aria-selected="true"  aria-controls="panel-profile"  tabindex="0">Profile</button>
+      <button role="tab" id="tab-billing" aria-selected="false" aria-controls="panel-billing"  tabindex="-1">Billing</button>
+      <button role="tab" id="tab-notify"  aria-selected="false" aria-controls="panel-notify"   tabindex="-1">Notifications</button>
+    </div>
+
+    <div role="tabpanel" id="panel-profile" aria-labelledby="tab-profile" tabindex="0">
+      <p>Display name, avatar, and public bio. Changes are visible to other members immediately.</p>
+    </div>
+    <div role="tabpanel" id="panel-billing" aria-labelledby="tab-billing" tabindex="0" hidden>
+      <p>Payment method, invoice history, and plan. Invoices are retained for seven years.</p>
+    </div>
+    <div role="tabpanel" id="panel-notify" aria-labelledby="tab-notify" tabindex="0" hidden>
+      <p>Email and in-app notification preferences, configurable per project.</p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const tablist = /** @type {HTMLElement} */ (document.getElementById('tablist'));
+      const tabs = /** @type {HTMLButtonElement[]} */ (Array.from(tablist.querySelectorAll('[role="tab"]')));
+      const manual = tablist.hasAttribute('data-manual');
+
+      function selectTab(tab, { focus = true } = {}) {
+        tabs.forEach((t) => {
+          const selected = t === tab;
+          t.setAttribute('aria-selected', String(selected));
+          // Roving tabindex: exactly one 0, the rest -1. This is what makes
+          // the whole tablist a single Tab stop.
+          t.tabIndex = selected ? 0 : -1;
+          const panel = document.getElementById(t.getAttribute('aria-controls'));
+          if (panel) panel.hidden = !selected;
+        });
+        if (focus) tab.focus();
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => selectTab(tab));
+
+        tab.addEventListener('keydown', (e) => {
+          const i = tabs.indexOf(tab);
+          let next = null;
+          switch (e.key) {
+            case 'ArrowRight': next = tabs[(i + 1) % tabs.length]; break;
+            case 'ArrowLeft':  next = tabs[(i - 1 + tabs.length) % tabs.length]; break;
+            case 'Home':       next = tabs[0]; break;
+            case 'End':        next = tabs[tabs.length - 1]; break;
+            case 'Enter':
+            case ' ':
+              if (manual) { e.preventDefault(); selectTab(tab); }
+              return;
+            default: return;
+          }
+          e.preventDefault();  // arrow/Home/End only — Tab is left alone
+          if (manual) {
+            // Manual activation: move focus without switching panels.
+            tabs.forEach((t) => { t.tabIndex = t === next ? 0 : -1; });
+            next.focus();
+          } else {
+            selectTab(next);
+          }
+        });
+      });
+
+      // --- inline smoke test -------------------------------------------
+      const zeroTabindex = tabs.filter((t) => t.tabIndex === 0);
+      console.assert(zeroTabindex.length === 1,
+        '[smoke] roving tabindex: exactly one tab is in the tab order (found ' + zeroTabindex.length + ')');
+      console.assert(tabs.filter((t) => t.getAttribute('aria-selected') === 'true').length === 1,
+        '[smoke] exactly one tab is aria-selected');
+      console.assert(
+        tabs.every((t) => {
+          const p = document.getElementById(t.getAttribute('aria-controls'));
+          return p && p.getAttribute('aria-labelledby') === t.id;
+        }),
+        '[smoke] tab <-> panel relationship is wired in BOTH directions');
+      console.assert(
+        /** @type {HTMLElement[]} */ (Array.from(document.querySelectorAll('[role="tabpanel"]'))).every((p) => p.tabIndex === 0),
+        '[smoke] every panel is focusable so its content can be scrolled by keyboard');
+      console.assert(tablist.hasAttribute('aria-label'),
+        '[smoke] tablist has an accessible name');
+    })();
+  </script>
+</body>
+</html>

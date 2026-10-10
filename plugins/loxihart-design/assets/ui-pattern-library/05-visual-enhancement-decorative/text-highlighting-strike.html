@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Text Highlighting Strike</title>
+<!--
+  PATTERN: Text Highlighting Strike
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Medium  |  RISK: Medium
+
+  WHAT THIS IS: two variants — an animated background highlight sweep
+  (pure decoration), and an animated strikethrough that carries REAL
+  meaning ("this item is no longer available").
+
+  ADAPT THIS BY:
+    - Using .highlight-sweep for decoration; use .semantic-strike (which
+      wraps real <del> markup) when the strike means something.
+
+  DO NOT STRIP WHEN ADAPTING (Risk: Medium — this is the actual gap most
+  implementations miss):
+    - A PURELY VISUAL strikethrough with no semantic equivalent
+      communicates nothing to a screen reader user — the item just reads
+      as normal text with a price, no "unavailable" signal at all. The
+      semantic variant below uses real <del> + a visually-hidden "no
+      longer available" text node so the meaning survives without the
+      visual line.
+-->
+<style>
+  :root { --dur-strike: 500ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 2rem;
+    flex-direction: column;
+  }
+  .example { text-align: center; }
+  .example .caption { font-size: 0.75rem; color: #475569; margin-bottom: 0.4rem; }
+
+  .highlight-sweep {
+    position: relative;
+    font-size: 1.25rem; font-weight: 700;
+    padding: 0 0.15em;
+  }
+  .highlight-sweep::before {
+    content: "";
+    position: absolute; inset: 0.05em 0;
+    background: #fde68a;
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-strike) cubic-bezier(0.65,0,0.35,1);
+  }
+  .highlight-sweep.active::before { transform: scaleX(1); }
+
+  .semantic-strike { font-size: 1.25rem; }
+  .semantic-strike del {
+    position: relative;
+    text-decoration: none; /* we draw our own animated line */
+  }
+  .semantic-strike del::after {
+    content: "";
+    position: absolute; left: 0; top: 50%;
+    width: 100%; height: 2px; background: #dc2626;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur-strike) cubic-bezier(0.65,0,0.35,1);
+  }
+  .semantic-strike.active del::after { transform: scaleX(1); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  button.trigger { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .highlight-sweep::before, .semantic-strike del::after { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="example">
+    <div class="caption">Decorative — background highlight sweep</div>
+    <span class="highlight-sweep" id="sweep">Now 20% off</span>
+  </div>
+
+  <div class="example">
+    <div class="caption">Semantic — meaning survives without the animation</div>
+    <p class="semantic-strike" id="strike">
+      <del>$129</del> <span class="visually-hidden">(no longer available at this price)</span> $89
+    </p>
+  </div>
+
+  <button class="trigger" id="triggerBtn">Trigger both</button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const sweep = document.getElementById('sweep');
+      const strike = document.getElementById('strike');
+      document.getElementById('triggerBtn').addEventListener('click', () => {
+        sweep.classList.toggle('active');
+        strike.classList.toggle('active');
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(strike.querySelector('del'),
+        '[smoke] semantic variant uses real <del>, not just a styled span');
+      console.assert(strike.querySelector('.visually-hidden').textContent.length > 0,
+        '[smoke] the "unavailable" meaning has a text equivalent independent of the animated visual line');
+    })();
+  </script>
+</body>
+</html>

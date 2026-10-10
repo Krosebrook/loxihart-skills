@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Skeleton Screen Shimmer</title>
+<!--
+  PATTERN: Skeleton Screen Shimmer
+  CATEGORY: Loading & Progress Feedback
+  PRIORITY: High  |  RISK: Low
+
+  WHAT THIS IS: placeholder content blocks with a light-sweep shimmer,
+  shown while real content loads, then swapped for the real markup.
+
+  ADAPT THIS BY:
+    - Sizing each skeleton block to match the REAL content's final
+      dimensions (aspect-ratio / explicit width+height) — this is the whole
+      point. A skeleton that doesn't match final layout just relocates the
+      layout shift to swap-time instead of preventing it.
+    - Swapping .render(data) for your real fetch-then-render call.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - The shimmer is 100% decorative — it is the FIRST thing removed under
+      reduced motion, and removing it costs nothing functionally (the
+      skeleton shape alone still communicates "loading").
+    - The #status live region announcing loading/loaded — the skeleton
+      shapes themselves are aria-hidden.
+-->
+<style>
+  :root {
+    --skel-base: #e2e8f0;
+    --skel-sheen: rgba(255,255,255,0.75);
+    --dur-shimmer: 1.5s;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .card {
+    width: 320px;
+    padding: 1.25rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .skel {
+    position: relative;
+    overflow: hidden;
+    background: var(--skel-base);
+    border-radius: 6px;
+  }
+  .skel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, var(--skel-sheen), transparent);
+    animation: sheen var(--dur-shimmer) ease-in-out infinite;
+  }
+  @keyframes sheen { to { transform: translateX(100%); } }
+
+  .skel-avatar { width: 48px; height: 48px; border-radius: 50%; }
+  .skel-line { height: 14px; margin-top: 0.5rem; }
+  .skel-line.w-60 { width: 60%; }
+  .skel-line.w-90 { width: 90%; }
+  .skel-line.w-40 { width: 40%; }
+  .row { display: flex; gap: 0.75rem; align-items: center; }
+  .col { flex: 1; }
+
+  .real-content { display: none; }
+  .real-content.visible { display: block; }
+  .real-content .row { align-items: flex-start; }
+  .real-content img.avatar { width: 48px; height: 48px; border-radius: 50%; }
+  .real-content h3 { margin: 0 0 0.25rem; font-size: 1rem; }
+  .real-content p { margin: 0; color: #475569; font-size: 0.875rem; }
+
+  button.reload {
+    margin-top: 1rem; padding: 0.5rem 1rem; border-radius: 6px;
+    border: 1px solid #cbd5e1; background: white; cursor: pointer;
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skel::after { animation: none; display: none; }
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="card">
+      <div class="skeleton-state" aria-hidden="true">
+        <div class="row">
+          <div class="skel skel-avatar"></div>
+          <div class="col">
+            <div class="skel skel-line w-60"></div>
+            <div class="skel skel-line w-40"></div>
+          </div>
+        </div>
+        <div class="skel skel-line w-90" style="margin-top:1rem"></div>
+        <div class="skel skel-line w-60"></div>
+      </div>
+
+      <div class="real-content" id="realContent">
+        <div class="row">
+          <img class="avatar" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%23cbd5e1'/%3E%3Ccircle cx='24' cy='18' r='8' fill='%23475569'/%3E%3Cpath d='M8 48c0-10 7-16 16-16s16 6 16 16z' fill='%23475569'/%3E%3C/svg%3E" alt="" /><rect width='48' height='48' fill='%23cbd5e1'/><circle cx='24' cy='18' r='8' fill='%23475569'/><path d='M8 48c0-10 7-16 16-16s16 6 16 16z' fill='%23475569'/></svg>" alt="" />
+          <div class="col">
+            <h3>Jordan Ellis</h3>
+            <p>Senior Design Engineer</p>
+          </div>
+        </div>
+        <p style="margin-top:1rem">Loaded content occupies the exact same
+        footprint as the skeleton above it did, so nothing jumps.</p>
+      </div>
+    </div>
+    <button class="reload" id="reloadBtn">Replay loading state</button>
+  </div>
+
+  <div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const card = document.querySelector('.card');
+      const skeleton = /** @type {HTMLElement} */ (document.querySelector('.skeleton-state'));
+      const real = document.getElementById('realContent');
+      const liveRegion = document.getElementById('status');
+      const reloadBtn = /** @type {HTMLButtonElement} */ (document.getElementById('reloadBtn'));
+
+      function render() {
+        skeleton.style.display = '';
+        real.classList.remove('visible');
+        liveRegion.textContent = 'Loading content';
+
+        // Replace with your real fetch/render call.
+        setTimeout(() => {
+          skeleton.style.display = 'none';
+          real.classList.add('visible');
+          liveRegion.textContent = 'Content loaded';
+        }, 1200);
+      }
+
+      reloadBtn.addEventListener('click', render);
+      render();
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(skeleton.getAttribute('aria-hidden') === 'true',
+        '[smoke] skeleton shapes are hidden from assistive tech');
+      console.assert(liveRegion.getAttribute('aria-live') === 'polite',
+        '[smoke] load-state live region present');
+    })();
+  </script>
+</body>
+</html>

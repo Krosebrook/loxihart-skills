@@ -1,0 +1,24 @@
+{
+  "name": "ui-pattern-library-verify",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "node phase1-typecheck.mjs",
+    "engines": "node phase1-harness.mjs",
+    "behavior": "node phase0-behavior-check.mjs",
+    "behavior:all": "node phase2-behavior-all.mjs",
+    "visual": "node phase3-visual-regression.mjs",
+    "visual:update": "node phase3-visual-regression.mjs --update",
+    "mutation": "node mutation-test.mjs",
+    "mutation:phase2": "node mutate-phase2.mjs",
+    "mutation:visual": "node mutate-visual.mjs",
+    "all": "npm run typecheck && npm run engines && npm run behavior && npm run behavior:all && npm run visual && npm run mutation && npm run mutation:phase2 && npm run mutation:visual"
+  },
+  "devDependencies": {
+    "axe-core": "^4.11.0",
+    "pixelmatch": "^7.2.0",
+    "playwright": "^1.56.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,119 @@
+@import url('./tokens.css');
+@import url('./parallax.css');
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  background: var(--surface-canvas);
+}
+
+body {
+  margin: 0;
+  min-inline-size: 20rem; /* [GENERATED: practical narrow-layout floor for this reference application] */
+  color: var(--text-primary);
+  background: var(--surface-canvas);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--line-body);
+}
+
+:where(a, button):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-indicator);
+  outline-offset: var(--focus-ring-width);
+}
+
+:where(button, a.button) {
+  min-inline-size: var(--target-minimum);
+  min-block-size: var(--target-minimum);
+}
+
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: 100; /* [GENERATED: places the skip link above the reference application chrome] */
+  translate: 0 -200%; /* [GENERATED: hides the skip link until keyboard focus] */
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  color: var(--action-primary-foreground);
+  background: var(--action-primary);
+}
+
+.skip-link:focus-visible { translate: 0; }
+
+.site-header {
+  position: relative;
+  z-index: 10; /* [GENERATED: keeps navigation above decorative layers] */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-12));
+  border-block-end: var(--focus-ring-width) solid color-mix(in srgb, var(--border-default) 65%, transparent);
+  background: color-mix(in srgb, var(--surface-canvas) 88%, transparent);
+  backdrop-filter: blur(1rem); /* [GENERATED: bounded header backdrop treatment] */
+}
+
+.site-header a { color: inherit; }
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 800; /* [GENERATED: strong brand weight] */
+  text-decoration: none;
+}
+
+.site-nav { display: flex; gap: var(--space-4); }
+.site-nav a { text-underline-offset: var(--space-1); }
+
+main { display: block; }
+
+.content-section {
+  inline-size: min(72rem, calc(100% - (var(--space-4) * 2))); /* [GENERATED: readable content measure] */
+  margin-inline: auto;
+  padding-block: clamp(var(--space-12), 10vw, 8rem); /* [GENERATED: responsive section spacing] */
+}
+
+.content-section h2 {
+  max-inline-size: 20ch; /* [GENERATED: readable heading measure] */
+  margin-block: 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 4.5rem); /* [GENERATED: responsive section heading range] */
+  line-height: 1; /* [GENERATED: display heading line-height] */
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); /* [GENERATED: responsive card minimum] */
+  gap: var(--space-4);
+  margin-block-start: var(--space-8);
+}
+
+.card {
+  padding: var(--space-6);
+  border: var(--focus-ring-width) solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--surface-default);
+}
+
+.card h3 { margin-block-start: 0; }
+
+.site-footer {
+  padding: var(--space-8) var(--space-4);
+  border-block-start: var(--focus-ring-width) solid var(--border-default);
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 40rem) {
+  .site-header { align-items: flex-start; flex-direction: column; }
+  .site-nav { flex-wrap: wrap; }
+}
+
+@media (forced-colors: active) {
+  .site-header,
+  .card,
+  .site-footer { border-color: CanvasText; }
+
+  .site-header { backdrop-filter: none; }
+}

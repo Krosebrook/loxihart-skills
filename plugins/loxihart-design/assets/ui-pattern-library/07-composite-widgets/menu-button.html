@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Menu Button</title>
+<!--
+  PATTERN: Menu Button
+  CATEGORY: Composite Widgets (WAI-ARIA APG)
+  PRIORITY: High  |  RISK: Medium
+
+  WHAT THIS IS: a button that opens a menu of actions. Follows the WAI-ARIA
+  Authoring Practices menu-button pattern.
+
+  ADAPT THIS BY:
+    - Add/remove [role=menuitem] children; wiring is automatic.
+    - Replace the demo action in onSelect().
+
+  DO NOT STRIP WHEN ADAPTING:
+    - FOCUS RETURN. When the menu closes, focus must go back to the trigger.
+      Without it a keyboard user is dumped at the top of the document and
+      has to re-traverse the page. This is the defect that makes menus
+      unusable by keyboard far more often than missing ARIA.
+    - Escape closes and returns focus. Clicking outside closes. Selecting an
+      item closes. All three paths, or the menu becomes a trap.
+    - Roving tabindex inside the menu: exactly one menuitem is tabbable.
+      Arrow keys move, Home/End jump, Tab leaves the menu entirely.
+    - Opening with ArrowDown focuses the FIRST item; ArrowUp focuses the
+      LAST. That asymmetry is in the spec and users rely on it.
+    - aria-haspopup="true" + aria-expanded on the trigger. aria-expanded
+      must be kept in sync on every close path, including click-outside —
+      easy to forget, and it silently lies to assistive tech.
+    - Type-ahead: typing a letter jumps to the next item starting with it.
+      Optional in the spec, but expected behaviour in practice.
+-->
+<style>
+  :root { --menu-accent: #2563eb; --menu-border: #cbd5e1; --dur: 140ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0;
+  }
+  .menu-wrap { position: relative; }
+  .menu-trigger {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    min-height: 44px; padding: 0.6rem 1rem;
+    background: #fff; border: 1px solid var(--menu-border); border-radius: 8px;
+    font: inherit; font-weight: 600; cursor: pointer; color: inherit;
+  }
+  .menu-trigger:hover { background: #f1f5f9; }
+  .menu-trigger:focus-visible { outline: 2px solid var(--menu-accent); outline-offset: 2px; }
+  .menu-trigger .chev { transition: transform var(--dur) ease; }
+  .menu-trigger[aria-expanded="true"] .chev { transform: rotate(180deg); }
+
+  [role="menu"] {
+    position: absolute; top: calc(100% + 6px); left: 0; min-width: 220px;
+    margin: 0; padding: 0.35rem; list-style: none;
+    background: #fff; border: 1px solid var(--menu-border); border-radius: 10px;
+    box-shadow: 0 12px 28px -10px rgba(15, 23, 42, 0.28); z-index: 10;
+  }
+  [role="menu"][hidden] { display: none; }
+  [role="menuitem"] {
+    display: block; width: 100%; text-align: left;
+    padding: 0.6rem 0.75rem; min-height: 40px;
+    background: transparent; border: none; border-radius: 6px;
+    font: inherit; cursor: pointer; color: inherit;
+  }
+  [role="menuitem"]:hover, [role="menuitem"]:focus { background: #eff6ff; outline: none; }
+  [role="menuitem"]:focus-visible { outline: 2px solid var(--menu-accent); outline-offset: -2px; }
+  .result { margin-top: 1.25rem; font-size: 0.875rem; color: #475569; min-height: 1.2em; }
+  @media (prefers-reduced-motion: reduce) { .menu-trigger .chev { transition: none; } }
+</style>
+</head>
+<body>
+  <div>
+    <div class="menu-wrap">
+      <button class="menu-trigger" id="menuBtn" aria-haspopup="true" aria-expanded="false" aria-controls="menu">
+        Actions
+        <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <ul role="menu" id="menu" aria-labelledby="menuBtn" hidden>
+        <li><button role="menuitem" tabindex="-1">Duplicate</button></li>
+        <li><button role="menuitem" tabindex="-1">Rename</button></li>
+        <li><button role="menuitem" tabindex="-1">Export as CSV</button></li>
+        <li><button role="menuitem" tabindex="-1">Archive</button></li>
+      </ul>
+    </div>
+    <p class="result" id="result" role="status" aria-live="polite"></p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const trigger = /** @type {HTMLButtonElement} */ (document.getElementById('menuBtn'));
+      const menu = /** @type {HTMLElement} */ (document.getElementById('menu'));
+      const result = /** @type {HTMLElement} */ (document.getElementById('result'));
+      const items = /** @type {HTMLButtonElement[]} */ (Array.from(menu.querySelectorAll('[role="menuitem"]')));
+
+      let typeBuffer = '';
+      let typeTimer = null;
+
+      function isOpen() { return trigger.getAttribute('aria-expanded') === 'true'; }
+
+      function focusItem(index) {
+        const i = (index + items.length) % items.length;
+        items.forEach((it, n) => { it.tabIndex = n === i ? 0 : -1; });
+        items[i].focus();
+      }
+
+      function openMenu(focusLast = false) {
+        menu.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        focusItem(focusLast ? items.length - 1 : 0);
+      }
+
+      /** @param {boolean} returnFocus */
+      function closeMenu(returnFocus = true) {
+        menu.hidden = true;
+        // aria-expanded must be reset on EVERY close path, including
+        // click-outside — otherwise it silently misreports state.
+        trigger.setAttribute('aria-expanded', 'false');
+        if (returnFocus) trigger.focus();
+      }
+
+      function onSelect(item) {
+        result.textContent = item.textContent.trim() + ' selected';
+        closeMenu();   // closes AND returns focus to the trigger
+      }
+
+      trigger.addEventListener('click', () => { isOpen() ? closeMenu() : openMenu(); });
+
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); openMenu(false);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault(); openMenu(true);   // ArrowUp opens to the LAST item
+        }
+      });
+
+      menu.addEventListener('keydown', (e) => {
+        const i = items.indexOf(/** @type {HTMLButtonElement} */ (document.activeElement));
+        switch (e.key) {
+          case 'ArrowDown': e.preventDefault(); focusItem(i + 1); break;
+          case 'ArrowUp':   e.preventDefault(); focusItem(i - 1); break;
+          case 'Home':      e.preventDefault(); focusItem(0); break;
+          case 'End':       e.preventDefault(); focusItem(items.length - 1); break;
+          case 'Escape':    e.preventDefault(); closeMenu(); break;
+          case 'Tab':       closeMenu(false); break;   // let Tab leave naturally
+          default:
+            if (e.key.length === 1 && /\S/.test(e.key)) {
+              typeBuffer += e.key.toLowerCase();
+              clearTimeout(typeTimer);
+              typeTimer = setTimeout(() => { typeBuffer = ''; }, 600);
+              const match = items.findIndex((it) =>
+                it.textContent.trim().toLowerCase().startsWith(typeBuffer));
+              if (match >= 0) { e.preventDefault(); focusItem(match); }
+            }
+        }
+      });
+
+      items.forEach((item) => item.addEventListener('click', () => onSelect(item)));
+
+      document.addEventListener('pointerdown', (e) => {
+        if (!isOpen()) return;
+        if (!menu.contains(/** @type {Node} */ (e.target)) &&
+            !trigger.contains(/** @type {Node} */ (e.target))) {
+          closeMenu(false);   // don't yank focus on an outside click
+        }
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(trigger.getAttribute('aria-haspopup') === 'true'
+        && trigger.hasAttribute('aria-expanded'),
+        '[smoke] trigger declares aria-haspopup and aria-expanded');
+      console.assert(menu.getAttribute('aria-labelledby') === trigger.id,
+        '[smoke] menu is labelled by its trigger');
+      console.assert(items.length > 0 && items.every((i) => i.getAttribute('role') === 'menuitem'),
+        '[smoke] menu contains real menuitems');
+      console.assert(items.filter((i) => i.tabIndex === 0).length === 0,
+        '[smoke] closed menu contributes nothing to the tab order');
+      // NOTE: an earlier version asserted closeMenu.length === 1 to prove the
+      // focus-return decision was explicit. That is brittle — default
+      // parameters do not count toward Function.length, so it failed on
+      // correct code. Focus return is behaviour, so it is tested in the
+      // behavioural suite where it can actually be exercised.
+      console.assert(menu.hidden === true,
+        '[smoke] menu starts closed');
+    })();
+  </script>
+</body>
+</html>

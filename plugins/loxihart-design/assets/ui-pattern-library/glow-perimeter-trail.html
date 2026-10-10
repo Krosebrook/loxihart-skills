@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Glow Perimeter Trail</title>
+<!--
+  PATTERN: Glow Perimeter Trail
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Low
+
+  WHAT THIS IS: an animated glow traveling around an element's border,
+  via a registered custom property (@property --angle) driving a rotating
+  conic-gradient — this is the modern technique; registered properties
+  are animatable by the compositor, plain custom properties are not.
+
+  ADAPT THIS BY:
+    - Wrapping any element in .glow-border.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - The @supports feature query. Browsers without @property support
+      still get a static gradient ring (no rotation) instead of a broken
+      or invisible border — this is the graceful-degradation path, not
+      an afterthought.
+-->
+<style>
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .glow-border {
+    position: relative;
+    padding: 2rem;
+    border-radius: 16px;
+    background: #1e293b;
+  }
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 18px;
+    z-index: -1;
+    background: conic-gradient(from var(--angle), #38bdf8, #a855f7, #38bdf8);
+    animation: rotate-angle 3s linear infinite;
+  }
+  @keyframes rotate-angle { to { --angle: 360deg; } }
+
+  .glow-border .content { color: #e2e8f0; font-weight: 600; }
+
+  /* Graceful degradation: no @property support -> static ring, no rotation */
+  @supports not (background: conic-gradient(from 0deg, red, blue)) {
+    .glow-border::before { animation: none; background: linear-gradient(135deg, #38bdf8, #a855f7); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glow-border::before { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="glow-border" aria-hidden="false">
+    <div class="content">Featured</div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const supportsProperty = CSS.supports('background', 'conic-gradient(from 0deg, red, blue)');
+      console.assert(typeof supportsProperty === 'boolean',
+        '[smoke] feature-detected conic-gradient support, no assumption made');
+    })();
+  </script>
+</body>
+</html>

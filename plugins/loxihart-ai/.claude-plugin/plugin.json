@@ -1,0 +1,13 @@
+{
+  "name": "loxihart-ai",
+  "version": "1.0.0",
+  "description": "Loxihart AI enablement, solution architecture, agent building, and leadership communication.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "loxihart"
+  ]
+}

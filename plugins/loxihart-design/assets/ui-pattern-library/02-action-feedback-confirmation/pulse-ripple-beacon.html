@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Pulse Ripple Beacon</title>
+<!--
+  PATTERN: Pulse Ripple Beacon
+  CATEGORY: Action Feedback & Confirmation
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a dot with looping, staggered expanding-and-fading rings,
+  used to draw attention to a point (e.g. a "new feature" indicator).
+
+  ADAPT THIS BY:
+    - Pointing the beacon at whatever element it should sit on.
+    - If the beacon is the ONLY signal of an actionable state (as opposed
+      to decoration next to a real notification count), give the PARENT
+      a real aria-label — see the accessible variant below.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Pure decoration is aria-hidden. If this beacon carries real meaning
+      on its own, it needs a text equivalent — that's not automatic.
+    - Reduced motion collapses the rings to a single static ring: the
+      "something is here" signal survives, only the looping motion goes.
+-->
+<style>
+  :root { --beacon-color: #ef4444; --dur-ring: 1.8s; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 3rem;
+  }
+  .row { display: flex; gap: 4rem; align-items: center; }
+
+  .beacon {
+    position: relative;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--beacon-color);
+  }
+  .beacon .ring {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 2px solid var(--beacon-color);
+    animation: ring-pulse var(--dur-ring) ease-out infinite;
+  }
+  .beacon .ring:nth-child(2) { animation-delay: 0.6s; }
+  .beacon .ring:nth-child(3) { animation-delay: 1.2s; }
+  @keyframes ring-pulse {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  .labelled-example { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9375rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .beacon .ring { animation: none; opacity: 0.5; transform: scale(1.4); }
+    .beacon .ring:nth-child(2), .beacon .ring:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div>
+      <p style="font-size:0.8125rem;color:#64748b;margin-bottom:0.5rem">Purely decorative — a real badge/count lives elsewhere</p>
+      <span class="beacon" aria-hidden="true">
+        <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      </span>
+    </div>
+
+    <div class="labelled-example">
+      <p style="font-size:0.8125rem;color:#64748b;margin:0 0.5rem 0 0">Beacon IS the signal — needs its own name</p>
+      <span class="beacon" role="img" aria-label="3 new notifications">
+        <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      </span>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const decorative = document.querySelectorAll('.beacon[aria-hidden="true"]');
+      const labelled = document.querySelectorAll('.beacon[aria-label]');
+      console.assert(decorative.length === 1, '[smoke] decorative beacon variant is aria-hidden');
+      console.assert(labelled.length === 1 && labelled[0].getAttribute('aria-label').length > 0,
+        '[smoke] standalone-meaning beacon variant carries a real accessible name');
+    })();
+  </script>
+</body>
+</html>

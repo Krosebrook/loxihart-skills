@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Border Dash Spin</title>
+<!--
+  PATTERN: Border Dash Spin
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Low
+
+  WHAT THIS IS: a dashed border with the illusion of continuous rotation,
+  via an SVG rect with stroke-dasharray + an animated stroke-dashoffset.
+  Implemented here as DECORATIVE emphasis (aria-hidden), not a loading
+  indicator.
+
+  ADAPT THIS BY:
+    - Sizing the SVG rect (rx for corner radius) to match your element.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - If you repurpose this AS a loading indicator instead of decoration,
+      it inherits the FULL accessibility treatment from Progress Button
+      Spinner (aria-busy, live region) — that treatment does not come
+      free just by looking like a spinner.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .dash-frame {
+    position: relative;
+    width: 220px; padding: 1.5rem;
+    display: grid; place-items: center;
+  }
+  .dash-frame svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .dash-rect {
+    fill: none; stroke: #2563eb; stroke-width: 3;
+    stroke-dasharray: 10 8;
+    animation: dash-rotate 2.4s linear infinite;
+  }
+  @keyframes dash-rotate { to { stroke-dashoffset: -180; } }
+  .dash-frame .label { position: relative; z-index: 1; font-weight: 600; color: #0f172a; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dash-rect { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="dash-frame" aria-hidden="false">
+    <svg viewBox="0 0 220 100" preserveAspectRatio="none">
+      <rect class="dash-rect" x="3" y="3" width="214" height="94" rx="12" aria-hidden="true" />
+    </svg>
+    <span class="label">Highlighted section</span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const rect = document.querySelector('.dash-rect');
+      console.assert(rect.getAttribute('aria-hidden') === 'true',
+        '[smoke] decorative border SVG is hidden from assistive tech; the real content label is not');
+    })();
+  </script>
+</body>
+</html>

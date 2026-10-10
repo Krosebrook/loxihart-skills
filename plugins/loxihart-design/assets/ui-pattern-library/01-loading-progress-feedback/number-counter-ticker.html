@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Number Counter Ticker</title>
+<!--
+  PATTERN: Number Counter Ticker
+  CATEGORY: Loading & Progress Feedback
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a number that animates counting up/down to a target value,
+  usually triggered when it scrolls into view.
+
+  ADAPT THIS BY:
+    - Setting data-target on each element to the real final value.
+    - Swapping the IntersectionObserver trigger for "on mount" if the
+      element is already in view when your component renders.
+
+  DO NOT STRIP WHEN ADAPTING (non-obvious a11y decision):
+    - aria-label is set to the FINAL value up front, not updated per frame.
+      A screen reader user gets the real number immediately; the counting
+      animation is a purely visual flourish sighted users see, and nothing
+      is lost by a screen reader user never "hearing" the count-up — an
+      aria-live region here would just announce a wall of intermediate
+      numbers, which is worse, not better.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .stats { display: flex; gap: 2.5rem; }
+  .stat { text-align: center; }
+  .stat .value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .caption { font-size: 0.8125rem; color: #475569; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+  <div class="stats">
+    <div class="stat">
+      <div class="value counter" data-target="12480" aria-label="12,480">0</div>
+      <div class="caption">Requests handled</div>
+    </div>
+    <div class="stat">
+      <div class="value counter" data-target="99.98" data-decimals="2" data-suffix="%" aria-label="99.98%">0%</div>
+      <div class="caption">Uptime</div>
+    </div>
+    <div class="stat">
+      <div class="value counter" data-target="342" data-prefix="$" data-suffix="k" aria-label="$342k">$0k</div>
+      <div class="caption">Processed</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const DURATION_MS = 1400;
+      const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function animateCounter(el) {
+        const target = parseFloat(el.dataset.target);
+        const decimals = parseInt(el.dataset.decimals || '0', 10);
+        const prefix = el.dataset.prefix || '';
+        const suffix = el.dataset.suffix || '';
+        const formatter = new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        });
+
+        if (reduceMotion) {
+          el.textContent = prefix + formatter.format(target) + suffix;
+          return;
+        }
+
+        const start = performance.now();
+        function tick(now) {
+          const elapsed = Math.min(1, (now - start) / DURATION_MS);
+          const eased = easeOutCubic(elapsed);
+          const current = target * eased;
+          el.textContent = prefix + formatter.format(current) + suffix;
+          if (elapsed < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.4 });
+
+      document.querySelectorAll('.counter').forEach(el => observer.observe(el));
+
+      // --- inline smoke test -------------------------------------------
+      document.querySelectorAll('.counter').forEach(el => {
+        console.assert(el.hasAttribute('aria-label') && el.getAttribute('aria-label').length > 0,
+          '[smoke] counter exposes its final value via aria-label up front');
+      });
+    })();
+  </script>
+</body>
+</html>

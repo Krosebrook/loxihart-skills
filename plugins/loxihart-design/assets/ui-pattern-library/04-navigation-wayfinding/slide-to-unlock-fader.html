@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Slide-to-Unlock Fader</title>
+<!--
+  PATTERN: Slide-to-Unlock Fader
+  CATEGORY: Navigation & Wayfinding
+  PRIORITY: Medium  |  RISK: High
+
+  WHAT THIS IS: a draggable handle that must reach the end of a track to
+  confirm an action, with the track fill fading in as it progresses.
+
+  ADAPT THIS BY:
+    - Calling onConfirm() with your real action instead of the demo alert.
+
+  DO NOT STRIP WHEN ADAPTING (Risk: High — this is the load-bearing part):
+    - A drag-to-a-position gesture has NO native keyboard equivalent.
+      SC 2.5.1/2.5.2 require a non-path-dependent alternative, which is
+      why the SAME focused handle also responds to:
+        • ArrowRight/ArrowLeft — step the fill by 10% per press
+        • Enter/Space — commit immediately, full stop
+      This is not an enhancement layered on top; it's the actual
+      compliance requirement. Do not ship the drag-only version.
+    - Pointer cancellation: dragging past the track edge and releasing
+      outside it does NOT commit — only a release AT or past the
+      threshold commits. Anything else snaps back to start.
+-->
+<style>
+  :root { --dur-snap: 220ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .slider-track {
+    position: relative;
+    width: 280px; height: 52px;
+    border-radius: 26px;
+    background: #e2e8f0;
+    overflow: hidden;
+  }
+  .fill {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, #16a34a, #22c55e);
+    opacity: 0;
+    width: 0%;
+  }
+  .track-label {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    color: #475569; font-size: 0.875rem; font-weight: 600;
+    pointer-events: none;
+  }
+  button.handle {
+    position: absolute; top: 4px; left: 4px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: white; border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    cursor: grab; touch-action: none;
+    display: grid; place-items: center;
+  }
+  button.handle:active { cursor: grabbing; }
+  button.handle:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+  .handle.snapping { transition: left var(--dur-snap) cubic-bezier(0.4,0,0.2,1); }
+
+  .instructions { font-size: 0.75rem; color: #475569; margin-top: 0.5rem; max-width: 30ch; text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .handle.snapping { transition-duration: 1ms; }
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="slider-track" id="track">
+      <div class="fill" id="fill"></div>
+      <div class="track-label" id="trackLabel">Slide to confirm</div>
+      <button class="handle" id="handle"
+              role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+              aria-label="Slide to confirm, or press Enter to confirm immediately">→</button>
+    </div>
+    <p class="instructions">Drag, or focus the handle and use Arrow keys / Enter.</p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const track = document.getElementById('track');
+      const handle = /** @type {HTMLButtonElement} */ (document.getElementById('handle'));
+      const fill = document.getElementById('fill');
+      const trackLabel = document.getElementById('trackLabel');
+      const HANDLE_SIZE = 44, PADDING = 4;
+      let trackWidth, maxX, committed = false;
+
+      function measure() {
+        trackWidth = track.getBoundingClientRect().width;
+        maxX = trackWidth - HANDLE_SIZE - PADDING * 2;
+      }
+      measure();
+      window.addEventListener('resize', measure);
+
+      function setPosition(x, animate) {
+        x = Math.max(0, Math.min(maxX, x));
+        const percent = Math.round((x / maxX) * 100);
+        handle.classList.toggle('snapping', !!animate);
+        handle.style.left = (x + PADDING) + 'px';
+        fill.style.width = (x + HANDLE_SIZE / 2 + PADDING) + 'px';
+        fill.style.opacity = String(Math.min(1, percent / 100 + 0.15));
+        handle.setAttribute('aria-valuenow', String(percent));
+        return percent;
+      }
+
+      function onConfirm() {
+        if (committed) return;
+        committed = true;
+        setPosition(maxX, true);
+        trackLabel.textContent = 'Confirmed ✓';
+        handle.setAttribute('aria-label', 'Confirmed');
+        // Real action goes here.
+      }
+
+      function reset() {
+        setPosition(0, true);
+      }
+
+      // --- pointer drag path ---
+      let dragging = false, startX = 0, startLeft = 0;
+      handle.addEventListener('pointerdown', (e) => {
+        if (committed) return;
+        dragging = true;
+        handle.setPointerCapture(e.pointerId);
+        startX = e.clientX;
+        startLeft = handle.offsetLeft - PADDING;
+      });
+      handle.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        setPosition(startLeft + (e.clientX - startX), false);
+      });
+      handle.addEventListener('pointerup', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        const percent = Math.round((Math.max(0, Math.min(maxX, startLeft + (e.clientX - startX))) / maxX) * 100);
+        // Cancellation: only a release at/past threshold commits.
+        percent >= 90 ? onConfirm() : reset();
+      });
+
+      // --- keyboard path (the actual accessibility requirement) ---
+      handle.addEventListener('keydown', (e) => {
+        if (committed) return;
+        const current = Number(handle.getAttribute('aria-valuenow'));
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          setPosition(((Math.min(100, current + 10)) / 100) * maxX, true);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          setPosition(((Math.max(0, current - 10)) / 100) * maxX, true);
+        } else if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onConfirm();
+        }
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(handle.getAttribute('role') === 'slider',
+        '[smoke] handle exposes role=slider with min/max/now');
+      console.assert(handle.tagName === 'BUTTON',
+        '[smoke] handle is natively focusable, keyboard path is real, not decorative');
+    })();
+  </script>
+</body>
+</html>

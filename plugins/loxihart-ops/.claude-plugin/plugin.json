@@ -1,0 +1,13 @@
+{
+  "name": "loxihart-ops",
+  "version": "1.0.0",
+  "description": "Loxihart service desk, endpoint imaging, and knowledge-base operations.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "MIT",
+  "keywords": [
+    "ops",
+    "loxihart"
+  ]
+}

@@ -1,0 +1,7 @@
+node_modules/
+.tscheck/
+.p2mut/
+.p2run.mjs
+verify/artifacts/
+*.log
+.DS_Store

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Ghost Trail Duplicate</title>
+<!--
+  PATTERN: Ghost Trail Duplicate
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Low  |  RISK: Medium
+
+  WHAT THIS IS: semi-transparent "afterimage" clones trailing behind a
+  moving element, fading with age.
+
+  ADAPT THIS BY:
+    - Swapping the pointermove sampling for whatever you're actually
+      tracking (a dragged element's position, an animated sprite, etc).
+
+  DO NOT STRIP WHEN ADAPTING (production detail, not decoration):
+    - The FIXED POOL of trail nodes (TRAIL_LENGTH), reused by index rather
+      than created/destroyed per frame. A naive version that appends a new
+      DOM node on every pointermove event leaks nodes and creates GC
+      churn — this pool is bounded and constant-cost regardless of how
+      long the pointer moves.
+    - rAF-gated position sampling — raw pointermove fires far more often
+      than the display can usefully show a distinct trail frame.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+  .arena {
+    position: relative;
+    width: 90vw; max-width: 700px; height: 320px;
+    border: 1px solid #1e293b; border-radius: 12px;
+    cursor: crosshair;
+  }
+  .hint {
+    position: absolute; top: 12px; left: 16px;
+    color: #cbd5e1; font-size: 0.8125rem; pointer-events: none;
+  }
+  .trail-node {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #38bdf8;
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform: translate(-9999px, -9999px);
+  }
+</style>
+</head>
+<body>
+  <div class="arena" id="arena" aria-hidden="true">
+    <p class="hint">Move your pointer inside this box</p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const arena = document.getElementById('arena');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduceMotion) {
+        // Decorative-only effect — fully removed under reduced motion,
+        // nothing functional depended on it.
+        return;
+      }
+
+      const TRAIL_LENGTH = 8;
+      const pool = [];
+      for (let i = 0; i < TRAIL_LENGTH; i++) {
+        const node = document.createElement('div');
+        node.className = 'trail-node';
+        node.style.opacity = String(1 - i / TRAIL_LENGTH);
+        node.style.transform += ` scale(${1 - i / (TRAIL_LENGTH * 1.4)})`;
+        arena.appendChild(node);
+        pool.push(node);
+      }
+
+      const history = new Array(TRAIL_LENGTH).fill(null);
+      let latestPointer = null;
+      let rafPending = false;
+
+      arena.addEventListener('pointermove', (e) => {
+        const rect = arena.getBoundingClientRect();
+        latestPointer = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(render);
+        }
+      });
+
+      function render() {
+        rafPending = false;
+        if (!latestPointer) return;
+        history.unshift(latestPointer);
+        history.length = TRAIL_LENGTH;
+        pool.forEach((node, i) => {
+          const pos = history[i];
+          if (!pos) return;
+          const scale = 1 - i / (TRAIL_LENGTH * 1.4);
+          node.style.transform = `translate(${pos.x - 10}px, ${pos.y - 10}px) scale(${scale})`;
+        });
+      }
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(pool.length === TRAIL_LENGTH,
+        '[smoke] trail uses a fixed, bounded node pool, not unbounded DOM growth');
+    })();
+  </script>
+</body>
+</html>

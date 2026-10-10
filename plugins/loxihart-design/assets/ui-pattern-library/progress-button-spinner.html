@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Progress Button Spinner</title>
+<!--
+  PATTERN: Progress Button Spinner
+  CATEGORY: Loading & Progress Feedback
+  PRIORITY: High  |  RISK: Low
+
+  WHAT THIS IS: a button that swaps its label for a spinner during an async
+  action, then resolves to a success/error terminal state.
+
+  ADAPT THIS BY:
+    - Replacing performAsyncAction() with your real request (fetch, RPC, etc).
+    - Reusing the state machine (idle/loading/success/error) verbatim in
+      React/Vue/Svelte as component state; the DOM writes below map 1:1 onto
+      conditional rendering in any of those.
+
+  DO NOT STRIP WHEN ADAPTING (accessibility-load-bearing):
+    - The persistent #status live region. Don't toggle its existence/visibility
+      — only its textContent. Screen readers track a stable node unreliably
+      if you mount/unmount it.
+    - aria-busy + native disabled during the loading state.
+    - The MAX_WAIT_MS timeout path. A spinner with no timeout can strand a user.
+-->
+<style>
+  :root {
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 150ms;
+    --color-accent: #2563eb;
+    --color-success: #16a34a;
+    --color-error: #dc2626;
+    --color-fg: #0f172a;
+    --color-bg: #f8fafc;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .demo { display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .demo p { font-size: 0.875rem; color: #475569; max-width: 26ch; text-align: center; }
+
+  button.progress-btn {
+    position: relative;
+    min-width: 160px;
+    min-height: 44px; /* WCAG 2.5.8 target size, well above the 24x24 floor */
+    padding: 0 1.5rem;
+    border: none;
+    border-radius: 8px;
+    background: var(--color-accent);
+    color: white;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--dur-fast) var(--ease-standard);
+  }
+  button.progress-btn:hover:not(:disabled) { background: #1d4ed8; }
+  button.progress-btn:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+  button.progress-btn:disabled { cursor: default; }
+  button.progress-btn[data-state="success"] { background: var(--color-success); }
+  button.progress-btn[data-state="error"] { background: var(--color-error); }
+
+  .btn-label, .btn-spinner, .btn-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-standard);
+  }
+  .btn-label { position: static; opacity: 1; }
+  button.progress-btn[data-state="loading"] .btn-label { opacity: 0; }
+  button.progress-btn[data-state="loading"] .btn-spinner,
+  button.progress-btn[data-state="success"] .btn-icon--success,
+  button.progress-btn[data-state="error"] .btn-icon--error {
+    opacity: 1;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255,255,255,0.35);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .icon { width: 18px; height: 18px; }
+  button.progress-btn[data-state="success"] .btn-icon--success,
+  button.progress-btn[data-state="error"] .btn-icon--error {
+    animation: pop 200ms var(--ease-overshoot);
+  }
+  @keyframes pop { from { transform: scale(0.8); } to { transform: scale(1); } }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation: none; border-top-color: rgba(255,255,255,0.9); }
+    button.progress-btn[data-state="success"] .btn-icon--success,
+    button.progress-btn[data-state="error"] .btn-icon--error { animation: none; }
+    button.progress-btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <button class="progress-btn" id="submitBtn" data-state="idle" aria-label="Submit payment">
+      <span class="btn-label">Submit</span>
+      <span class="btn-spinner" aria-hidden="true"><span class="spinner"></span></span>
+      <span class="btn-icon btn-icon--success" aria-hidden="true">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+          <path d="M5 12l5 5L20 7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="btn-icon btn-icon--error" aria-hidden="true">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </button>
+    <p>Click to trigger a simulated ~1.4s request. ~25% of attempts simulate failure so you can see the error/retry path.</p>
+  </div>
+
+  <div id="status" role="status" aria-live="polite" class="visually-hidden"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const MAX_WAIT_MS = 8000;
+      const SUCCESS_DWELL_MS = 1800;
+
+      const btn = /** @type {HTMLButtonElement} */ (document.getElementById('submitBtn'));
+      const liveRegion = document.getElementById('status');
+      let timeoutId = null;
+
+      function setState(state) {
+        btn.dataset.state = state;
+      }
+
+      function announce(message) {
+        // Update text content only — never remount/hide this node.
+        liveRegion.textContent = message;
+      }
+
+      // Replace this with your real request. Must return a Promise.
+      function performAsyncAction() {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            Math.random() < 0.25
+              ? reject(new Error('Payment declined'))
+              : resolve({ ok: true });
+          }, 1400);
+        });
+      }
+
+      async function onActivate() {
+        if (btn.dataset.state !== 'idle') return; // re-entrancy guard
+
+        setState('loading');
+        btn.setAttribute('aria-busy', 'true');
+        btn.disabled = true;
+        announce('Loading');
+
+        timeoutId = setTimeout(() => {
+          setState('error');
+          btn.removeAttribute('aria-busy');
+          btn.disabled = false;
+          announce('Action failed: request timed out');
+        }, MAX_WAIT_MS);
+
+        try {
+          await performAsyncAction();
+          clearTimeout(timeoutId);
+          btn.removeAttribute('aria-busy');
+          setState('success');
+          announce('Action completed');
+          setTimeout(() => {
+            setState('idle');
+            btn.disabled = false;
+          }, SUCCESS_DWELL_MS);
+        } catch (err) {
+          clearTimeout(timeoutId);
+          btn.removeAttribute('aria-busy');
+          setState('error');
+          btn.disabled = false;
+          announce('Action failed: ' + /** @type {Error} */ (err).message);
+        }
+      }
+
+      btn.addEventListener('click', onActivate);
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(liveRegion && liveRegion.getAttribute('role') === 'status',
+        '[smoke] live region present with role=status');
+      console.assert(btn.hasAttribute('aria-label'),
+        '[smoke] button has a stable accessible name');
+      console.assert(getComputedStyle(btn).minHeight !== '0px',
+        '[smoke] button meets a real min touch target size');
+    })();
+  </script>
+</body>
+</html>

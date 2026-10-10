@@ -1,0 +1,381 @@
+# anti-slop lexicon.yaml — literal words & phrases, tiered
+# Matching: case-insensitive whole-word/phrase boundary match (\b...\b).
+# Morphology: scanner matches the exact form listed; list the lemma and common
+#   inflections are covered by the morphology_note policy below (v0.1 scanner is
+#   exact-form; the SKILL.md prose ban covers "any variation — plural, tense,
+#   -ing, -ly, hyphenated").
+# A term appears in EXACTLY ONE tier (slopcheck --self-test enforces this).
+# Structural constructions ("it's not X, it's Y", tails, etc.) live in patterns.yaml,
+#   so some pattern/lexicon overlap in scan reports is expected and fine.
+
+meta:
+  name: anti-slop-lexicon
+  version: 0.2.0
+  generated: "2026-07-19"
+  register_calibration: >
+    Tiering is calibrated for a technical / MSP-consulting register. Words that
+    are working vocabulary in engineering, stats, or MSP delivery (robust,
+    significant, end-to-end, turnkey, roadmap, framework) are deliberately
+    Tier 2/3, never Tier 1. Recalibrate tiers before reusing for pure
+    marketing or fiction registers.
+  tier_semantics:
+    tier1_ban: "Rewrite on sight in prose. Near-zero legitimate cost in this register."
+    tier2_flag: "Context-dependent. Legitimate literal/technical uses exist — human judgment. `ok:` notes the legit context."
+    tier3_density: "Normal English that LLMs oversaturate. Count per 1000 words; breach = revise."
+  morphology_note: >
+    Ban covers singular/plural, tenses, -ing/-ed/-ly forms, e-drop, y-to-ies,
+    and space/hyphen variants of compounds. Enforced in code by
+    scripts/slopcheck.py lemma_regex (suffix heuristic; -ness/-ation/-istic
+    variants are out of scope and listed separately where they matter).
+
+tier1_ban:
+  words:
+    - delve
+    - tapestry
+    - multifaceted
+    - synergy
+    - synergistic
+    - holistic
+    - embark
+    - unwavering
+    - unparalleled
+    - meticulous
+    - intricacies
+    - pivotal
+    - garner
+    - glean
+    - bolster
+    - spearhead
+    - showcase
+    - supercharge
+    - turbocharge
+    - unleash
+    - revolutionize
+    - transformative
+    - groundbreaking
+    - breathtaking
+    - awe-inspiring
+    - captivating
+    - mesmerizing
+    - enchanting
+    - bustling
+    - indelible
+    - ever-evolving
+    - fast-paced
+    - beacon
+    - cornerstone
+    - linchpin
+    - culmination
+    - epitome
+    - quintessential
+    - veritable
+    - undeniably
+    - undoubtedly
+    - invaluable
+    - paramount
+    - commendable
+    - praiseworthy
+    - noteworthy
+    - utilize
+    - whilst
+    - amidst
+    - amongst
+    - interplay
+    - enduring
+    - kaleidoscope
+    - game-changer
+    - game-changing
+  phrases:
+    - rich tapestry
+    - treasure trove
+    - beacon of hope
+    - in a nutshell
+    - needless to say
+    - it goes without saying
+    - the fact of the matter
+    - hidden gem
+    - must-visit
+    - must-see destination
+    - stay ahead of the curve
+    - ahead of the game
+    - look no further
+    - you've come to the right place
+    - a world of possibilities
+    - endless possibilities
+    - the possibilities are endless
+    - to the next level
+    - unwavering commitment
+    - commitment to excellence
+    - unlock your full potential
+    - dive deep into
+    - a deep dive into
+    - at your fingertips
+    - second to none
+    - one-stop shop
+    - hassle-free
+    - new normal
+    - unsung hero
+    - a force to be reckoned with
+    - wealth of knowledge
+    - at the forefront of
+    - the beating heart of
+    - cannot be overstated
+    - nothing short of
+    - suffice it to say
+    - in this day and age
+    - now more than ever
+    - as technology continues to evolve
+    - stands the test of time
+    - from humble beginnings
+    - pushing the boundaries
+    - breaking down silos
+    - bridging the gap
+    - raising the bar
+    - the holy grail of
+    - icing on the cake
+    - cherry on top
+    - a double-edged sword
+    - tip of the iceberg
+    - the elephant in the room
+    - food for thought
+    - a perfect storm
+    - at the end of the day
+    - the bottom line is
+    - let that sink in
+    - read that again
+    - more than just a
+    - whatever lies ahead
+    - maybe, just maybe
+    - a testament to their resolve
+    - words cannot express
+
+tier2_flag:
+  # ok: = the context where the term is legitimate and should NOT be rewritten
+  words:
+    - {term: leverage, ok: "finance (debt leverage); physics"}
+    - {term: robust, ok: "engineering (fault tolerance), statistics (robust estimator)"}
+    - {term: landscape, ok: "literal terrain; landscape orientation"}
+    - {term: navigate, ok: "literal navigation, UI navigation"}
+    - {term: journey, ok: "literal travel; 'user journey' as a named UX artifact"}
+    - {term: seamless, ok: "literal seams (textiles, welds); rarely earned in UX claims"}
+    - {term: streamline, ok: "literal fluid dynamics"}
+    - {term: elevate, ok: "literal elevation; medical (elevate the limb)"}
+    - {term: empower, ok: "access-control grants, legal empowerment"}
+    - {term: harness, ok: "literal harness (safety, animal)"}
+    - {term: unlock, ok: "literal locks, feature flags, achievement systems"}
+    - {term: foster, ok: "foster care"}
+    - {term: dynamic, ok: "dynamic typing/linking/programming — technical senses"}
+    - {term: disruptive, ok: "clinical/behavioral sense; Christensen citation with source"}
+    - {term: cutting-edge, ok: "almost never; quote from a source only"}
+    - {term: state-of-the-art, ok: "ML papers with benchmark evidence (SOTA)"}
+    - {term: notably, ok: "sparingly, mid-sentence, for a genuine standout fact"}
+    - {term: arguably, ok: "when you then actually make the argument"}
+    - {term: albeit, ok: "occasional formal register"}
+    - {term: stark, ok: "genuine sharp contrast, data-backed"}
+    - {term: staggering, ok: "only with the number attached"}
+    - {term: profound, ok: "clinical (profound hearing loss)"}
+    - {term: nuanced, ok: "when you then supply the nuance"}
+    - {term: intricate, ok: "literal physical intricacy (mechanism, lacework)"}
+    - {term: renowned, ok: "with the evidence of renown cited"}
+    - {term: iconic, ok: "icon design; sourced cultural-status claims"}
+    - {term: vibrant, ok: "literal color vibrancy"}
+    - {term: boast, ok: "literal bragging by a person"}
+    - {term: crucible, ok: "literal metallurgy; titled works"}
+    - {term: symphony, ok: "actual music"}
+    - {term: testament, ok: "legal (last will and testament); scripture"}
+    - {term: underscore, ok: "the _ character; typography"}
+    - {term: highlight, ok: "literal highlighting (UI, marker); sports highlights"}
+    - {term: align, ok: "layout/CSS alignment; mechanical alignment; data alignment"}
+    - {term: resonate, ok: "physics/audio resonance"}
+    - {term: catalyst, ok: "chemistry"}
+    - {term: bedrock, ok: "geology"}
+    - {term: moat, ok: "literal moats; sourced competitive-strategy analysis"}
+    - {term: flywheel, ok: "literal mechanics; named growth-model diagrams"}
+  phrases:
+    - {term: deep dive, ok: "titled artifact names (a 'Deep Dive' doc series) — sparingly"}
+    - {term: low-hanging fruit, ok: "orchards"}
+    - {term: move the needle, ok: "analog gauges"}
+    - {term: circle back, ok: "aviation, running routes"}
+    - {term: touch base, ok: "baseball"}
+    - {term: boil the ocean, ok: "never; delete"}
+    - {term: double-click on that, ok: "actual GUI instruction"}
+    - {term: value-add, ok: "tax terminology (value-added)"}
+    - {term: core competency, ok: "HR frameworks quoting Prahalad/Hamel with citation"}
+    - {term: thought leader, ok: "never unironically"}
+    - {term: north star, ok: "astronomy; a formally named 'North Star metric' in a metrics doc"}
+    - {term: table stakes, ok: "poker"}
+    - {term: secret sauce, ok: "recipes"}
+    - {term: win-win, ok: "game theory with payoff matrix shown"}
+    - {term: open the kimono, ok: "never; delete"}
+    - {term: herding cats, ok: "actual cats"}
+    - {term: hit the ground running, ok: "paratroopers"}
+    - {term: future-proof, ok: "never as a promise; OK as a named requirement to interrogate"}
+    - {term: mission-critical, ok: "aerospace/defense system classifications"}
+    - {term: turnkey, ok: "MSP/real-estate contracts where it is the actual delivery model"}
+    - {term: white-glove, ok: "MSP service-tier names where it is the actual SKU"}
+    - {term: end-to-end, ok: "E2E tests, E2E encryption — precise technical senses"}
+    - {term: growth hacking, ok: "quoting the ecosystem, with distance"}
+    - {term: rockstar developer, ok: "never; delete"}
+    - {term: paradigm shift, ok: "Kuhn, cited"}
+    - {term: best-of-breed, ok: "dog shows"}
+    - {term: drink from the firehose, ok: "never; delete"}
+    - {term: peel the onion, ok: "cooking"}
+    - {term: socialize the idea, ok: "never; say 'share' or 'discuss'"}
+    - {term: operationalize, ok: "research-methods sense (operationalizing a variable)"}
+    - {term: ideate, ok: "never; say 'brainstorm' or 'think'"}
+
+tier3_density:
+  # Normal English that LLMs oversaturate. max = occurrences per 1000 words.
+  default_max_per_1000: 2
+  words:
+    - {term: significant, max: 4, ok: "statistics — 'statistically significant' is exempt vocabulary"}
+    - {term: significantly, max: 3}
+    - {term: crucial, max: 2}
+    - {term: critical, max: 4, ok: "severity levels, critical sections, critical path"}
+    - {term: key, max: 4, ok: "cryptographic keys, primary keys, keyboard keys are exempt"}
+    - {term: essential, max: 2}
+    - {term: vital, max: 2}
+    - {term: comprehensive, max: 2}
+    - {term: important, max: 5}
+    - {term: additionally, max: 2}
+    - {term: moreover, max: 1}
+    - {term: furthermore, max: 1}
+    - {term: ultimately, max: 2}
+    - {term: overall, max: 2}
+    - {term: various, max: 3}
+    - {term: numerous, max: 2}
+    - {term: several, max: 5}
+    - {term: effectively, max: 2}
+    - {term: efficiently, max: 2}
+    - {term: truly, max: 2}
+    - {term: incredibly, max: 1}
+    - {term: extremely, max: 2}
+    - {term: highly, max: 3}
+    - {term: deeply, max: 2}
+    - {term: remarkable, max: 1}
+    - {term: remarkably, max: 1}
+    - {term: valuable, max: 2}
+    - {term: enhance, max: 2}
+    - {term: enhancing, max: 2}
+    - {term: optimize, max: 3, ok: "compiler/query optimization — technical senses lean exempt"}
+    - {term: facilitate, max: 1}
+    - {term: ensure, max: 4, ok: "legit in specs and SLAs; watch marketing use"}
+    - {term: enable, max: 4, ok: "feature flags, config enablement exempt"}
+    - {term: innovative, max: 1}
+    - {term: actionable, max: 2}
+    - {term: impactful, max: 1}
+    - {term: ecosystem, max: 2, ok: "biology exempt"}
+    - {term: framework, max: 4, ok: "software frameworks exempt when named (React, .NET)"}
+    - {term: roadmap, max: 3, ok: "actual planning artifacts exempt"}
+    - {term: momentum, max: 2, ok: "physics exempt"}
+    - {term: trajectory, max: 2, ok: "physics/ballistics exempt"}
+  phrases:
+    - {term: best practices, max: 2}
+    - {term: key takeaways, max: 1}
+    - {term: at scale, max: 2}
+    - {term: going forward, max: 1}
+    - {term: at its core, max: 1}
+    - {term: at the heart of, max: 1}
+    - {term: in order to, max: 2}
+    - {term: the world of, max: 1}
+    - {term: the realm of, max: 1}
+
+replacements:
+  # Tier-1-and-2 top offenders → plain-language swaps. "(cut)" = usually delete outright.
+  delve: examine / dig into
+  utilize: use
+  leverage: use
+  plethora: plenty / many
+  myriad: many
+  multifaceted: complex / has several parts
+  pivotal: decisive / key
+  crucial: important (or name the consequence of failure)
+  garner: get / earn
+  glean: learn / pick up
+  bolster: strengthen / support
+  spearhead: lead
+  showcase: show
+  underscore: show / stress
+  highlight (verb): point out / show
+  foster: build / encourage
+  cultivate: build
+  embark on: start
+  endeavor (verb): try
+  commence: start
+  facilitate: help / make possible
+  ascertain: find out
+  subsequently: then
+  prior to: before
+  in order to: to
+  due to the fact that: because
+  a majority of: most
+  at this point in time: now
+  in the event that: if
+  with regard to: about
+  in terms of: for / about / (cut)
+  it is important to note that: (cut)
+  it is worth noting that: (cut)
+  needless to say: (cut)
+  at the end of the day: (cut)
+  when it comes to: for / with
+  a wide range of: many / list the actual items
+  a variety of: several / list them
+  such as: like / e.g. (then trim the list)
+  seamless: smooth (or describe the absence of a specific friction)
+  robust (marketing sense): reliable / fault-tolerant (name the failure it survives)
+  streamline: simplify / shorten
+  optimize (marketing sense): improve (say the metric)
+  enhance: improve
+  elevate: improve / raise
+  empower: let / enable (say who can now do what)
+  unlock: enable / make available
+  unleash: release / (cut)
+  harness: use
+  navigate (figurative): handle / work through
+  landscape (abstract): field / market / situation
+  ecosystem (figurative): market / community / stack
+  journey (figurative): process / path
+  game-changer: (cut — state the measured change)
+  revolutionize: change (state how much, with a number)
+  transformative: (cut — show the before/after)
+  cutting-edge: new / current (name the capability)
+  state-of-the-art (unbacked): current-best (cite the benchmark or cut)
+  innovative: new (say what is new about it)
+  groundbreaking: first (prove the priority claim or cut)
+  best-in-class: (cut — cite the comparison)
+  world-class: (cut)
+  comprehensive: complete / covers X, Y, Z (list them)
+  holistic: whole-system / end-to-end (only if literally true)
+  synergy: combined effect (name the mechanism)
+  paradigm shift: major change (describe it)
+  stakeholders: the people affected / name the roles
+  circle back: follow up
+  touch base: talk / check in
+  deep dive: detailed look / analysis
+  bandwidth (time sense): time / capacity
+  ideate: brainstorm / think
+  socialize (an idea): share / discuss
+  operationalize (business sense): put into practice
+  actionable: specific / something you can act on
+  impactful: effective (name the impact)
+  boasts: has / includes
+  nestled in: in / located in
+  vibrant (abstract): lively / active
+  bustling: busy / crowded
+  breathtaking: (cut — describe the thing)
+  stunning: (cut — describe the thing)
+  meticulously: carefully
+  invaluable: very useful (say for what)
+  paramount: most important
+  imperative (adj): necessary / required
+  whilst: while
+  amidst: amid / among
+  amongst: among
+  albeit: though
+  akin to: like
+  thus: so
+  hence: so
+  therefore: so (sparingly)
+  moreover: also / (cut)
+  furthermore: also / (cut)
+  additionally: also / (cut)

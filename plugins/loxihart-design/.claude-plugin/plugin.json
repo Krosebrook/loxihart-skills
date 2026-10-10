@@ -1,0 +1,13 @@
+{
+  "name": "loxihart-design",
+  "version": "1.0.0",
+  "description": "UI/UX, design systems, frontend execution, and the verified UI pattern library.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "loxihart"
+  ]
+}

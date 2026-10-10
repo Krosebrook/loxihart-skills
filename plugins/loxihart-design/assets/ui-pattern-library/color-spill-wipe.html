@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Color Spill Wipe</title>
+<!--
+  PATTERN: Color Spill Wipe
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a directional color wipe revealing new content, via an
+  animated clip-path (broadly supported, the reliable baseline). A
+  View Transitions API path is noted as a progressive enhancement, not
+  the primary implementation — clip-path works everywhere clip-path
+  itself is supported, View Transitions do not.
+
+  ADAPT THIS BY:
+    - Swapping the two panels for your real before/after content.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Reduced motion swaps the clip-path transition for an instant swap —
+      the reveal still happens, just without the traveling wipe.
+-->
+<style>
+  :root { --dur-wipe: 650ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .wipe-frame {
+    position: relative;
+    width: 320px; height: 200px;
+    border-radius: 12px; overflow: hidden;
+  }
+  .panel { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 700; font-size: 1.125rem; }
+  .panel.before { background: #1e293b; color: white; }
+  .panel.after {
+    background: linear-gradient(135deg, #f59e0b, #ef4444); color: white;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path var(--dur-wipe) cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .wipe-frame.revealed .panel.after { clip-path: inset(0 0 0 0); }
+
+  button.trigger { margin-top: 1rem; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel.after { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="wipe-frame" id="wipeFrame">
+      <div class="panel before">Before</div>
+      <div class="panel after">After</div>
+    </div>
+    <button class="trigger" id="triggerBtn">Wipe reveal</button>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const frame = document.getElementById('wipeFrame');
+      const btn = /** @type {HTMLButtonElement} */ (document.getElementById('triggerBtn'));
+
+      btn.addEventListener('click', () => {
+        frame.classList.toggle('revealed');
+      });
+
+      // --- inline smoke test -------------------------------------------
+      const after = document.querySelector('.panel.after');
+      console.assert(getComputedStyle(after).clipPath !== 'none' || CSS.supports('clip-path', 'inset(0)'),
+        '[smoke] clip-path wipe technique is feature-supported in this environment');
+    })();
+  </script>
+</body>
+</html>

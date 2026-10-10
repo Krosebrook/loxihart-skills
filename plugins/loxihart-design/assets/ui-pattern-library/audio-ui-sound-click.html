@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Audio UI Sound Click</title>
+<!--
+  PATTERN: Audio UI Sound Click
+  CATEGORY: Action Feedback & Confirmation
+  PRIORITY: Low  |  RISK: High
+
+  WHAT THIS IS: a short click/tick sound on interaction, synthesized with
+  the Web Audio API (no bundled audio file needed) so this file has zero
+  external asset dependencies.
+
+  ADAPT THIS BY:
+    - Swapping playClick() for playbackof a real asset (AudioBufferSourceNode
+      + a fetched/decoded file) if you want a specific brand sound instead
+      of a synthesized tone.
+
+  DO NOT STRIP WHEN ADAPTING (risk-critical — Risk: High):
+    - The AudioContext is only created/resumed inside a user-gesture
+      handler. Browsers block autoplay of audio outside a gesture; creating
+      the context at page load and expecting sound to "just work" will
+      silently fail in most browsers.
+    - Audio never fires without an explicit user action, and never as the
+      sole feedback channel (the button's own visual state change is the
+      load-bearing signal; sound is decoration on top of it).
+    - Mute toggle is in-memory only — no localStorage in this sandbox.
+
+  NOTE: no prefers-reduced-motion query in this file, deliberately — there
+  is zero CSS animation/transition anywhere in it (audio is not a visual-
+  motion concern that media query addresses). If you add any visual
+  animation while adapting this, add the query at that point; don't add
+  one now just to have one.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .demo { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  button.click-target {
+    padding: 0.75rem 1.5rem; border-radius: 8px; border: none;
+    background: #0f172a; color: white; font-weight: 600; cursor: pointer;
+  }
+  button.click-target:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+  label.mute-row { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <button class="click-target" id="clickTarget">Click for sound</button>
+    <label class="mute-row">
+      <input type="checkbox" id="muteToggle" />
+      Mute (this session only)
+    </label>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const clickTarget = document.getElementById('clickTarget');
+      const muteToggle = /** @type {HTMLInputElement} */ (document.getElementById('muteToggle'));
+
+      let audioCtx = null; // created lazily, inside a user gesture
+      let muted = false;
+      muteToggle.addEventListener('change', () => { muted = muteToggle.checked; });
+
+      function getAudioContext() {
+        if (!audioCtx) {
+          const Ctx = window.AudioContext || /** @type {any} */ (window).webkitAudioContext;
+          if (!Ctx) return null;
+          audioCtx = new Ctx();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+      }
+
+      function playClick() {
+        if (muted) return;
+        const ctx = getAudioContext();
+        if (!ctx) return; // Web Audio unsupported — fail silently, visual state still updates
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1100, ctx.currentTime);
+        // Fast attack, fast decay — a "tick," not a tone.
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + 0.005);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
+
+        osc.connect(gain).connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.1);
+      }
+
+      clickTarget.addEventListener('click', () => {
+        playClick(); // decoration
+        clickTarget.textContent = 'Clicked ✓'; // the real, unconditional feedback
+        setTimeout(() => { clickTarget.textContent = 'Click for sound'; }, 700);
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(audioCtx === null,
+        '[smoke] AudioContext is not created until a user gesture occurs');
+    })();
+  </script>
+</body>
+</html>

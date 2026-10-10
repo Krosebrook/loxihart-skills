@@ -1,0 +1,24 @@
+name = "ff-llm-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+
+# Rate-limit / spend-cap counters. Create the namespace, then paste its id:
+#   wrangler kv:namespace create RL
+[[kv_namespaces]]
+binding = "RL"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+# Comma-separated EXACT origins allowed to call the proxy (scheme + host, no trailing slash).
+ALLOWED_ORIGINS = "https://REPLACE-your-tool-host"
+MAX_TOKENS_CAP = "4096"
+MAX_BODY_BYTES = "2000000"
+RATE_PER_MIN = "20"
+DAILY_CAP = "1000"
+
+# Secrets are NOT set here. Provider keys + auth secrets go through wrangler secret put:
+#   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put OPENAI_API_KEY        # optional
+#   wrangler secret put GOOGLE_API_KEY        # optional
+#   wrangler secret put TURNSTILE_SECRET      # browser mode (recommended for public tools)
+#   wrangler secret put FF_PROXY_TOKEN        # server-to-server mode only; never ship in browser

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Typing Effect Reset</title>
+<!--
+  PATTERN: Typing Effect Reset
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Medium
+
+  WHAT THIS IS: text typed out character-by-character, pausing, then
+  clearing and cycling to the next string in a loop.
+
+  ADAPT THIS BY:
+    - Editing the STRINGS array.
+
+  DO NOT STRIP WHEN ADAPTING (Risk: Medium — this is the specific,
+  easy-to-miss mistake):
+    - The animated text node is aria-hidden and NOT wrapped in aria-live.
+      A live region here would announce every intermediate partial string
+      as it types — "B", "Bu", "Bui", "Buil"... — which is unusable noise,
+      not helpful feedback. The container instead carries a stable
+      aria-label set to the CURRENT full string, updated once per string,
+      not once per keystroke.
+    - role="img" on that container is REQUIRED, not decoration. aria-label
+      is prohibited on a plain <div> (generic role) and is silently dropped
+      by assistive tech — an axe scan flags it as aria-prohibited-attr.
+      Giving the container a real role makes the label legal and effective.
+      Caught by automated WCAG scanning, not by reading the markup.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .typing-line {
+    font-family: ui-monospace, monospace;
+    font-size: 1.5rem; color: #e2e8f0;
+    min-height: 1.6em;
+  }
+  .cursor {
+    display: inline-block; width: 2px; height: 1.2em;
+    background: #38bdf8; margin-left: 2px; vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+  <div class="typing-line" id="typingLine" role="img" aria-label="">
+    <span id="typedText" aria-hidden="true"></span><span class="cursor" aria-hidden="true"></span>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const STRINGS = ['Building accessible UIs', 'One pattern at a time', 'Production-grade by default'];
+      const container = document.getElementById('typingLine');
+      const typedText = document.getElementById('typedText');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduceMotion) {
+        typedText.textContent = STRINGS[0];
+        container.setAttribute('aria-label', STRINGS[0]);
+        return;
+      }
+
+      const TYPE_SPEED_MS = 45;
+      const HOLD_MS = 1400;
+      const ERASE_SPEED_MS = 25;
+      let stringIndex = 0;
+
+      function typeString(str, onDone) {
+        let i = 0;
+        // Set the accessible label to the FULL final string up front, not
+        // per-keystroke — a screen reader user gets the real content
+        // immediately without hearing 30 intermediate fragments.
+        container.setAttribute('aria-label', str);
+        const interval = setInterval(() => {
+          i++;
+          typedText.textContent = str.slice(0, i);
+          if (i >= str.length) {
+            clearInterval(interval);
+            setTimeout(onDone, HOLD_MS);
+          }
+        }, TYPE_SPEED_MS);
+      }
+
+      function eraseString(onDone) {
+        const str = typedText.textContent;
+        let i = str.length;
+        const interval = setInterval(() => {
+          i--;
+          typedText.textContent = str.slice(0, i);
+          if (i <= 0) {
+            clearInterval(interval);
+            onDone();
+          }
+        }, ERASE_SPEED_MS);
+      }
+
+      function cycle() {
+        typeString(STRINGS[stringIndex], () => {
+          eraseString(() => {
+            stringIndex = (stringIndex + 1) % STRINGS.length;
+            cycle();
+          });
+        });
+      }
+      cycle();
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(typedText.getAttribute('aria-hidden') === 'true',
+        '[smoke] rapidly-changing visual text node is aria-hidden');
+      console.assert(!container.hasAttribute('aria-live'),
+        '[smoke] container deliberately has NO aria-live — per-keystroke announcement would be unusable noise');
+    })();
+  </script>
+</body>
+</html>

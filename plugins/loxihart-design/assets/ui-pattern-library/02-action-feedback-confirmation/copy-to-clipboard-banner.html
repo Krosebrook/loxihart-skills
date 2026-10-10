@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Copy-to-Clipboard Banner</title>
+<!--
+  PATTERN: Copy-to-Clipboard Banner
+  CATEGORY: Action Feedback & Confirmation
+  PRIORITY: High  |  RISK: Low
+
+  WHAT THIS IS: a transient confirmation banner after a successful
+  navigator.clipboard.writeText() call, with an explicit error path.
+
+  ADAPT THIS BY:
+    - Pointing copyText at whatever string/element you're actually copying.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - The Clipboard API feature-detect + catch path. Clipboard access can
+      be denied by browser permission policy (esp. in iframes / non-HTTPS
+      contexts) — a silent failure with no feedback is worse than the
+      feature not existing.
+    - document.execCommand('copy') is NOT implemented here as a fallback —
+      it's deprecated and inconsistent across browsers. If you must support
+      a browser old enough to lack the Clipboard API, that's a deliberate,
+      separate decision — don't resurrect it by default.
+-->
+<style>
+  :root { --dur-fast: 180ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .code-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: #0f172a; color: #e2e8f0; padding: 0.75rem 1rem;
+    border-radius: 8px; font-family: ui-monospace, monospace; font-size: 0.875rem;
+  }
+  button.copy-btn {
+    min-width: 32px; min-height: 32px; padding: 0.4rem;
+    border-radius: 6px; border: 1px solid #334155; background: #1e293b;
+    color: #e2e8f0; cursor: pointer; display: grid; place-items: center;
+  }
+  button.copy-btn:hover { background: #334155; }
+  button.copy-btn:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
+
+  .banner {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translate(-50%, 20px);
+    background: #0f172a; color: white; padding: 0.6rem 1rem;
+    border-radius: 8px; font-size: 0.875rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--dur-fast) ease-out, transform var(--dur-fast) ease-out;
+  }
+  .banner.error { background: #7f1d1d; }
+  .banner.visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .banner { transition: opacity var(--dur-fast) linear; transform: translate(-50%, 0) !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="code-row">
+    <span id="codeValue">npm install @your-org/ui-patterns</span>
+    <button class="copy-btn" id="copyBtn" aria-label="Copy command to clipboard">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="9" y="9" width="12" height="12" rx="2" />
+        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="banner" id="banner" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const copyBtn = /** @type {HTMLButtonElement} */ (document.getElementById('copyBtn'));
+      const codeValue = document.getElementById('codeValue');
+      const banner = document.getElementById('banner');
+      let dismissTimer = null;
+
+      function showBanner(message, isError) {
+        clearTimeout(dismissTimer);
+        banner.textContent = message;
+        banner.classList.toggle('error', !!isError);
+        banner.classList.add('visible');
+        dismissTimer = setTimeout(hideBanner, 3000);
+      }
+      function hideBanner() {
+        banner.classList.remove('visible');
+      }
+
+      async function copyText(text) {
+        if (!navigator.clipboard || !navigator.clipboard.writeText) {
+          showBanner('Copy is not supported in this context', true);
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(text);
+          showBanner('Copied to clipboard');
+        } catch (err) {
+          // Most commonly a permissions-policy denial, not a code bug.
+          showBanner('Could not copy — check clipboard permissions', true);
+        }
+      }
+
+      copyBtn.addEventListener('click', () => copyText(codeValue.textContent));
+      banner.addEventListener('click', hideBanner);
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') hideBanner();
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(copyBtn.hasAttribute('aria-label'),
+        '[smoke] icon-only copy button has an accessible name');
+      console.assert(banner.getAttribute('role') === 'status',
+        '[smoke] banner announces via role=status, not just visually');
+    })();
+  </script>
+</body>
+</html>

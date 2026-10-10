@@ -1,0 +1,50 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: verify
+        run: npm install
+
+      - name: Install browsers
+        working-directory: verify
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      # Type-check catches what neither static analysis nor browser
+      # testing can — e.g. setProperty(number), which browsers coerce.
+      - name: Type-check inline scripts
+        working-directory: verify
+        run: npm run typecheck
+
+      # Multi-engine + computed a11y tree + axe-core + visual sanity.
+      - name: Engines, accessibility, visual
+        working-directory: verify
+        run: npm run engines
+
+      - name: Behavioural (6 patterns, deep)
+        working-directory: verify
+        run: npm run behavior
+
+      - name: Behavioural (remaining 26)
+        working-directory: verify
+        run: npm run behavior:all
+
+      # The suites are only worth their green if they can go red.
+      - name: Mutation-test the harness
+        working-directory: verify
+        run: npm run mutation
+
+      - name: Mutation-test the phase-2 suite
+        working-directory: verify
+        run: npm run mutation:phase2

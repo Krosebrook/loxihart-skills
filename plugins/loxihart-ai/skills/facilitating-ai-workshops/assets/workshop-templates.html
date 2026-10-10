@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Workshop Templates</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:11pt;margin:0;padding:20px;color:#111}
+  h1{font-size:16pt;border-bottom:2px solid #111;padding-bottom:6px;margin-bottom:4px}
+  h2{font-size:13pt;margin-top:28px;margin-bottom:6px}
+  .sub{font-size:9pt;color:#555;margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;margin-bottom:16px}
+  th{background:#111;color:#fff;padding:8px 10px;text-align:left;font-size:10pt}
+  td{border:1px solid #bbb;padding:8px 10px;vertical-align:top}
+  td.lbl{background:#f5f5f5;font-weight:bold;font-size:9pt;width:30%}
+  td.w{height:48px}
+  .rule{background:#ffe;border-left:4px solid #c90;padding:8px 12px;margin:10px 0;font-size:10pt}
+  .pg{page-break-before:always;padding-top:20px}
+  .ft{font-size:8pt;color:#888;margin-top:32px;border-top:1px solid #ddd;padding-top:8px}
+  @media print{.pg{page-break-before:always}}
+</style>
+</head>
+<body>
+
+<h1>Exercise 1 — Reverse Menu Mapping</h1>
+<p class="sub">Outcome-First Requirements Engineering · Leaders, PMs, Cross-functional teams</p>
+<div class="rule"><strong>Rule:</strong> Complete columns 1 and 2 <em>before</em> touching column 3. No tool names until both are fully populated.</div>
+<h2>Outcome Ledger</h2>
+<table>
+<tr>
+  <th style="width:33%">1. TARGET METRIC CHANGE<br><span style="font-weight:normal;font-size:9pt">Before &rarr; After (specific number)</span></th>
+  <th style="width:33%">2. HUMAN FRICTION POINT<br><span style="font-weight:normal;font-size:9pt">What step causes the gap?</span></th>
+  <th style="width:33%">3. AI ENABLER<br><span style="font-weight:normal;font-size:9pt">Name this LAST</span></th>
+</tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+</table>
+<table>
+<tr><th colspan="2">Red flags to catch</th></tr>
+<tr><td class="lbl">Column 3 filled first</td><td>Redirect — "what number changes if this works?"</td></tr>
+<tr><td class="lbl">Column 1 is vague</td><td>"Improve efficiency" &rarr; push for a before/after number</td></tr>
+<tr><td class="lbl">Column 2 is a department</td><td>"The legal team" &rarr; push for the specific human action that takes time</td></tr>
+</table>
+<p class="ft">Output artifact: Prioritized AI Project Backlog (stack-ranked by impact)</p>
+
+<div class="pg">
+<h1>Exercise 2 — AI Friction Audit</h1>
+<p class="sub">Value Stream Mapping for Automation · Operations, Business Analysts</p>
+<div class="rule"><strong>Rule:</strong> Every step gets &#x1F7E2; or &#x1F534;. No neutrals. &#x1F7E2; = human judgment/creativity/relationship &nbsp;|&nbsp; &#x1F534; = boilerplate, data shifting, manual synthesis.</div>
+<table>
+<tr><td class="lbl" colspan="2"><strong>Workflow:</strong></td><td colspan="2" class="w" style="width:60%"></td></tr>
+<tr><td class="lbl"><strong>Frequency:</strong></td><td>Daily / Weekly / Monthly</td><td class="lbl"><strong>Total time/cycle:</strong></td><td class="w"></td></tr>
+</table>
+<h2>Workflow Timeline</h2>
+<table>
+<tr><th style="width:6%">#</th><th style="width:44%">Step Description</th><th style="width:10%">&#x1F7E2;/&#x1F534;</th><th style="width:16%">Time (mins)</th><th style="width:24%">Notes</th></tr>
+<tr><td>1</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>5</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>6</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>7</td><td class="w"></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td class="w"></td><td></td><td></td><td></td></tr>
+</table>
+<h2>Friction Heatmap</h2>
+<table>
+<tr><th>ROI Tier</th><th>Red Light Clusters</th><th>Est. Hrs/Cycle</th><th>Annualized (&times;cycles/yr)</th></tr>
+<tr><td><strong>HIGH</strong><br><span style="font-size:9pt">time-heavy + frequent</span></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td><strong>MEDIUM</strong></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td><strong>LOW</strong></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+</table>
+<p class="ft">Output artifact: Friction Heatmap — prioritized Red Light clusters with time-cost estimates</p>
+</div>
+
+<div class="pg">
+<h1>Exercise 3 — Guardrail &amp; Trade-Off Matrix</h1>
+<p class="sub">Deterministic vs. Probabilistic Risk Alignment · Security, Legal, Platform Eng</p>
+<div class="rule"><strong>Rule:</strong> Every initiative needs a completed balance sheet. Every HITL checkpoint requires a <strong>named person</strong> — not "human review," not "the team."</div>
+<table>
+<tr><td class="lbl" colspan="2"><strong>Initiative:</strong></td><td colspan="2" class="w"></td></tr>
+<tr><td class="lbl"><strong>Source:</strong></td><td colspan="3">Exercise 1 Backlog &nbsp;/&nbsp; Exercise 2 Heatmap &nbsp;&nbsp;(circle one)</td></tr>
+</table>
+<h2>Trade-Off Balance Sheet</h2>
+<table>
+<tr>
+  <th style="width:20%">AI GAIN</th>
+  <th style="width:25%">WHAT WE GIVE UP</th>
+  <th style="width:28%">MITIGATION LAYER</th>
+  <th style="width:27%">HITL CHECKPOINT<br><span style="font-weight:normal;font-size:9pt">trigger condition + named person</span></th>
+</tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+<tr><td class="w"></td><td class="w"></td><td class="w"></td><td class="w"></td></tr>
+</table>
+<h2>Risk Classification</h2>
+<table>
+<tr><th>Level</th><th>Description</th><th style="width:8%">Select</th></tr>
+<tr><td><strong>Probabilistic only</strong></td><td>AI decides, no human gate — requires escalation approval before deployment</td><td style="text-align:center">&#9744;</td></tr>
+<tr><td><strong>Probabilistic + deterministic</strong></td><td>AI output validated by rule-based check (regex, keyword, schema)</td><td style="text-align:center">&#9744;</td></tr>
+<tr><td><strong>HITL on exception</strong></td><td>AI handles standard cases; human reviews edge cases via trigger threshold</td><td style="text-align:center">&#9744;</td></tr>
+<tr><td><strong>HITL on all outputs</strong></td><td>AI drafts; human approves every output before action</td><td style="text-align:center">&#9744;</td></tr>
+</table>
+<h2>Facilitator Prompts</h2>
+<table>
+<tr><td class="lbl">Blast radius</td><td>"What breaks — and what does it cost — if the AI gets this wrong?"</td></tr>
+<tr><td class="lbl">Detection</td><td>"How would you know it got it wrong? What's the monitoring mechanism?"</td></tr>
+<tr><td class="lbl">Ownership</td><td>"Who is on the hook when it fails? Name a person, not a team."</td></tr>
+</table>
+<p class="ft">Output artifact: HITL Architecture Safeguards — risk-mitigated roadmap with named owners and checkpoint triggers</p>
+</div>
+
+<div class="pg">
+<h1>Participant Ground Rules Card</h1>
+<p class="sub">Print one per person &middot; Hand out at the start of each session</p>
+<table style="font-size:12pt">
+<tr><th colspan="2" style="font-size:13pt;text-align:center">AI ENABLEMENT WORKSHOP &mdash; GROUND RULES</th></tr>
+<tr><td class="lbl" style="width:35%">Exercise 1</td><td>No tool names until KPIs are on paper</td></tr>
+<tr><td class="lbl">Exercise 2</td><td>Every step gets a flag. No neutrals.</td></tr>
+<tr><td class="lbl">Exercise 3</td><td>Every initiative needs a named human owner</td></tr>
+<tr><td colspan="2" style="background:#111;color:#fff;text-align:center;padding:12px">
+  The goal: a roadmap your ops team and risk team both sign off on &mdash;<br>
+  not a list of cool AI things to try someday.
+</td></tr>
+</table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+{
+  "_meta": {
+    "name": "Elite UI Starter Tokens",
+    "version": "1.0.0",
+    "description": "Customize these values for your project. All colors are HSL. All spacing is 8-point grid. Replace placeholder hues with your brand values.",
+    "usage": "Copy this file, replace the brand hue (210 default), adjust surface/text values, and generate your design system from these tokens."
+  },
+
+  "color": {
+    "_instructions": "Replace hue 210 (blue) with your brand hue. Adjust saturation and lightness per context. Dark mode values are separate — never invert light mode.",
+
+    "light": {
+      "brand-primary":     "hsl(210, 65%, 45%)",
+      "brand-primary-hover": "hsl(210, 65%, 38%)",
+      "brand-primary-text": "hsl(0, 0%, 100%)",
+
+      "surface-base":      "hsl(210, 15%, 97%)",
+      "surface-raised":    "hsl(210, 12%, 100%)",
+      "surface-overlay":   "hsl(210, 12%, 100%)",
+      "surface-scrim":     "hsla(210, 30%, 10%, 0.5)",
+
+      "text-primary":      "hsl(210, 20%, 12%)",
+      "text-secondary":    "hsl(210, 10%, 40%)",
+      "text-disabled":     "hsl(210, 8%, 62%)",
+      "text-inverse":      "hsl(0, 0%, 100%)",
+
+      "border-default":    "hsl(210, 12%, 87%)",
+      "border-strong":     "hsl(210, 12%, 72%)",
+      "border-focus":      "hsl(210, 65%, 45%)",
+
+      "feedback-success":        "hsl(145, 55%, 38%)",
+      "feedback-success-surface": "hsl(145, 40%, 95%)",
+      "feedback-error":          "hsl(0, 65%, 50%)",
+      "feedback-error-surface":   "hsl(0, 50%, 96%)",
+      "feedback-warning":        "hsl(38, 80%, 50%)",
+      "feedback-warning-surface": "hsl(38, 60%, 95%)",
+      "feedback-info":           "hsl(210, 65%, 45%)",
+      "feedback-info-surface":    "hsl(210, 40%, 96%)"
+    },
+
+    "dark": {
+      "_instructions": "Hue-matched darks. Never pure #000000. Surface lightness increases with elevation.",
+
+      "brand-primary":     "hsl(210, 60%, 55%)",
+      "brand-primary-hover": "hsl(210, 60%, 62%)",
+      "brand-primary-text": "hsl(0, 0%, 100%)",
+
+      "surface-base":      "hsl(210, 15%, 9%)",
+      "surface-raised":    "hsl(210, 12%, 13%)",
+      "surface-overlay":   "hsl(210, 12%, 17%)",
+      "surface-scrim":     "hsla(210, 30%, 5%, 0.7)",
+
+      "text-primary":      "hsl(210, 10%, 93%)",
+      "text-secondary":    "hsl(210, 8%, 60%)",
+      "text-disabled":     "hsl(210, 6%, 38%)",
+      "text-inverse":      "hsl(210, 20%, 12%)",
+
+      "border-default":    "hsl(210, 10%, 20%)",
+      "border-strong":     "hsl(210, 10%, 32%)",
+      "border-focus":      "hsl(210, 60%, 55%)",
+
+      "feedback-success":        "hsl(145, 50%, 48%)",
+      "feedback-success-surface": "hsl(145, 30%, 14%)",
+      "feedback-error":          "hsl(0, 60%, 58%)",
+      "feedback-error-surface":   "hsl(0, 40%, 14%)",
+      "feedback-warning":        "hsl(38, 70%, 55%)",
+      "feedback-warning-surface": "hsl(38, 40%, 14%)",
+      "feedback-info":           "hsl(210, 60%, 55%)",
+      "feedback-info-surface":    "hsl(210, 30%, 14%)"
+    }
+  },
+
+  "typography": {
+    "_instructions": "Replace 'Inter' with your chosen typeface. Adjust scale ratio if needed. Current scale uses ~1.125 (Major Second) for tight hierarchy or ~1.250 (Major Third) for more dramatic contrast.",
+
+    "font-family-primary": "Inter, system-ui, -apple-system, sans-serif",
+    "font-family-mono": "JetBrains Mono, Fira Code, Consolas, monospace",
+
+    "scale": {
+      "text-xs":      { "size": "0.75rem",  "line-height": "1rem",    "weight": 400 },
+      "text-sm":      { "size": "0.875rem", "line-height": "1.25rem", "weight": 400 },
+      "text-base":    { "size": "1rem",     "line-height": "1.5rem",  "weight": 400 },
+      "text-lg":      { "size": "1.125rem", "line-height": "1.75rem", "weight": 400 },
+      "text-xl":      { "size": "1.25rem",  "line-height": "1.75rem", "weight": 500 },
+      "text-2xl":     { "size": "1.5rem",   "line-height": "2rem",    "weight": 600 },
+      "text-3xl":     { "size": "1.875rem", "line-height": "2.25rem", "weight": 600 },
+      "text-display": { "size": "3rem",     "line-height": "3.5rem",  "weight": 700 }
+    },
+
+    "weight": {
+      "regular": 400,
+      "medium":  500,
+      "semibold": 600,
+      "bold":    700
+    }
+  },
+
+  "spacing": {
+    "_instructions": "8-point grid. All values in multiples of 4px. Use space-0 (0) sparingly.",
+
+    "space-0":  "0",
+    "space-1":  "4px",
+    "space-2":  "8px",
+    "space-3":  "12px",
+    "space-4":  "16px",
+    "space-5":  "20px",
+    "space-6":  "24px",
+    "space-8":  "32px",
+    "space-10": "40px",
+    "space-12": "48px",
+    "space-16": "64px",
+    "space-20": "80px",
+    "space-24": "96px"
+  },
+
+  "shape": {
+    "radius-none": "0",
+    "radius-sm":   "4px",
+    "radius-md":   "8px",
+    "radius-lg":   "12px",
+    "radius-xl":   "16px",
+    "radius-full": "9999px"
+  },
+
+  "elevation": {
+    "_instructions": "Replace hue 210 with your brand hue for shadow colors. Never use rgba(0,0,0,X) on colored surfaces.",
+
+    "L0": {
+      "shadow": "none",
+      "surface-shift": "0%"
+    },
+    "L1": {
+      "shadow": "0 1px 2px hsla(210, 30%, 20%, 0.06), 0 1px 3px hsla(210, 30%, 20%, 0.1)",
+      "surface-shift": "+2% lightness"
+    },
+    "L2": {
+      "shadow": "0 4px 6px hsla(210, 30%, 20%, 0.07), 0 2px 4px hsla(210, 30%, 20%, 0.06)",
+      "surface-shift": "+3% lightness"
+    },
+    "L3": {
+      "shadow": "0 10px 15px hsla(210, 30%, 20%, 0.1), 0 4px 6px hsla(210, 30%, 20%, 0.05)",
+      "surface-shift": "+4% lightness"
+    },
+    "L4": {
+      "shadow": "0 20px 25px hsla(210, 30%, 20%, 0.1), 0 8px 10px hsla(210, 30%, 20%, 0.04)",
+      "surface-shift": "+5% lightness",
+      "scrim": "hsla(210, 30%, 10%, 0.5)"
+    }
+  },
+
+  "motion": {
+    "easing": {
+      "appear":  "cubic-bezier(0.0, 0.0, 0.2, 1)",
+      "depart":  "cubic-bezier(0.4, 0.0, 1, 1)",
+      "move":    "cubic-bezier(0.4, 0.0, 0.2, 1)",
+      "spring":  "cubic-bezier(0.34, 1.56, 0.64, 1)"
+    },
+    "duration": {
+      "micro":  "80ms",
+      "fast":   "150ms",
+      "medium": "250ms",
+      "slow":   "400ms"
+    },
+    "reduced-motion": {
+      "_rule": "opacity fades only, max 150ms, no spring physics",
+      "max-duration": "150ms",
+      "allowed-properties": ["opacity"],
+      "forbidden": ["spring easing", "transform animations", "stagger delays"]
+    }
+  },
+
+  "breakpoints": {
+    "mobile":  "0px",
+    "tablet":  "768px",
+    "desktop": "1024px",
+    "wide":    "1440px"
+  },
+
+  "layout": {
+    "content-max-width": "1200px",
+    "prose-max-width":   "65ch",
+    "touch-target-min":  "44px",
+    "grid-columns": {
+      "mobile":  4,
+      "tablet":  8,
+      "desktop": 12
+    }
+  }
+}

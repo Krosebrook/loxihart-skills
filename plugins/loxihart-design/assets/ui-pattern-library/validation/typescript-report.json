@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "typescript_artifacts_expected": 100,
+  "typescript_artifacts_checked": 100,
+  "compiler": "TypeScript 5.8.3",
+  "flags": [
+    "--noEmit",
+    "--strict",
+    "--target ES2022",
+    "--module ES2022",
+    "--lib ES2022,DOM,DOM.Iterable",
+    "--pretty false"
+  ],
+  "errors": [],
+  "note": "Every TypeScript block from each production-code artifact is concatenated in source order and compiled as one standalone ES module."
+}

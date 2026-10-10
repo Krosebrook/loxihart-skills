@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Staggered Card Entry</title>
+<!--
+  PATTERN: Staggered Card Entry
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a grid of cards that animate in with incrementing delay
+  per item, triggered on scroll-into-view.
+
+  ADAPT THIS BY:
+    - Applying .stagger-item to any repeated list/grid item; the JS below
+      sets --i automatically from DOM order.
+
+  DO NOT STRIP WHEN ADAPTING (production detail):
+    - The per-item delay is CAPPED (MAX_STAGGER_ITEMS) — a naive
+      calc(var(--i) * 60ms) with no ceiling means a 50-item list takes
+      3 real seconds to finish entering, which reads as broken, not
+      elegant. Past the cap, remaining items stop incrementing delay.
+    - Reduced motion: all items appear instantly, no stagger, no transform.
+-->
+<style>
+  :root { --dur-entry: 420ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    margin: 0; padding: 3rem 1.5rem;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    max-width: 720px;
+  }
+  .stagger-item {
+    padding: 1.25rem; background: white; border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    opacity: 0; transform: translateY(20px);
+  }
+  .stagger-item.in-view {
+    animation: enter var(--dur-entry) cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  @keyframes enter { to { opacity: 1; transform: translateY(0); } }
+  .stagger-item h4 { margin: 0 0 0.25rem; font-size: 0.9375rem; }
+  .stagger-item p { margin: 0; font-size: 0.8125rem; color: #475569; }
+
+  .spacer { height: 60vh; display: grid; place-items: center; color: #475569; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stagger-item { opacity: 1; transform: none; }
+    .stagger-item.in-view { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="spacer">Scroll down ↓</div>
+  <div class="grid" id="grid">
+    <!-- 9 items generated in JS below to demonstrate the delay cap -->
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const MAX_STAGGER_ITEMS = 6; // beyond this, delay stops incrementing
+      const grid = document.getElementById('grid');
+
+      for (let i = 0; i < 9; i++) {
+        const card = document.createElement('div');
+        card.className = 'stagger-item';
+        card.style.setProperty('--i', String(Math.min(i, MAX_STAGGER_ITEMS)));
+        card.innerHTML = `<h4>Card ${i + 1}</h4><p>Staggered entry, capped delay past item ${MAX_STAGGER_ITEMS}.</p>`;
+        grid.appendChild(card);
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.stagger-item').forEach(el => observer.observe(el));
+
+      // --- inline smoke test -------------------------------------------
+      const items = document.querySelectorAll('.stagger-item');
+      const lastDelay = getComputedStyle(items[items.length - 1]).getPropertyValue('--i');
+      console.assert(Number(lastDelay) <= MAX_STAGGER_ITEMS,
+        '[smoke] stagger delay is capped, not unbounded per item index');
+    })();
+  </script>
+</body>
+</html>

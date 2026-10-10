@@ -1,0 +1,65 @@
+/* Full-Spectrum Reference Design System — primitive and semantic token layers. */
+:root {
+  color-scheme: dark;
+
+  --primitive-white: #f8fafc; /* [GENERATED: high-contrast neutral primitive] */
+  --primitive-slate-950: #0b1020; /* [GENERATED: canvas primitive] */
+  --primitive-slate-900: #111827; /* [GENERATED: surface primitive] */
+  --primitive-slate-800: #1e293b; /* [GENERATED: elevated surface primitive] */
+  --primitive-slate-500: #64748b; /* [GENERATED: boundary primitive selected for non-text contrast] */
+  --primitive-slate-300: #cbd5e1; /* [GENERATED: secondary text primitive] */
+  --primitive-sky-300: #7dd3fc; /* [GENERATED: interactive accent primitive] */
+  --primitive-sky-950: #082f49; /* [GENERATED: accent foreground primitive] */
+  --primitive-amber-300: #fcd34d; /* [GENERATED: focus indicator primitive] */
+
+  --space-1: 0.25rem; /* [GENERATED: four-CSS-pixel spacing step at the default root size] */
+  --space-2: 0.5rem; /* [GENERATED: compact spacing step] */
+  --space-3: 0.75rem; /* [GENERATED: control spacing step] */
+  --space-4: 1rem; /* [GENERATED: base spacing step] */
+  --space-6: 1.5rem; /* [GENERATED: content spacing step] */
+  --space-8: 2rem; /* [GENERATED: section spacing step] */
+  --space-12: 3rem; /* [GENERATED: large section spacing step] */
+
+  --radius-sm: 0.5rem; /* [GENERATED: compact radius] */
+  --radius-lg: 1rem; /* [GENERATED: card radius] */
+  --radius-pill: 999rem; /* [GENERATED: effectively pill-shaped radius] */
+
+  --duration-instant: 0ms; /* [GENERATED: non-animated state change] */
+  --duration-standard: 280ms; /* [GENERATED: balanced visual feedback duration] */
+  --easing-standard: cubic-bezier(0.2, 0.8, 0.2, 1); /* [GENERATED: decelerating interaction curve] */
+
+  --target-minimum: 24px; /* [SOURCED: WCAG 2.2 SC 2.5.8, Level AA, subject to criterion exceptions] */
+  --focus-ring-width: 2px; /* [GENERATED: visible focus-ring width] */
+
+  --surface-canvas: var(--primitive-slate-950);
+  --surface-default: var(--primitive-slate-900);
+  --surface-elevated: var(--primitive-slate-800);
+  --text-primary: var(--primitive-white);
+  --text-secondary: var(--primitive-slate-300);
+  --border-default: var(--primitive-slate-500);
+  --action-primary: var(--primitive-sky-300);
+  --action-primary-foreground: var(--primitive-sky-950);
+  --focus-indicator: var(--primitive-amber-300);
+
+  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: ui-rounded, "Arial Rounded MT Bold", var(--font-body);
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem); /* [GENERATED: responsive body-size range] */
+  --text-display: clamp(3rem, 10vw, 8rem); /* [GENERATED: responsive hero-size range] */
+  --line-body: 1.6; /* [GENERATED: readable body line-height] */
+  --line-display: 0.9; /* [GENERATED: compact display line-height] */
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+    --surface-canvas: #f8fafc; /* [GENERATED: light canvas token] */
+    --surface-default: #ffffff; /* [GENERATED: light surface token] */
+    --surface-elevated: #e2e8f0; /* [GENERATED: light elevated surface token] */
+    --text-primary: #0f172a; /* [GENERATED: light primary text token] */
+    --text-secondary: #334155; /* [GENERATED: light secondary text token] */
+    --border-default: #64748b; /* [GENERATED: light boundary token] */
+    --action-primary: #0369a1; /* [GENERATED: light interactive accent token] */
+    --action-primary-foreground: #ffffff; /* [GENERATED: light accent foreground token] */
+    --focus-indicator: #92400e; /* [GENERATED: light focus token] */
+  }
+}

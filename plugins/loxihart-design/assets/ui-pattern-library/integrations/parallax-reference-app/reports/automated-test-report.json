@@ -1,0 +1,439 @@
+{
+  "generatedAt": "2026-07-23T18:32:14.409949+00:00",
+  "status": "passed",
+  "environment": {
+    "browser": "Chromium 144.0.7559.96",
+    "typescript": "Version 5.8.3",
+    "navigationNote": "The managed system Chromium blocks URL navigation, so tests execute the built application through an equivalent inline document while retaining the compiled JavaScript and production CSS."
+  },
+  "cases": [
+    {
+      "name": "Browser behavior",
+      "status": "passed",
+      "evidence": {
+        "nativeScrollY": 520,
+        "normalizedProgress": 1.0,
+        "initialTransforms": [
+          "matrix(1, 0, 0, 1, 0, 0)",
+          "matrix(1, 0, 0, 1, 0, 0)"
+        ],
+        "movedTransforms": [
+          "matrix(1, 0, 0, 1, 0, -25.6)",
+          "matrix(1, 0, 0, 1, 0, -66.56)"
+        ],
+        "evidence": "reports/screenshots/01-browser-base.png",
+        "provenance": "[GENERATED: automated Chromium behavioral test]"
+      }
+    },
+    {
+      "name": "Keyboard navigation",
+      "status": "passed",
+      "evidence": {
+        "tabOrder": [
+          {
+            "tag": "A",
+            "text": "Skip to main content",
+            "pressed": null
+          },
+          {
+            "tag": "A",
+            "text": "Full-Spectrum Pattern Lab",
+            "pressed": null
+          },
+          {
+            "tag": "A",
+            "text": "Pilot",
+            "pressed": null
+          },
+          {
+            "tag": "A",
+            "text": "Tokens",
+            "pressed": null
+          },
+          {
+            "tag": "A",
+            "text": "Evidence",
+            "pressed": null
+          },
+          {
+            "tag": "A",
+            "text": "Review test evidence",
+            "pressed": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Disable depth motion",
+            "pressed": "false"
+          }
+        ],
+        "skipLinkDestination": "main-content",
+        "enterAndSpaceOperable": true,
+        "evidence": "reports/screenshots/02-keyboard-focus.png",
+        "provenance": "[GENERATED: automated keyboard-navigation test]"
+      }
+    },
+    {
+      "name": "Two-hundred-percent zoom equivalent",
+      "status": "passed",
+      "evidence": {
+        "emulation": "Layout viewport halved with a device scale factor of two.",
+        "metrics": {
+          "innerWidth": 640,
+          "innerHeight": 360,
+          "scrollWidth": 640,
+          "clientWidth": 640,
+          "scrollHeight": 1950,
+          "visualScale": 1
+        },
+        "interactiveTargetSizes": [
+          {
+            "label": "Skip to main content",
+            "width": 192.953125,
+            "height": 42.625
+          },
+          {
+            "label": "Full-Spectrum Pattern Lab",
+            "width": 220.265625,
+            "height": 26.625
+          },
+          {
+            "label": "Pilot",
+            "width": 34.703125,
+            "height": 26.625
+          },
+          {
+            "label": "Tokens",
+            "width": 54.640625,
+            "height": 26.625
+          },
+          {
+            "label": "Evidence",
+            "width": 69.21875,
+            "height": 26.625
+          },
+          {
+            "label": "Review test evidence",
+            "width": 209.546875,
+            "height": 46.625
+          },
+          {
+            "label": "Disable depth motion",
+            "width": 214.875,
+            "height": 46.625
+          }
+        ],
+        "undersizedTargets": [],
+        "evidence": "reports/screenshots/03-zoom-200-percent-equivalent.png",
+        "provenance": "[GENERATED: Chromium layout-equivalent test for two-hundred-percent browser zoom]",
+        "criterion": "[SOURCED: WCAG 2.2 SC 1.4.4, Level AA]"
+      }
+    },
+    {
+      "name": "Forced colors",
+      "status": "passed",
+      "evidence": {
+        "decorativeLayersHidden": true,
+        "focusIndicatorVisible": true,
+        "evidence": "reports/screenshots/04-forced-colors.png",
+        "provenance": "[GENERATED: automated Chromium forced-colors test]"
+      }
+    },
+    {
+      "name": "Reduced motion",
+      "status": "passed",
+      "evidence": {
+        "motionState": "reduced",
+        "transforms": [
+          "none",
+          "none"
+        ],
+        "willChange": [
+          "auto",
+          "auto"
+        ],
+        "evidence": "reports/screenshots/05-reduced-motion.png",
+        "provenance": "[GENERATED: automated Chromium reduced-motion test]"
+      }
+    },
+    {
+      "name": "Accessibility tree",
+      "status": "passed",
+      "evidence": {
+        "relevantNodes": [
+          {
+            "role": "link",
+            "name": "Skip to main content",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#main-content"
+            },
+            "backendDOMNodeId": 11
+          },
+          {
+            "role": "main",
+            "name": "",
+            "properties": {
+              "focusable": true
+            },
+            "backendDOMNodeId": 18
+          },
+          {
+            "role": "link",
+            "name": "Full-Spectrum Pattern Lab",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#top"
+            },
+            "backendDOMNodeId": 13
+          },
+          {
+            "role": "navigation",
+            "name": "Primary navigation",
+            "properties": {},
+            "backendDOMNodeId": 14
+          },
+          {
+            "role": "region",
+            "name": "Depth without losing the document.",
+            "properties": {
+              "labelledby": null
+            },
+            "backendDOMNodeId": 2
+          },
+          {
+            "role": "region",
+            "name": "Mapped to a semantic token system.",
+            "properties": {
+              "labelledby": null
+            },
+            "backendDOMNodeId": 30
+          },
+          {
+            "role": "region",
+            "name": "Evidence before catalog import.",
+            "properties": {
+              "labelledby": null
+            },
+            "backendDOMNodeId": 43
+          },
+          {
+            "role": "link",
+            "name": "Pilot",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#pilot"
+            },
+            "backendDOMNodeId": 15
+          },
+          {
+            "role": "link",
+            "name": "Tokens",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#tokens"
+            },
+            "backendDOMNodeId": 16
+          },
+          {
+            "role": "link",
+            "name": "Evidence",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#evidence"
+            },
+            "backendDOMNodeId": 17
+          },
+          {
+            "role": "heading",
+            "name": "Mapped to a semantic token system.",
+            "properties": {
+              "level": 2
+            },
+            "backendDOMNodeId": 31
+          },
+          {
+            "role": "heading",
+            "name": "Evidence before catalog import.",
+            "properties": {
+              "level": 2
+            },
+            "backendDOMNodeId": 44
+          },
+          {
+            "role": "heading",
+            "name": "Semantic color",
+            "properties": {
+              "level": 3
+            },
+            "backendDOMNodeId": 35
+          },
+          {
+            "role": "heading",
+            "name": "Motion contract",
+            "properties": {
+              "level": 3
+            },
+            "backendDOMNodeId": 38
+          },
+          {
+            "role": "heading",
+            "name": "Progressive baseline",
+            "properties": {
+              "level": 3
+            },
+            "backendDOMNodeId": 41
+          },
+          {
+            "role": "heading",
+            "name": "Depth without losing the document.",
+            "properties": {
+              "level": 1
+            },
+            "backendDOMNodeId": 24
+          },
+          {
+            "role": "link",
+            "name": "Review test evidence",
+            "properties": {
+              "focusable": true,
+              "url": "about:blank#evidence"
+            },
+            "backendDOMNodeId": 27
+          },
+          {
+            "role": "button",
+            "name": "Disable depth motion",
+            "properties": {
+              "invalid": "false",
+              "focusable": true,
+              "pressed": "false"
+            },
+            "backendDOMNodeId": 28
+          },
+          {
+            "role": "status",
+            "name": "",
+            "properties": {
+              "live": "polite",
+              "atomic": true,
+              "relevant": "additions text"
+            },
+            "backendDOMNodeId": 29
+          }
+        ],
+        "decorativeBackendNodeIds": [
+          20,
+          21
+        ],
+        "exposedDecorativeBackendNodeIds": [],
+        "fullTree": "reports/accessibility-tree.json",
+        "provenance": "[GENERATED: Chromium accessibility-tree inspection; not a physical screen-reader session]"
+      }
+    },
+    {
+      "name": "Token contrast",
+      "status": "passed",
+      "evidence": {
+        "results": [
+          {
+            "id": "dark-primary-text",
+            "foreground": "#f8fafc",
+            "background": "#0b1020",
+            "ratio": 18.095,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "dark-secondary-text",
+            "foreground": "#cbd5e1",
+            "background": "#111827",
+            "ratio": 11.948,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "dark-action-label",
+            "foreground": "#082f49",
+            "background": "#7dd3fc",
+            "ratio": 8.324,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "dark-focus-indicator",
+            "foreground": "#fcd34d",
+            "background": "#0b1020",
+            "ratio": 13.13,
+            "threshold": 3.0,
+            "usage": "UI component",
+            "passed": true
+          },
+          {
+            "id": "dark-boundary",
+            "foreground": "#64748b",
+            "background": "#111827",
+            "ratio": 3.728,
+            "threshold": 3.0,
+            "usage": "UI component",
+            "passed": true
+          },
+          {
+            "id": "light-primary-text",
+            "foreground": "#0f172a",
+            "background": "#f8fafc",
+            "ratio": 17.063,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "light-secondary-text",
+            "foreground": "#334155",
+            "background": "#ffffff",
+            "ratio": 10.355,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "light-action-label",
+            "foreground": "#ffffff",
+            "background": "#0369a1",
+            "ratio": 5.934,
+            "threshold": 4.5,
+            "usage": "normal text",
+            "passed": true
+          },
+          {
+            "id": "light-focus-indicator",
+            "foreground": "#92400e",
+            "background": "#f8fafc",
+            "ratio": 6.776,
+            "threshold": 3.0,
+            "usage": "UI component",
+            "passed": true
+          },
+          {
+            "id": "light-boundary",
+            "foreground": "#64748b",
+            "background": "#ffffff",
+            "ratio": 4.759,
+            "threshold": 3.0,
+            "usage": "UI component",
+            "passed": true
+          }
+        ],
+        "normalTextCriterion": "[SOURCED: WCAG 2.2 SC 1.4.3, Level AA — four-and-one-half to one]",
+        "uiCriterion": "[SOURCED: WCAG 2.2 SC 1.4.11, Level AA — three to one]"
+      }
+    }
+  ],
+  "manualAssistiveTechnologyGate": {
+    "status": "not-run",
+    "checklist": "tests/manual-assistive-technology-checklist.md",
+    "reason": "NVDA, JAWS, VoiceOver, and TalkBack are not installed in this container."
+  }
+}

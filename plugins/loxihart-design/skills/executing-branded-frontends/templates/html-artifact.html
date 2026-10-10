@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--
+  FRONTEND-DESIGN SKILL — HTML ARTIFACT TEMPLATE
+  ================================================
+  Profile:      [Loxihart | FlashFusion | Custom]
+  Component:    [component name]
+  Differentiator: [the one design decision that makes this memorable]
+  States:       [empty, loading, error, success, ...]
+  Brief ref:    [brief file or "inline gate passed"]
+  
+  Replace all [PLACEHOLDER] values before delivery.
+  Remove this comment block from final output.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Component Name]</title>
+
+  <!-- Fonts: replace with profile-appropriate load from typography-system.md -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Loxihart:          Space Grotesk:700 + Inter:400;500 -->
+  <!-- FlashFusion:  Instrument Serif (400) + Geist (400/500) + Geist Mono (400)   -->
+  <link href="[FONT_URL]" rel="stylesheet">
+
+  <style>
+    /* ===================================================
+       DESIGN TOKENS — import from designs/[profile]-tokens.md
+       All hex/rgba values must reference CSS variables.
+       No hardcoded color values in component styles.
+       =================================================== */
+    :root {
+      /* Paste full token set from relevant profile file */
+      /* [TOKENS] */
+
+      /* Easing + duration — from references/animation-system.md */
+      --ease-out-smooth:   cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --ease-out-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-in-out-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+      --duration-fast:   150ms;
+      --duration-medium: 250ms;
+      --duration-slow:   400ms;
+    }
+
+    /* ===================================================
+       RESET
+       =================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===================================================
+       REDUCED MOTION — mandatory
+       =================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ===================================================
+       BASE
+       =================================================== */
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--surface-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: var(--leading-normal);
+      min-height: 100vh;
+    }
+
+    /* ===================================================
+       FOCUS — never remove, always style
+       =================================================== */
+    :focus-visible {
+      outline: 2px solid var(--accent, var(--accent-primary));
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    :focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    /* ===================================================
+       COMPONENT STYLES
+       Write component-specific styles here.
+       Use CSS variables only — no hardcoded values.
+       =================================================== */
+
+    /* [COMPONENT_STYLES] */
+
+    /* ===================================================
+       STATES — all must be present
+       - .state--loading   → skeleton shimmer
+       - .state--empty     → zero-data view
+       - .state--error     → error with recovery action
+       - .state--success   → confirmation / completion
+       =================================================== */
+
+    /* Skeleton shimmer — from references/animation-system.md */
+    @keyframes shimmer {
+      from { background-position: -200% 0; }
+      to   { background-position: 200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--surface-raised) 25%,
+        var(--surface-overlay) 50%,
+        var(--surface-raised) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ===================================================
+       ENTRANCE ANIMATION
+       Stagger reveals for list/card components.
+       =================================================== */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* [ENTRANCE_ANIMATION_RULES] */
+  </style>
+</head>
+<body>
+
+  <!--
+    COMPONENT MARKUP
+    ================
+    - One <main> landmark with descriptive aria-label
+    - Semantic HTML: use <button> not <div> for actions
+    - All interactive elements keyboard-navigable
+    - All states represented in markup (toggle with JS/class)
+  -->
+
+  <main aria-label="[Component description]">
+
+    <!-- [COMPONENT_MARKUP] -->
+
+    <!--
+      STATES (render as needed, toggle with JS):
+      
+      Empty state:
+      <div class="empty-state" role="status">
+        <p>[Empty state message with action]</p>
+        <button class="btn">Primary action</button>
+      </div>
+
+      Loading state:
+      <div aria-busy="true" aria-label="Loading [content]...">
+        <div class="skeleton" style="height: 20px; width: 60%;"></div>
+        <div class="skeleton" style="height: 20px; width: 80%; margin-top: 8px;"></div>
+      </div>
+
+      Error state:
+      <div role="alert" aria-live="assertive" class="error-state">
+        <p>[Error message]</p>
+        <button class="btn" onclick="retry()">Try again</button>
+      </div>
+    -->
+
+  </main>
+
+  <script>
+    // ===================================================
+    // COMPONENT LOGIC
+    // ===================================================
+    // - No inline event handlers (use addEventListener)
+    // - Input values validated before use
+    // - No raw innerHTML with user-provided data
+    // - State managed explicitly (no undefined states)
+
+    // [COMPONENT_LOGIC]
+
+    // ===================================================
+    // STATE MANAGEMENT
+    // ===================================================
+    const states = {
+      LOADING: 'loading',
+      EMPTY: 'empty',
+      ERROR: 'error',
+      SUCCESS: 'success',
+      IDLE: 'idle'
+    };
+
+    // function setState(state) { ... }
+  </script>
+</body>
+</html>

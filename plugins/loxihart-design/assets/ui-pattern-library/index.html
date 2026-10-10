@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI Pattern Library — 32 Patterns</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    margin: 0; padding: 2.5rem 1.5rem;
+    max-width: 760px; margin-inline: auto;
+  }
+  h1 { font-size: 1.5rem; }
+  p.intro { color: #475569; font-size: 0.9375rem; }
+  .category { margin-top: 2rem; }
+  .category h2 { font-size: 1.0625rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.4rem; }
+  .category.risk h2 { color: #b91c1c; }
+  ul { list-style: none; padding: 0; margin: 0.75rem 0 0; }
+  li { margin-bottom: 0.4rem; }
+  a { color: #2563eb; text-decoration: none; font-size: 0.9375rem; }
+  a:hover, a:focus-visible { text-decoration: underline; }
+  .risk-tag { font-size: 0.6875rem; color: #b91c1c; font-weight: 700; margin-left: 0.4rem; }
+</style>
+</head>
+<body>
+  <h1>UI Interaction &amp; Motion Pattern Library</h1>
+  <p class="intro">32 self-contained, runnable reference implementations. Open any file directly in a browser — each one is a complete demo with no build step and no dependency on this index or any other file.</p>
+
+  <div class="category">
+    <h2>1. Loading &amp; Progress Feedback</h2>
+    <ul>
+      <li><a href="01-loading-progress-feedback/progress-button-spinner.html">Progress Button Spinner</a></li>
+      <li><a href="01-loading-progress-feedback/skeleton-screen-shimmer.html">Skeleton Screen Shimmer</a></li>
+      <li><a href="01-loading-progress-feedback/download-progress-wave.html">Download Progress Wave</a></li>
+      <li><a href="01-loading-progress-feedback/number-counter-ticker.html">Number Counter Ticker</a></li>
+    </ul>
+  </div>
+
+  <div class="category">
+    <h2>2. Action Feedback &amp; Confirmation</h2>
+    <ul>
+      <li><a href="02-action-feedback-confirmation/copy-to-clipboard-banner.html">Copy-to-Clipboard Banner</a></li>
+      <li><a href="02-action-feedback-confirmation/haptic-vibration-feedback.html">Haptic Vibration Feedback</a></li>
+      <li><a href="02-action-feedback-confirmation/audio-ui-sound-click.html">Audio UI Sound Click</a></li>
+      <li><a href="02-action-feedback-confirmation/pulse-ripple-beacon.html">Pulse Ripple Beacon</a></li>
+      <li><a href="02-action-feedback-confirmation/password-peek-toggle.html">Password Peek Toggle</a></li>
+    </ul>
+  </div>
+
+  <div class="category">
+    <h2>3. Motion &amp; Transform Effects</h2>
+    <ul>
+      <li><a href="03-motion-transform-effects/ghost-trail-duplicate.html">Ghost Trail Duplicate</a></li>
+      <li><a href="03-motion-transform-effects/tilt-parallax-angle.html">Tilt Parallax Angle</a></li>
+      <li><a href="03-motion-transform-effects/rubber-band-squish.html">Rubber-Band Squish</a></li>
+      <li><a href="03-motion-transform-effects/card-lift-perspective.html">Card Lift Perspective</a></li>
+      <li><a href="03-motion-transform-effects/magnetic-cursor-ring.html">Magnetic Cursor Ring</a></li>
+      <li><a href="03-motion-transform-effects/hover-click-zoom-bounds.html">Hover/Click Zoom Bounds</a></li>
+      <li><a href="03-motion-transform-effects/staggered-card-entry.html">Staggered Card Entry</a></li>
+      <li><a href="03-motion-transform-effects/staggered-icon-pop.html">Staggered Icon Pop</a></li>
+    </ul>
+  </div>
+
+  <div class="category">
+    <h2>4. Navigation &amp; Wayfinding</h2>
+    <ul>
+      <li><a href="04-navigation-wayfinding/underline-growth-track.html">Underline Growth Track</a></li>
+      <li><a href="04-navigation-wayfinding/image-hotspot-pulse.html">Image Hotspot Pulse</a></li>
+      <li><a href="04-navigation-wayfinding/slide-to-unlock-fader.html">Slide-to-Unlock Fader</a></li>
+    </ul>
+  </div>
+
+  <div class="category">
+    <h2>5. Visual Enhancement &amp; Decorative Effects</h2>
+    <ul>
+      <li><a href="05-visual-enhancement-decorative/shimmer-sheen-highlight.html">Shimmer Sheen Highlight</a></li>
+      <li><a href="05-visual-enhancement-decorative/liquid-blob-fusion.html">Liquid Blob Fusion</a></li>
+      <li><a href="05-visual-enhancement-decorative/glow-perimeter-trail.html">Glow Perimeter Trail</a></li>
+      <li><a href="05-visual-enhancement-decorative/color-spill-wipe.html">Color Spill Wipe</a></li>
+      <li><a href="05-visual-enhancement-decorative/border-dash-spin.html">Border Dash Spin</a></li>
+      <li><a href="05-visual-enhancement-decorative/text-highlighting-strike.html">Text Highlighting Strike</a></li>
+      <li><a href="05-visual-enhancement-decorative/drawing-path-tracing.html">Drawing Path Tracing</a></li>
+      <li><a href="05-visual-enhancement-decorative/scratch-card-reveal.html">Scratch-Card Reveal</a></li>
+      <li><a href="05-visual-enhancement-decorative/typing-effect-reset.html">Typing Effect Reset</a></li>
+    </ul>
+  </div>
+
+  <div class="category risk">
+    <h2>6. Theming &amp; Display-Mode Transitions — Elevated Risk</h2>
+    <ul>
+      <li><a href="06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html">Dark Mode Flashbang Toggle</a><span class="risk-tag">RISK: HIGH</span></li>
+      <li><a href="06-theming-display-mode-elevated-risk/dual-tone-inversion.html">Dual-Tone Inversion</a><span class="risk-tag">RISK: MEDIUM</span></li>
+      <li><a href="06-theming-display-mode-elevated-risk/image-glitch-flicker.html">Image Glitch Flicker</a><span class="risk-tag">RISK: HIGH</span></li>
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Tree View</title>
+<!--
+  PATTERN: Tree View
+  CATEGORY: Composite Widgets (WAI-ARIA APG)
+  PRIORITY: Medium  |  RISK: Medium
+
+  WHAT THIS IS: a hierarchical file-tree, following the WAI-ARIA Authoring
+  Practices tree pattern (single-select).
+
+  ADAPT THIS BY:
+    - Nest [role=treeitem] inside [role=group] to any depth; aria-level,
+      aria-setsize and aria-posinset are computed at init, so hand-written
+      values cannot drift out of sync with the DOM.
+
+  DO NOT STRIP WHEN ADAPTING — the arrow-key semantics ARE the pattern:
+    - Right on a COLLAPSED node expands it; Right on an EXPANDED node moves
+      to its first child. Left on an EXPANDED node collapses it; Left on a
+      COLLAPSED node moves to its PARENT. That asymmetry is not a quirk —
+      it is how tree navigation works everywhere, and users depend on it.
+    - Up/Down move through VISIBLE nodes only. A collapsed subtree's
+      children are skipped. Walking the raw DOM order instead is the usual
+      bug and it strands focus on invisible nodes.
+    - Roving tabindex: exactly one treeitem is tabbable, so the whole tree
+      is a single Tab stop no matter how many nodes it has.
+    - aria-level, aria-setsize, aria-posinset let a screen reader announce
+      "level 2, 3 of 4". Without them the hierarchy is inaudible — the
+      indentation is purely visual.
+    - Collapsed groups get the `hidden` attribute, not CSS display:none via
+      a class only, so they leave the a11y tree as well as the view.
+-->
+<style>
+  :root { --tree-accent: #2563eb; --dur: 160ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 2rem;
+  }
+  .tree-wrap {
+    width: min(420px, 100%); background: #fff; border: 1px solid #cbd5e1;
+    border-radius: 10px; padding: 0.5rem;
+  }
+  [role="tree"], [role="group"] { list-style: none; margin: 0; padding: 0; }
+  [role="group"] { padding-left: 1.1rem; }
+  [role="group"][hidden] { display: none; }
+  .node {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.5rem; min-height: 36px; border-radius: 6px;
+    cursor: pointer; font-size: 0.9375rem;
+  }
+  [role="treeitem"]:focus > .node { outline: 2px solid var(--tree-accent); outline-offset: -2px; }
+  [role="treeitem"][aria-selected="true"] > .node { background: #eff6ff; font-weight: 600; }
+  .node:hover { background: #f1f5f9; }
+  .twisty { flex: none; width: 14px; transition: transform var(--dur) ease; }
+  [role="treeitem"][aria-expanded="false"] > .node .twisty { transform: rotate(-90deg); }
+  .twisty.leaf { visibility: hidden; }
+  .label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  @media (prefers-reduced-motion: reduce) { .twisty { transition: none; } }
+</style>
+</head>
+<body>
+  <div class="tree-wrap">
+    <ul role="tree" aria-label="Project files" id="tree">
+      <li role="treeitem" aria-expanded="true">
+        <span class="node"><svg class="twisty" viewBox="0 0 24 24" width="12" height="12" fill="none"
+          stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <span class="label">src</span></span>
+        <ul role="group">
+          <li role="treeitem" aria-expanded="false">
+            <span class="node"><svg class="twisty" viewBox="0 0 24 24" width="12" height="12" fill="none"
+              stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+              <span class="label">components</span></span>
+            <ul role="group" hidden>
+              <li role="treeitem"><span class="node"><span class="twisty leaf"></span><span class="label">Button.tsx</span></span></li>
+              <li role="treeitem"><span class="node"><span class="twisty leaf"></span><span class="label">Dialog.tsx</span></span></li>
+            </ul>
+          </li>
+          <li role="treeitem"><span class="node"><span class="twisty leaf"></span><span class="label">index.ts</span></span></li>
+        </ul>
+      </li>
+      <li role="treeitem" aria-expanded="false">
+        <span class="node"><svg class="twisty" viewBox="0 0 24 24" width="12" height="12" fill="none"
+          stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          <span class="label">tests</span></span>
+        <ul role="group" hidden>
+          <li role="treeitem"><span class="node"><span class="twisty leaf"></span><span class="label">smoke.spec.ts</span></span></li>
+        </ul>
+      </li>
+      <li role="treeitem"><span class="node"><span class="twisty leaf"></span><span class="label">README.md</span></span></li>
+    </ul>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const tree = /** @type {HTMLElement} */ (document.getElementById('tree'));
+      const allItems = () => /** @type {HTMLElement[]} */ (Array.from(tree.querySelectorAll('[role="treeitem"]')));
+
+      // Compute level/setsize/posinset from the DOM so hand-written values
+      // cannot drift when someone edits the markup.
+      /** @param {HTMLElement} list @param {number} level */
+      (function annotate(list, level) {
+        const children = /** @type {HTMLElement[]} */ (
+          Array.from(list.children).filter((c) => c.getAttribute('role') === 'treeitem'));
+        children.forEach((item, i) => {
+          item.setAttribute('aria-level', String(level));
+          item.setAttribute('aria-setsize', String(children.length));
+          item.setAttribute('aria-posinset', String(i + 1));
+          item.tabIndex = -1;
+          const group = /** @type {HTMLElement|null} */ (item.querySelector(':scope > [role="group"]'));
+          if (group) annotate(group, level + 1);
+        });
+      })(tree, 1);
+
+      const first = allItems()[0];
+      if (first) first.tabIndex = 0;   // roving tabindex: one Tab stop total
+
+      const isExpandable = (it) => it.hasAttribute('aria-expanded');
+      const isExpanded = (it) => it.getAttribute('aria-expanded') === 'true';
+      const groupOf = (it) => /** @type {HTMLElement} */ (it.querySelector(':scope > [role="group"]'));
+
+      /** Only nodes actually on screen — collapsed subtrees are skipped. */
+      function visibleItems() {
+        return allItems().filter((it) => {
+          let p = it.parentElement;
+          while (p && p !== tree) {
+            if (p.getAttribute('role') === 'group' && p.hidden) return false;
+            p = p.parentElement;
+          }
+          return true;
+        });
+      }
+
+      function focusItem(item) {
+        if (!item) return;
+        allItems().forEach((it) => { it.tabIndex = -1; });
+        item.tabIndex = 0;
+        item.focus();
+      }
+
+      function setExpanded(item, expanded) {
+        if (!isExpandable(item)) return;
+        item.setAttribute('aria-expanded', String(expanded));
+        const g = groupOf(item);
+        if (g) g.hidden = !expanded;
+      }
+
+      function select(item) {
+        allItems().forEach((it) => it.removeAttribute('aria-selected'));
+        item.setAttribute('aria-selected', 'true');
+      }
+
+      function parentItem(item) {
+        const g = item.parentElement;
+        if (!g || g.getAttribute('role') !== 'group') return null;
+        const p = g.closest('[role="treeitem"]');
+        return /** @type {HTMLElement|null} */ (p);
+      }
+
+      tree.addEventListener('keydown', (e) => {
+        const item = /** @type {HTMLElement} */ (
+          (/** @type {HTMLElement} */ (e.target)).closest('[role="treeitem"]'));
+        if (!item) return;
+        const vis = visibleItems();
+        const i = vis.indexOf(item);
+
+        switch (e.key) {
+          case 'ArrowDown': e.preventDefault(); focusItem(vis[Math.min(i + 1, vis.length - 1)]); break;
+          case 'ArrowUp':   e.preventDefault(); focusItem(vis[Math.max(i - 1, 0)]); break;
+          case 'Home':      e.preventDefault(); focusItem(vis[0]); break;
+          case 'End':       e.preventDefault(); focusItem(vis[vis.length - 1]); break;
+          case 'ArrowRight':
+            e.preventDefault();
+            // collapsed -> expand; already expanded -> step into first child
+            if (isExpandable(item) && !isExpanded(item)) setExpanded(item, true);
+            else if (isExpandable(item)) {
+              const g = groupOf(item);
+              const kid = g && g.querySelector(':scope > [role="treeitem"]');
+              if (kid) focusItem(/** @type {HTMLElement} */ (kid));
+            }
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            // expanded -> collapse; already collapsed (or a leaf) -> go to parent
+            if (isExpandable(item) && isExpanded(item)) setExpanded(item, false);
+            else focusItem(parentItem(item));
+            break;
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            select(item);
+            if (isExpandable(item)) setExpanded(item, !isExpanded(item));
+            break;
+        }
+      });
+
+      tree.addEventListener('click', (e) => {
+        const item = /** @type {HTMLElement} */ (
+          (/** @type {HTMLElement} */ (e.target)).closest('[role="treeitem"]'));
+        if (!item) return;
+        focusItem(item);
+        select(item);
+        if (isExpandable(item)) setExpanded(item, !isExpanded(item));
+      });
+
+      // --- inline smoke test -------------------------------------------
+      const items = allItems();
+      console.assert(items.filter((i) => i.tabIndex === 0).length === 1,
+        '[smoke] roving tabindex: the whole tree is exactly one Tab stop');
+      console.assert(items.every((i) => i.hasAttribute('aria-level')
+        && i.hasAttribute('aria-setsize') && i.hasAttribute('aria-posinset')),
+        '[smoke] every node exposes level/setsize/posinset so hierarchy is announced');
+      console.assert(items.filter(isExpandable).every((i) => groupOf(i)),
+        '[smoke] every aria-expanded node actually owns a group');
+      console.assert(items.filter((i) => isExpandable(i) && !isExpanded(i))
+        .every((i) => groupOf(i).hidden),
+        '[smoke] collapsed groups use hidden, leaving the a11y tree as well as the view');
+      console.assert(tree.hasAttribute('aria-label'), '[smoke] tree has an accessible name');
+    })();
+  </script>
+</body>
+</html>

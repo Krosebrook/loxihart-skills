@@ -1,0 +1,1003 @@
+# anti-slop patterns.yaml — structural slop pattern rules
+# Engine: Python `re`. All rules compiled with re.IGNORECASE unless case_sensitive: true.
+# Add re.MULTILINE when flags contains MULTILINE.
+# Tiers: BAN (rewrite always) | FLAG (context-dependent, human judgment) | DENSITY (count vs threshold_per_1000 words)
+# Sources: wikipedia-signs | kobak-2024 | juzek-2025 | community-lists | generated  (see README.md provenance map)
+# Example keys: ex_match = must match (self-tested) · ex_clean = must NOT match
+#   (self-tested) · ex_context = matches by design, but legitimate — FLAG-tier
+#   demonstration for the human reviewer (not self-tested).
+
+meta:
+  name: anti-slop-patterns
+  version: 0.1.0
+  generated: "2026-07-19"
+  engine: python-re
+  default_flags: [IGNORECASE]
+  rule_count: 76
+  note: >
+    Patterns outlive vocabulary. Word lists decay once publicized (Kobak et al.
+    documented "delve" frequency dropping after early-2024 exposure); sentence
+    structures persist across model generations. Literal words/phrases live in
+    lexicon.yaml.
+
+rules:
+
+  # ── CONTRAST / EMPHASIS TEMPLATES ─────────────────────────────
+
+  - id: CT-01
+    name: negative-parallelism-not-just-but
+    category: contrast
+    tier: BAN
+    regex: |-
+      \bnot\s+(?:just|only|merely|simply)\s+[^.!?\n]{2,80}?\bbut\b
+    why: Manufactured depth via contrast-reframe; canonical LLM construction.
+    fix: State the actual claim once, without the fake pivot.
+    source: wikipedia-signs
+    ex_match:
+      - "It's not just a tool, but a partner in your workflow."
+    ex_clean:
+      - "The tests are not just yet passing."
+
+  - id: CT-02
+    name: negative-parallelism-isnt-x-its-y
+    category: contrast
+    tier: BAN
+    regex: |-
+      \b(?:is\s+not|isn['\u2019]t|it['\u2019]s\s+not)\s+(?:about\s+)?[^.!?\n]{2,60}[.;\u2014\u2013]\s*[Ii]t['\u2019]s\s+(?:about\s+)?
+    why: The "It's not X. It's Y." reframe — the single most recognizable LLM sentence shape.
+    fix: Delete the negation clause; assert Y directly with evidence.
+    source: wikipedia-signs
+    ex_match:
+      - "This isn't about speed. It's about trust."
+    ex_clean:
+      - "It's not ready yet."
+
+  - id: CT-03
+    name: rather-than-density
+    category: contrast
+    tier: DENSITY
+    threshold_per_1000: 4
+    regex: |-
+      \brather\s+than\b
+    why: Legit English, but LLMs over-select it as a parallelism connector.
+    fix: Vary with "instead of", or restructure to a plain statement.
+    source: wikipedia-signs
+    ex_match:
+      - "We chose Postgres rather than MySQL."
+
+  - id: CT-04
+    name: rhetorical-question-answer
+    category: contrast
+    tier: BAN
+    flags: [MULTILINE]
+    regex: |-
+      (?:^|[.!?]\s+)[Tt]he\s+(?:result|answer|best\s+part|kicker|catch|takeaway|problem|reason|difference|verdict|goal|upshot|bottom\s+line)\?
+    why: Fake-dialectic "The result? X." cadence; engagement-bait rhythm.
+    fix: Merge into one declarative sentence.
+    source: community-lists
+    ex_match:
+      - "We shipped early. The result? A 40% lift in signups."
+    ex_clean:
+      - "What was the result?"
+
+  - id: CT-05
+    name: heres-the-thing
+    category: contrast
+    tier: BAN
+    regex: |-
+      \bhere['\u2019]s\s+(?:the\s+(?:thing|kicker|catch|deal|truth)|where\s+it\s+gets\s+(?:interesting|good|tricky))\b
+    why: Throat-clearing pivot that delays the point.
+    fix: Delete; say the point.
+    source: community-lists
+    ex_match:
+      - "Here's the thing: nobody reads the docs."
+
+  - id: CT-06
+    name: rule-of-three-density
+    category: contrast
+    tier: DENSITY
+    threshold_per_1000: 3
+    regex: |-
+      ,\s+[\w'\u2019-]+,\s+and\s+[\w'\u2019-]+\b
+    why: Triplet lists ("fast, cheap, and good") — LLMs default to threes for everything.
+    fix: Use the actual number of items the content has; often it's one or two.
+    source: wikipedia-signs
+    ex_match:
+      - "The platform is fast, cheap, and good."
+
+  - id: CT-07
+    name: em-dash-density
+    category: contrast
+    tier: DENSITY
+    threshold_per_1000: 12
+    regex: |-
+      [\u2014\u2013]|\s--\s
+    why: >
+      Em dashes used where commas/parens/colons fit, at above-human rates.
+      Not a ban — a density signal.
+    fix: Swap surplus dashes for commas, parentheses, or a period.
+    source: wikipedia-signs
+    ex_match:
+      - "The fix — obvious in hindsight — took a week."
+
+  - id: CT-08
+    name: from-x-to-y-catalog
+    category: contrast
+    tier: FLAG
+    regex: |-
+      \bfrom\s+(?:breathtaking|stunning|vibrant|bustling|humble|cozy|quaint|world-class|its\s+humble)\b[^.!?\n]{0,50}\bto\b
+    why: Travel-copy "from breathtaking X to vibrant Y" range-catalog framing.
+    fix: Name one concrete thing instead of a decorative range.
+    source: wikipedia-signs
+    ex_match:
+      - "From breathtaking sunsets to vibrant nightlife, the city has it all."
+
+  # ── TAILING / PARTICIPLE ANALYSIS ─────────────────────────────
+
+  - id: TL-01
+    name: tailing-significance-participle
+    category: tail
+    tier: BAN
+    regex: |-
+      ,\s+(?:highlighting|underscoring|showcasing|reflecting|demonstrating|signal(?:l)?ing|emphasizing|reinforcing|illustrating|cementing|solidifying|underlining|symbolizing|encompassing)\b
+    why: >
+      Present-participle tail bolted onto sentences to assert unearned
+      significance ("..., highlighting its importance").
+    fix: End the sentence at the fact. If significance is real, prove it in its own sentence.
+    source: wikipedia-signs
+    ex_match:
+      - "Revenue grew 12%, underscoring the strength of the model."
+    ex_clean:
+      - "She was signaling the turn."
+
+  - id: TL-02
+    name: tailing-ensuring-enabling
+    category: tail
+    tier: FLAG
+    regex: |-
+      ,\s+(?:ensuring|enabling|allowing|paving\s+the\s+way|setting\s+the\s+stage|contributing\s+to|cultivating|fostering)\b
+    why: Benefit-tail participles that smuggle in unverified outcomes.
+    fix: If the outcome is real and measured, give it a sentence and a number.
+    source: wikipedia-signs
+    ex_match:
+      - "We cache aggressively, ensuring a seamless experience."
+
+  - id: TL-03
+    name: stands-serves-as
+    category: tail
+    tier: BAN
+    regex: |-
+      \b(?:stands?|serves?|stood|served|functions?|operates?)\s+as\s+an?\s+(?:testament|reminder|symbol|beacon|cornerstone|hub|catalyst)\b
+    why: Copulative avoidance — "serves as a testament" instead of "is". Monument-speak.
+    fix: Use "is", or delete the sentence — it usually carries no information.
+    source: wikipedia-signs
+    ex_match:
+      - "The launch stands as a testament to the team's resolve."
+
+  - id: TL-04
+    name: testament-to
+    category: tail
+    tier: BAN
+    regex: |-
+      \b(?:a\s+)?testament\s+to\b
+    why: Empty significance-assertion; on Wikipedia's corroborated AI-vocab list.
+    fix: Show the evidence instead of declaring it a testament.
+    source: wikipedia-signs
+    ex_match:
+      - "Their uptime is a testament to good engineering."
+
+  - id: TL-05
+    name: plays-a-vital-role
+    category: tail
+    tier: BAN
+    regex: |-
+      \bplay(?:s|ed|ing)?\s+an?\s+(?:vital|crucial|pivotal|key|significant|central|critical|important|essential)\s+role\b
+    why: Stock significance formula.
+    fix: State what the thing actually does, concretely.
+    source: wikipedia-signs
+    ex_match:
+      - "Caching plays a crucial role in performance."
+
+  - id: TL-06
+    name: cemented-its-status
+    category: tail
+    tier: BAN
+    regex: |-
+      \b(?:solidified|cemented|cementing|solidifying)\s+(?:its|his|her|their)\s+(?:place|position|status|reputation|legacy|standing)\b
+    why: Legacy-speak significance formula.
+    fix: Report the event; let readers judge status.
+    source: wikipedia-signs
+    ex_match:
+      - "The album cemented its place in hip-hop history."
+
+  - id: TL-07
+    name: lasting-indelible-mark
+    category: tail
+    tier: BAN
+    regex: |-
+      \b(?:lasting|indelible)\s+(?:impact|impression|mark|legacy)\b|\bleft\s+an\s+indelible\b
+    why: Unfalsifiable legacy claim.
+    fix: Cite a specific, dated consequence or cut it.
+    source: wikipedia-signs
+    ex_match:
+      - "The paper left a lasting impact on the field."
+
+  - id: TL-08
+    name: continues-to-captivate
+    category: tail
+    tier: BAN
+    regex: |-
+      \bcontinues?\s+to\s+(?:captivate|inspire|shape|resonate|thrive|evolve)\b
+    why: '"Despite challenges, X continues to..." perseverance-narrative filler.'
+    fix: Give the current, checkable state instead.
+    source: wikipedia-signs
+    ex_match:
+      - "The franchise continues to captivate audiences worldwide."
+
+  - id: TL-09
+    name: marks-a-significant-shift
+    category: tail
+    tier: BAN
+    regex: |-
+      \b(?:marks?|marking|represents?)\s+a\s+(?:significant\s+)?(?:shift|milestone|turning\s+point)\b
+    why: Trend-inflation formula ("represents a shift toward...").
+    fix: Describe the change with before/after specifics.
+    source: wikipedia-signs
+    ex_match:
+      - "The acquisition marks a significant shift in strategy."
+
+  - id: TL-10
+    name: broader-trends-anchors
+    category: tail
+    tier: FLAG
+    regex: |-
+      \b(?:reflect(?:s|ing)?\s+(?:a\s+)?broader|(?:ever-)?evolving\s+landscape|deeply\s+rooted|focal\s+point\s+of|key\s+turning\s+point)\b
+    why: Undue-emphasis anchors tying mundane facts to Grand Trends.
+    fix: Keep the fact; drop the trend attachment unless sourced.
+    source: wikipedia-signs
+    ex_match:
+      - "The pop-up reflects a broader movement toward experiential retail."
+
+  # ── EDITORIALIZING / META-COMMENTARY ──────────────────────────
+
+  - id: ED-01
+    name: important-to-note
+    category: editorial
+    tier: BAN
+    regex: |-
+      \b(?:it\s+is|it['\u2019]s)\s+(?:important|critical|crucial|essential|vital|worth)\s+(?:to\s+)?(?:not(?:e|ing)|remember(?:ing)?|consider(?:ing)?|mention(?:ing)?|understand(?:ing)?|recogniz(?:e|ing))\b
+    why: The model inserting its opinion about what matters. Signature editorial tic.
+    fix: Delete the frame; state the content.
+    source: wikipedia-signs
+    ex_match:
+      - "It's important to note that results may differ."
+      - "It is worth noting the API is rate-limited."
+
+  - id: ED-02
+    name: no-discussion-complete
+    category: editorial
+    tier: BAN
+    regex: |-
+      \bno\s+(?:discussion|overview|article|list|analysis)\s+(?:of\s+[^.!?\n]{1,40}\s+)?(?:would|is|can)\s+be\s+complete\s+without\b
+    why: Completeness-performance filler.
+    fix: Just include the item.
+    source: wikipedia-signs
+    ex_match:
+      - "No discussion of caching would be complete without Redis."
+
+  - id: ED-03
+    name: sentence-initial-editorial-adverbs
+    category: editorial
+    tier: DENSITY
+    threshold_per_1000: 4
+    flags: [MULTILINE]
+    regex: |-
+      (?:^|[.!?]\s+)(?:Notably|Interestingly|Importantly|Crucially|Significantly|Remarkably|Additionally|Moreover|Furthermore),
+    why: >
+      Editorial/transition adverb stacking; sentence-initial "Additionally" is on
+      Wikipedia's corroborated list (Geng, Huang refs).
+    fix: Cut most; connect ideas with content, not connectors.
+    source: wikipedia-signs
+    ex_match:
+      - "Additionally, the system supports webhooks."
+
+  - id: ED-04
+    name: in-todays-world
+    category: editorial
+    tier: BAN
+    regex: |-
+      \bin\s+today['\u2019]s\s+(?:[\w-]+\s+){0,2}(?:world|landscape|environment|economy|market|age|era|society|climate)\b
+    why: Universal empty opener ("In today's fast-paced digital landscape...").
+    fix: Start with the actual subject.
+    source: community-lists
+    ex_match:
+      - "In today's fast-paced digital world, attention is scarce."
+      - "In today's market, margins are thin."
+
+  - id: ED-05
+    name: whether-youre-a-x-or-y
+    category: editorial
+    tier: BAN
+    regex: |-
+      \bwhether\s+you['\u2019]re\s+an?\b[^.!?\n]{2,60}\bor\s+(?:an?|just)\b
+    why: Audience-hedging opener addressed to everyone, hence no one.
+    fix: Pick the reader and write to them.
+    source: community-lists
+    ex_match:
+      - "Whether you're a beginner or a seasoned pro, this guide has you covered."
+
+  - id: ED-06
+    name: lets-dive-in
+    category: editorial
+    tier: BAN
+    regex: |-
+      \b(?:let['\u2019]s|we['\u2019]ll|we\s+will|time\s+to)\s+(?:dive|delve|dig|jump)\s+(?:in|into|deeper|right\s+in)\b
+    why: Section-transition filler; "delve" family is the most-cited AI marker.
+    fix: Delete; begin the section with content.
+    source: kobak-2024
+    ex_match:
+      - "Let's dive into the architecture."
+
+  - id: ED-07
+    name: conclusion-scaffolds
+    category: editorial
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      (?:^|[.!?]\s+)(?:In\s+conclusion|In\s+summary|To\s+sum\s+up|All\s+in\s+all|In\s+essence),
+    why: Restatement-closer scaffolding; the paragraph that follows usually repeats the piece.
+    fix: End on the last new idea. Cut summary paragraphs that add nothing.
+    source: wikipedia-signs
+    ex_match:
+      - "In conclusion, monitoring matters."
+
+  - id: ED-08
+    name: challenges-and-future-outlook
+    category: editorial
+    tier: BAN
+    regex: |-
+      \bdespite\s+(?:these|its|the)\s+challenges\b|\bfuture\s+outlook\b|\bchallenges\s+and\s+legacy\b
+    why: Outline-like "Despite these challenges... Future Outlook" essay scaffold.
+    fix: Report specific obstacles and specific plans, or cut the section.
+    source: wikipedia-signs
+    ex_match:
+      - "Despite these challenges, the company remains optimistic."
+
+  - id: ED-09
+    name: when-it-comes-to
+    category: editorial
+    tier: DENSITY
+    threshold_per_1000: 2
+    regex: |-
+      \bwhen\s+it\s+comes\s+to\b
+    why: Topic-shifter filler.
+    fix: Name the topic as the subject of the sentence.
+    source: community-lists
+    ex_match:
+      - "When it comes to security, defaults matter."
+
+  # ── HEDGING / VAGUE ATTRIBUTION ───────────────────────────────
+
+  - id: HG-01
+    name: vague-expert-attribution
+    category: hedge
+    tier: BAN
+    regex: |-
+      \b(?:(?:some|many|several|numerous)\s+)?(?:critics|experts|observers|analysts|scholars|commentators)\s+(?:have\s+)?(?:argue|argued|believe|say|note|noted|suggest|contend|cited?|point(?:ed)?\s+out)\b
+    why: Weasel attribution to unnamed authorities; also fabrication-adjacent.
+    fix: Name the source and cite it, or drop the claim.
+    source: wikipedia-signs
+    ex_match:
+      - "Experts argue the approach does not scale."
+      - "Some critics argue the benchmark is flawed."
+
+  - id: HG-02
+    name: widely-regarded-as
+    category: hedge
+    tier: BAN
+    regex: |-
+      \b(?:is|are|was|were)\s+(?:widely|often|generally|commonly)\s+(?:regarded|considered|seen|viewed|believed|recognized)\s+as\b
+    why: Opinion overgeneralization with no attributable holder.
+    fix: Attribute to a named source or state your own assessment as yours.
+    source: wikipedia-signs
+    ex_match:
+      - "Rust is widely regarded as the safer choice."
+
+  - id: HG-03
+    name: one-of-the-most
+    category: hedge
+    tier: DENSITY
+    threshold_per_1000: 2
+    regex: |-
+      \bone\s+of\s+the\s+most\s+\w+\b
+    why: Hedged superlative — praise without commitment or ranking.
+    fix: Either rank it with evidence or drop the superlative.
+    source: community-lists
+    ex_match:
+      - "It is one of the most popular frameworks."
+
+  - id: HG-04
+    name: myriad-plethora-of
+    category: hedge
+    tier: BAN
+    regex: |-
+      \ba\s+(?:myriad|plethora|wealth|treasure\s+trove|multitude|panoply|host)\s+of\b
+    why: Ornamental quantity words concealing an unknown count.
+    fix: Give the number, or say "many".
+    source: kobak-2024
+    ex_match:
+      - "A plethora of options exists."
+
+  - id: HG-05
+    name: range-variety-array-of
+    category: hedge
+    tier: DENSITY
+    threshold_per_1000: 3
+    regex: |-
+      \ba\s+(?:(?:wide|broad|diverse|vast)\s+)?(?:range|variety|array|spectrum)\s+of\b
+    why: '"Diverse array of" catalog filler (on Wikipedia''s promo-language list).'
+    fix: List the two or three items that matter.
+    source: wikipedia-signs
+    ex_match:
+      - "The library offers a wide range of integrations."
+
+  - id: HG-06
+    name: has-the-potential-to
+    category: hedge
+    tier: BAN
+    regex: |-
+      \b(?:has|have|holds?)\s+the\s+potential\s+to\b
+    why: Double-distance hedge; claims impact without claiming it.
+    fix: Say what it does now, or what specifically must happen for the future claim.
+    source: community-lists
+    ex_match:
+      - "The tool has the potential to transform onboarding."
+
+  - id: HG-07
+    name: double-modal-hedge
+    category: hedge
+    tier: FLAG
+    regex: |-
+      \b(?:can|may|could|might)\s+(?:potentially|possibly)\s+\w+
+    why: Stacked hedging ("may potentially") — one modal already does the job.
+    fix: Keep one hedge word maximum.
+    source: generated
+    ex_match:
+      - "This change may potentially reduce latency."
+
+  - id: HG-08
+    name: such-as-density
+    category: hedge
+    tier: DENSITY
+    threshold_per_1000: 4
+    regex: |-
+      \bsuch\s+as\b
+    why: '"Such as" before exhaustive example lists (Wikipedia vague-attribution box).'
+    fix: Trim example lists to the one or two that carry the point.
+    source: wikipedia-signs
+    ex_match:
+      - "Databases such as Postgres, MySQL, and SQLite are supported."
+
+  # ── PROMOTIONAL PUFFERY ───────────────────────────────────────
+
+  - id: PR-01
+    name: nestled-in-the-heart-of
+    category: promo
+    tier: BAN
+    regex: |-
+      \bnestled\s+(?:in|within|among|between|along|at)\b|\bin\s+the\s+heart\s+of\b
+    why: Travel-brochure geography voice.
+    fix: State the location plainly.
+    source: wikipedia-signs
+    ex_match:
+      - "Nestled in the heart of Lincolnshire, the office overlooks the lake."
+
+  - id: PR-02
+    name: boasts-a
+    category: promo
+    tier: FLAG
+    regex: |-
+      \bboast(?:s|ed|ing)?\s+(?:an?|over|more\s+than|its|the)\b
+    why: '"Boasts" meaning "has" — corroborated promo verb (Juzek & Ward).'
+    fix: Use "has" / "includes" with the concrete spec.
+    source: wikipedia-signs
+    ex_match:
+      - "The laptop boasts a 14-hour battery."
+
+  - id: PR-03
+    name: rich-cultural-tapestry
+    category: promo
+    tier: BAN
+    regex: |-
+      \b(?:rich|vibrant|cultural)\s+(?:tapestry|heritage|history)\b
+    why: Heritage-puffery formula; "tapestry" as abstract noun is a top-cited marker.
+    fix: Name one specific cultural fact instead.
+    source: wikipedia-signs
+    ex_match:
+      - "The city's rich cultural tapestry draws millions."
+
+  - id: PR-04
+    name: breathtaking-adjective-pack
+    category: promo
+    tier: DENSITY
+    threshold_per_1000: 2
+    regex: |-
+      \b(?:breathtaking|stunning|awe-inspiring|captivating|mesmerizing|enchanting|majestic)\b
+    why: Flattery-adjective saturation.
+    fix: One earned adjective per piece, backed by a detail.
+    source: wikipedia-signs
+    ex_match:
+      - "The views are breathtaking."
+
+  - id: PR-05
+    name: game-changer-revolutionize
+    category: promo
+    tier: BAN
+    regex: |-
+      \bgame[-\s]?chang(?:er|ing)\b|\brevolutioniz\w+\b|\bparadigm\s+shift\b|\btransform(?:s|ed|ing)?\s+the\s+way\b
+    why: Hype-claim verbs with no falsifiable content.
+    fix: State the measured delta.
+    source: community-lists
+    ex_match:
+      - "This feature is a game-changer for support teams."
+
+  - id: PR-06
+    name: unlock-unleash-verb-pack
+    category: promo
+    tier: FLAG
+    regex: |-
+      \b(?:unlock(?:s|ed|ing)?|unleash(?:es|ed|ing)?|harness(?:es|ed|ing)?|empower(?:s|ed|ing)?|elevat(?:e|es|ed|ing)|supercharg(?:e|es|ed|ing)|turbocharg(?:e|es|ed|ing))\b
+    why: Marketing power-verb family. FLAG not BAN — literal uses exist ("unlock the door").
+    fix: Replace figurative uses with the concrete verb of what actually happens.
+    source: community-lists
+    ex_match:
+      - "Unlock your team's full potential."
+    ex_context:
+      - "Use the badge to unlock the server room door."
+
+  - id: PR-07
+    name: cutting-edge-pack
+    category: promo
+    tier: FLAG
+    regex: |-
+      \b(?:cutting-edge|state-of-the-art|best-in-class|world-class|next-generation|bleeding-edge|top-notch|first-class)\b
+    why: Superlative-tech puffery. FLAG — "state-of-the-art" is legitimate in ML papers.
+    fix: Name the capability or benchmark instead of the tier-word.
+    source: community-lists
+    ex_match:
+      - "Our cutting-edge platform scales infinitely."
+    ex_context:
+      - "The model achieves state-of-the-art results on GSM8K."
+
+  - id: PR-08
+    name: evolving-landscape
+    category: promo
+    tier: BAN
+    regex: |-
+      \b(?:ever-|rapidly\s+|constantly\s+)?evolving\s+(?:landscape|world|field|industry|space|environment)\b|\bever-(?:changing|evolving|growing)\b
+    why: '"Landscape" as abstract noun + evolution framing — twin corroborated markers.'
+    fix: Name the specific change and its date.
+    source: wikipedia-signs
+    ex_match:
+      - "In the ever-evolving landscape of AI, agility wins."
+
+  - id: PR-09
+    name: navigate-the-complexities
+    category: promo
+    tier: BAN
+    regex: |-
+      \bnavigat\w+\s+the\s+(?:complexit(?:y|ies)|landscape|challenges|world|waters|maze)\s+of\b
+    why: Metaphorical navigation cliché.
+    fix: Say what decision or task is actually involved.
+    source: community-lists
+    ex_match:
+      - "We help you navigate the complexities of compliance."
+
+  - id: PR-10
+    name: foster-a-culture-of
+    category: promo
+    tier: BAN
+    regex: |-
+      \bfoster(?:s|ed|ing)?\s+a\s+(?:culture|sense|spirit|environment|climate)\s+of\b|\bcultivat\w+\s+a\s+(?:culture|sense)\s+of\b
+    why: '"Fostering/cultivating" — corroborated markers in canned-culture framing.'
+    fix: Describe the concrete practice, not the culture-claim.
+    source: kobak-2024
+    ex_match:
+      - "We foster a culture of innovation."
+
+  - id: PR-11
+    name: harness-the-power-of
+    category: promo
+    tier: BAN
+    regex: |-
+      \b(?:harness|unlock|unleash|tap\s+into)\s+the\s+(?:power|potential|full\s+potential|secrets?)\s+of\b
+    why: Power-of-X incantation.
+    fix: State the mechanism and the outcome.
+    source: community-lists
+    ex_match:
+      - "Harness the power of automation."
+
+  - id: PR-12
+    name: embark-on-a-journey
+    category: promo
+    tier: BAN
+    regex: |-
+      \bembark(?:s|ed|ing)?\s+(?:up)?on\s+a\b|\bjourney\s+of\s+(?:discovery|self-discovery|transformation)\b
+    why: Journey-metaphor onboarding voice.
+    fix: '"Start." Then say what starts.'
+    source: kobak-2024
+    ex_match:
+      - "Embark on a journey toward better sleep."
+
+  # ── STRUCTURE / FORMATTING TICS ───────────────────────────────
+
+  - id: ST-01
+    name: bold-leadin-bullets
+    category: structure
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      ^\s*[-*\u2022]\s*\*\*[^*\n]{2,60}?(?::\*\*|\*\*\s*[:\u2014\u2013-])
+    why: '"**Speed:** ..." bulleted-bold scaffolding — listicle-ification of prose.'
+    fix: Convert to prose unless the content is genuinely enumerable.
+    source: wikipedia-signs
+    ex_match:
+      - "- **Scalability:** handles millions of rows"
+
+  - id: ST-02
+    name: bold-density
+    category: structure
+    tier: DENSITY
+    threshold_per_1000: 8
+    regex: |-
+      \*\*[^*\n]{2,60}\*\*
+    why: Boldface overuse mid-prose (emphasis inflation).
+    fix: Bold nothing, or one thing.
+    source: wikipedia-signs
+    ex_match:
+      - "This is **really** important and **must** ship **today**."
+
+  - id: ST-03
+    name: emoji-as-formatting
+    category: structure
+    tier: BAN
+    flags: [MULTILINE]
+    regex: |-
+      (?:^|\n)\s*(?:#{1,6}\s*)?[\U0001F300-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF]
+    why: Emoji as bullets/section markers (🚀 ✅ 💡) — decorative signal, zero content.
+    fix: Remove; use words.
+    source: wikipedia-signs
+    ex_match:
+      - "🚀 Launch checklist"
+
+  - id: ST-04
+    name: colon-headline
+    category: structure
+    tier: FLAG
+    case_sensitive: true
+    flags: [MULTILINE]
+    regex: |-
+      ^[A-Z][^:\n]{8,60}:\s+(?:How|Why|What|A|An|The|\d+|Your)\b[^\n]{4,80}$
+    why: '"Unlocking Growth: How X Does Y" two-part SEO title template.'
+    fix: One clause. Say the thing.
+    source: generated
+    ex_match:
+      - "Unlocking Growth: How Automation Reshapes Retail"
+
+  - id: ST-05
+    name: listicle-title
+    category: structure
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      ^\s*(?:Top\s+)?\d+\s+(?:ways|tips|reasons|strategies|secrets|things|steps|hacks|mistakes)\b
+    why: Numbered-listicle title template.
+    fix: Title the actual claim of the piece.
+    source: community-lists
+    ex_match:
+      - "7 ways to speed up your CI pipeline"
+
+  - id: ST-06
+    name: title-case-headings
+    category: structure
+    tier: FLAG
+    case_sensitive: true
+    flags: [MULTILINE]
+    regex: |-
+      ^#{1,6}\s+(?:[A-Z][a-z'\u2019]+\s+){2,}[A-Z][a-z'\u2019]+\s*$
+    why: Title Case headings where sentence case is the house style.
+    fix: Sentence-case the heading.
+    source: wikipedia-signs
+    ex_match:
+      - "## The Future Of Digital Marketing"
+    ex_clean:
+      - "## Getting started"
+
+  - id: ST-07
+    name: faq-autoappend
+    category: structure
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      ^#{1,6}\s*(?:Frequently\s+Asked\s+Questions|FAQs?)\s*$
+    why: Auto-appended FAQ section — SEO scaffold, usually restates the article.
+    fix: Delete unless real users asked real questions.
+    source: generated
+    ex_match:
+      - "## Frequently Asked Questions"
+
+  - id: ST-08
+    name: intro-conclusion-headers
+    category: structure
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      ^#{1,6}\s*(?:Introduction|Conclusion|Final\s+Thoughts|Key\s+Takeaways|Wrapping\s+Up)\s*$
+    why: Essay-scaffold headers on short-form content.
+    fix: Cut the header; if the section only restates, cut the section.
+    source: wikipedia-signs
+    ex_match:
+      - "## Final Thoughts"
+
+  - id: ST-09
+    name: hr-before-heading
+    category: structure
+    tier: FLAG
+    flags: [MULTILINE]
+    regex: |-
+      ^---+\s*\n+#{1,6}\s
+    why: Thematic break immediately before a heading — double separator tic.
+    fix: Keep the heading, drop the rule line.
+    source: wikipedia-signs
+    ex_match:
+      - "---\n## Next steps"
+
+  - id: ST-10
+    name: uniform-paragraph-rhythm
+    category: structure
+    tier: FLAG
+    manual: true
+    why: >
+      Every paragraph 2–3 sentences of near-identical length; metronome cadence.
+      Not regexable — human/eval check.
+    fix: Vary paragraph and sentence length; let one idea run long and one land short.
+    source: community-lists
+
+  # ── CHAT / MODEL ARTIFACTS ────────────────────────────────────
+
+  - id: AR-01
+    name: as-an-ai-model
+    category: artifact
+    tier: BAN
+    regex: |-
+      \bas\s+an?\s+(?:AI|artificial\s+intelligence|large\s+language)\s+(?:language\s+)?model\b
+    why: Direct chatbot self-reference leaked into a deliverable.
+    fix: Delete the disclaimer; rewrite the sentence.
+    source: wikipedia-signs
+    ex_match:
+      - "As an AI language model, I cannot browse the internet."
+
+  - id: AR-02
+    name: knowledge-cutoff-disclaimer
+    category: artifact
+    tier: BAN
+    regex: |-
+      \b(?:as\s+of\s+my\s+last\s+(?:knowledge\s+)?(?:update|training)|knowledge\s+cutoff|up\s+to\s+my\s+last\s+training)\b
+    why: Training-window disclaimer leaked into content.
+    fix: Verify the fact against a current source and state it plainly.
+    source: wikipedia-signs
+    ex_match:
+      - "As of my last knowledge update, the CEO is unchanged."
+
+  - id: AR-03
+    name: chat-opener-leakage
+    category: artifact
+    tier: BAN
+    case_sensitive: true
+    flags: [MULTILINE]
+    regex: |-
+      (?:^|\n)(?:Certainly|Sure|Absolutely|Of\s+course|Great\s+question|You['\u2019]re\s+absolutely\s+right)[,!.]
+    why: Assistant-turn openers pasted into a document.
+    fix: Delete the opener line.
+    source: wikipedia-signs
+    ex_match:
+      - "Certainly! Here is the revised draft."
+
+  - id: AR-04
+    name: chat-closer-leakage
+    category: artifact
+    tier: BAN
+    regex: |-
+      \bI\s+hope\s+this\s+helps\b|\blet\s+me\s+know\s+if\b|\bis\s+there\s+anything\s+else\b|\bwould\s+you\s+like\s+(?:me\s+to|a)\b|\bhere\s+is\s+a\s+(?:more\s+)?detailed\s+breakdown\b
+    why: Assistant sign-off and offer-of-more leaked into content.
+    fix: Delete.
+    source: wikipedia-signs
+    ex_match:
+      - "I hope this helps! Let me know if you need anything else."
+
+  - id: AR-05
+    name: placeholder-brackets
+    category: artifact
+    tier: BAN
+    regex: |-
+      \[(?:insert|your|company|product|name|date|link|city)\b[^\]]{0,40}\]
+    why: Unfilled template slots shipped in "finished" output.
+    fix: Fill or delete every slot before shipping.
+    source: wikipedia-signs
+    ex_match:
+      - "Contact [insert name] to schedule a demo."
+
+  - id: AR-06
+    name: sources-limited-hedge
+    category: artifact
+    tier: BAN
+    regex: |-
+      \b(?:while\s+specific\s+details\s+are\s+(?:limited|scarce)|not\s+widely\s+(?:available|documented|disclosed)|based\s+on\s+(?:the\s+)?available\s+(?:information|sources)|in\s+the\s+provided\s+(?:sources|search\s+results))\b
+    why: RAG-hedge phrasing that narrates retrieval instead of reporting facts.
+    fix: Find the source or cut the claim.
+    source: wikipedia-signs
+    ex_match:
+      - "While specific details are limited, the deal closed in May."
+
+  - id: AR-07
+    name: model-citation-debris
+    category: artifact
+    tier: BAN
+    regex: |-
+      \b(?:contentReference|oaicite|oai_citation|turn0search\d+|attributableIndex|grok_render_citation|start_span|ppl-ai-file-upload|attached_file)\b|\[cite:\s*\d+\]
+    why: >
+      Raw citation tokens from ChatGPT/Gemini/Grok/Perplexity pipelines
+      (oaicite, [cite: 1], turn0search0...) — mechanical proof of paste.
+    fix: Strip debris; replace with real citations.
+    source: wikipedia-signs
+    ex_match:
+      - "The study found a 12% gain [cite: 3]."
+      - "oaicite reference left in text"
+
+  # ── FICTION / NARRATIVE CLICHES ───────────────────────────────
+
+  - id: FX-01
+    name: chill-down-spine
+    category: fiction
+    tier: BAN
+    regex: |-
+      \b(?:a\s+)?(?:chill|shiver)\s+(?:ran|running|went)\s+(?:down|up)\s+(?:his|her|their|my|your)\s+spine\b
+    why: Top-frequency AI fiction n-gram.
+    fix: Show the character's specific physical reaction, once, differently.
+    source: community-lists
+    ex_match:
+      - "A chill ran down her spine."
+
+  - id: FX-02
+    name: breath-didnt-know-holding
+    category: fiction
+    tier: BAN
+    regex: |-
+      \blet\s+out\s+a\s+breath\s+(?:he|she|they|I|you)\s+(?:didn['\u2019]t|did\s+not)\s+(?:know|realize)\b
+    why: The most-mocked AI fiction beat.
+    fix: Cut; find a reaction unique to this character.
+    source: community-lists
+    ex_match:
+      - "She let out a breath she didn't know she was holding."
+
+  - id: FX-03
+    name: breath-caught-throat
+    category: fiction
+    tier: BAN
+    regex: |-
+      \bbreath\s+(?:caught|catching|hitch(?:ed|ing))\s+in\s+(?:his|her|their|my|your)\s+throat\b
+    why: Stock somatic beat.
+    fix: Replace with a concrete, scene-specific detail.
+    source: community-lists
+    ex_match:
+      - "Her breath caught in her throat."
+
+  - id: FX-04
+    name: eyes-widened
+    category: fiction
+    tier: BAN
+    regex: |-
+      \beyes\s+widen(?:ed|ing)?\s+(?:in|with)\s+(?:surprise|shock|horror|disbelief)\b
+    why: Stock face-reaction n-gram.
+    fix: Convey surprise through action or dialogue.
+    source: community-lists
+    ex_match:
+      - "His eyes widened in surprise."
+
+  - id: FX-05
+    name: voice-barely-whisper
+    category: fiction
+    tier: BAN
+    regex: |-
+      \bvoice\s+(?:was\s+|dropped\s+to\s+)?(?:barely\s+above|no\s+more\s+than)\s+a\s+whisper\b
+    why: Stock dialogue tag.
+    fix: '"she whispered", or cut the tag.'
+    source: community-lists
+    ex_match:
+      - "Her voice was barely above a whisper."
+
+  - id: FX-06
+    name: air-thick-with
+    category: fiction
+    tier: BAN
+    regex: |-
+      \b(?:the\s+)?air\s+(?:was|grew|hung)\s+thick\s+with\b
+    why: Stock atmosphere line.
+    fix: Name one sensory detail doing the work.
+    source: community-lists
+    ex_match:
+      - "The air was thick with anticipation."
+
+  - id: FX-07
+    name: couldnt-help-but
+    category: fiction
+    tier: BAN
+    regex: |-
+      \bcouldn['\u2019]t\s+help\s+but\b
+    why: Involuntary-reaction filler verb phrase.
+    fix: State the action directly ("she smiled").
+    source: community-lists
+    ex_match:
+      - "He couldn't help but smile."
+
+  - id: FX-08
+    name: little-did-they-know
+    category: fiction
+    tier: BAN
+    regex: |-
+      \blittle\s+did\s+(?:he|she|they|I|we|you)\s+know\b
+    why: Foreshadowing crutch.
+    fix: Let the reveal land without the wink.
+    source: community-lists
+    ex_match:
+      - "Little did they know, the door was already open."
+
+  - id: FX-09
+    name: felt-like-eternity
+    category: fiction
+    tier: BAN
+    regex: |-
+      \bfor\s+what\s+(?:felt|seemed)\s+like\s+(?:an\s+eternity|hours|forever)\b
+    why: Stock time-dilation phrase.
+    fix: Anchor duration in a concrete beat.
+    source: community-lists
+    ex_match:
+      - "They waited for what felt like an eternity."
+
+  - id: FX-10
+    name: mixture-of-x-and-y
+    category: fiction
+    tier: FLAG
+    regex: |-
+      \b(?:a\s+)?mix(?:ture)?\s+of\s+\w+\s+and\s+\w+\b
+    why: '"a mixture of fear and excitement" emotion-pairing template. FLAG — literal mixtures are legit.'
+    fix: Pick the dominant emotion; show it.
+    source: community-lists
+    ex_match:
+      - "She felt a mixture of fear and excitement."
+    ex_context:
+      - "Combine a mixture of flour and water."
+
+  - id: FX-11
+    name: growing-sense-of-dread
+    category: fiction
+    tier: BAN
+    regex: |-
+      \b(?:a\s+)?(?:growing|creeping)\s+sense\s+of\s+(?:dread|unease|foreboding)\b
+    why: Stock dread escalation.
+    fix: Show the trigger; let dread be inferred.
+    source: community-lists
+    ex_match:
+      - "A growing sense of dread settled over the camp."
+
+  - id: FX-12
+    name: smile-spread-across
+    category: fiction
+    tier: BAN
+    regex: |-
+      \b(?:a\s+)?smile\s+(?:spread|spreading|tugged|playing)\s+(?:across|at)\b
+    why: Stock smile choreography.
+    fix: '"He smiled." Or show what the smile costs him.'
+    source: community-lists
+    ex_match:
+      - "A smile spread across his face."

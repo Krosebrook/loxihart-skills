@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Dark Mode Flashbang Toggle</title>
+<!--
+  PATTERN: Dark Mode Flashbang Toggle
+  CATEGORY: Theming & Display-Mode Transitions
+  PRIORITY: High  |  RISK: HIGH — ELEVATED RISK, MITIGATED BELOW
+
+  NAME VS. IMPLEMENTATION — READ THIS FIRST:
+  The colloquial name implies an instantaneous full-viewport brightness
+  flash on toggle. That is a direct WCAG SC 2.3.1 (Three Flashes or Below
+  Threshold) risk and is unpleasant for every user, photosensitive or not.
+  "Flashbang" is treated here as an informal label for "instant switch,"
+  NOT an instruction to flash the screen — that naming decision is made
+  explicitly here, not silently.
+
+  WHAT THIS ACTUALLY IS: a smooth theme cross-fade using the View
+  Transitions API for a circular reveal expanding from the toggle button
+  (a genuinely delightful, SAFE way to make a theme switch feel dramatic
+  without any flash), with a plain instant-swap fallback where View
+  Transitions isn't supported, and a fully motion-free instant swap under
+  reduced motion.
+
+  ADAPT THIS BY:
+    - Swapping the CSS custom properties in [data-theme] for your real
+      palette.
+
+  DO NOT STRIP WHEN ADAPTING (non-negotiable):
+    - There is no code path in this file that produces a literal flash.
+      If you're tempted to "make it punchier," do not remove the
+      cross-fade/reveal in favor of an instant full-viewport brightness
+      jump — that is exactly the outcome this file exists to prevent.
+-->
+<style>
+  :root, [data-theme="light"] {
+    --bg: #f8fafc; --fg: #0f172a; --card: #ffffff;
+  }
+  [data-theme="dark"] {
+    --bg: #0f172a; --fg: #e2e8f0; --card: #1e293b;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--fg);
+    display: grid; place-items: center; min-height: 100vh; margin: 0;
+    transition: background 200ms ease, color 200ms ease; /* fallback path only */
+  }
+  .card { background: var(--card); padding: 2rem; border-radius: 14px; text-align: center; }
+  button.theme-toggle {
+    margin-top: 1rem; padding: 0.5rem 1.25rem; border-radius: 999px;
+    border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer;
+  }
+  button.theme-toggle:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+
+  ::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body { transition: none; }
+    ::view-transition-group(root) { animation: none !important; }
+  }
+</style>
+</head>
+<body data-theme="light">
+  <div class="card">
+    <p>Toggle the theme — no flash, ever.</p>
+    <button class="theme-toggle" id="themeToggle" aria-pressed="false">Switch to dark mode</button>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const toggle = document.getElementById('themeToggle');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const supportsViewTransitions = typeof document.startViewTransition === 'function';
+
+      function applyTheme(next) {
+        document.body.dataset.theme = next;
+        toggle.setAttribute('aria-pressed', String(next === 'dark'));
+        toggle.textContent = next === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      }
+
+      function switchTheme(e) {
+        const current = document.body.dataset.theme;
+        const next = current === 'dark' ? 'light' : 'dark';
+
+        if (reduceMotion || !supportsViewTransitions) {
+          // No flash on either path: reduced-motion gets an instant swap
+          // (correct — no motion, not a flash); no-VT-support gets the
+          // CSS `transition` cross-fade defined on body above.
+          applyTheme(next);
+          return;
+        }
+
+        const x = e.clientX, y = e.clientY;
+        const endRadius = Math.hypot(
+          Math.max(x, innerWidth - x),
+          Math.max(y, innerHeight - y)
+        );
+
+        const transition = document.startViewTransition(() => applyTheme(next));
+        transition.ready.then(() => {
+          document.documentElement.animate(
+            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`] },
+            { duration: 500, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+          );
+        });
+      }
+
+      toggle.addEventListener('click', switchTheme);
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(!document.body.style.animation || document.body.style.animation === '',
+        '[smoke] no keyframe-driven full-viewport brightness flash exists on the body element');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ridgeline Supply — Built for the Miles Between Trailheads</title>
+<!--
+  SMOKE TEST: on load, sky/ridge/treeline layers are visible and static.
+  Scroll through the hero — the three silhouette layers should drift at
+  visibly different rates (far ridge slowest, treeline fastest). Check
+  Chrome/Edge/Safari DevTools "Emulate CSS prefers-reduced-motion" AND, if
+  available, force-disable the `animation-timeline` feature flag to confirm
+  the JS rAF fallback path (open the console and check `usingFallback` is
+  logged true) — the drift should still work, just via a different
+  mechanism. A thin progress rail on the right edge should track scroll
+  position down the whole page. Toggle OS "reduce motion" — all three ridge
+  layers stop moving and the rail hides entirely.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #2B3A4A;
+    --sky-bottom: #C97B4A;
+    --ridge-far: #4B5A52;
+    --ridge-near: #2E3B33;
+    --treeline: #1B241E;
+    --cream: #F6EFE3;
+    --ink: #23241F;
+    --ink-soft: #5B5A4E;
+    --rule: rgba(35, 36, 31, 0.14);
+    --space-2: 16px; --space-3: 24px; --space-4: 32px;
+    --space-5: 48px; --space-6: 64px; --space-7: 96px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: "Karla", -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2 { font-family: "Fjalla One", "Arial Narrow", sans-serif; letter-spacing: 0.01em; margin: 0; text-transform: uppercase; }
+  .kicker { font-family: "Fjalla One", sans-serif; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--treeline); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-3) var(--space-5);
+    position: absolute; top: 0; left: 0; right: 0; z-index: 5;
+    color: var(--cream);
+  }
+  header .wordmark { font-family: "Fjalla One", sans-serif; letter-spacing: 0.05em; }
+  nav { display: flex; gap: var(--space-4); }
+  nav a { color: var(--cream); text-decoration: none; font-size: 0.85rem; opacity: 0.9; }
+  nav a:hover, nav a:focus-visible { opacity: 1; }
+  nav a:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+
+  /* ---------- depth-layer scene (sky + ridges + treeline) ---------- */
+  .scene { position: relative; height: 100vh; overflow: hidden; }
+  .scene .layer { position: absolute; inset: 0; will-change: transform; }
+  .sky { background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom) 85%); }
+  .ridge-far {
+    background: var(--ridge-far);
+    top: 38%;
+    clip-path: polygon(0% 100%,0% 60%,8% 45%,18% 58%,28% 30%,38% 50%,50% 20%,62% 48%,74% 35%,86% 55%,100% 40%,100% 100%);
+  }
+  .ridge-near {
+    background: var(--ridge-near);
+    top: 52%;
+    clip-path: polygon(0% 100%,0% 75%,10% 55%,20% 70%,32% 40%,44% 65%,56% 35%,68% 60%,80% 45%,92% 68%,100% 50%,100% 100%);
+  }
+  .treeline {
+    background: var(--treeline);
+    top: 78%;
+    clip-path: polygon(0% 100%,0% 85%,4% 70%,8% 85%,12% 68%,16% 85%,20% 72%,24% 85%,28% 65%,32% 85%,36% 74%,40% 85%,44% 66%,48% 85%,52% 73%,56% 85%,60% 67%,64% 85%,68% 76%,72% 85%,76% 69%,80% 85%,84% 72%,88% 85%,92% 66%,96% 85%,100% 78%,100% 100%);
+  }
+  .scene-scrim {
+    position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(to top, rgba(10, 8, 6, 0.5) 0%, rgba(10, 8, 6, 0.42) 30%, transparent 62%);
+    pointer-events: none;
+  }
+  .scene-copy {
+    position: relative; z-index: 3;
+    height: 100%;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 var(--space-5) 18vh;
+    color: var(--cream);
+  }
+  .scene-copy .kicker { color: var(--cream); opacity: 0.85; }
+  .scene-copy h1 { font-size: clamp(2rem, 6vw, 4rem); margin-top: var(--space-2); line-height: 1.1; text-shadow: 0 2px 18px rgba(0,0,0,0.25); }
+
+  @supports (animation-timeline: view()) {
+    .ridge-far  { animation: drift-slow linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+    .ridge-near { animation: drift-med  linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+    .treeline   { animation: drift-fast linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+  }
+  @keyframes drift-slow { from { transform: translateY(0); } to { transform: translateY(-4%); } }
+  @keyframes drift-med  { from { transform: translateY(0); } to { transform: translateY(-9%); } }
+  @keyframes drift-fast { from { transform: translateY(0); } to { transform: translateY(-16%); } }
+
+  /* ---------- scroll progress rail ---------- */
+  .progress-rail {
+    position: fixed;
+    right: var(--space-3);
+    top: 14vh;
+    bottom: 14vh;
+    width: 2px;
+    background: rgba(35, 36, 31, 0.18);
+    z-index: 20;
+  }
+  .progress-rail .marker {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 9px; height: 9px;
+    margin-left: -4.5px;
+    border-radius: 50%;
+    background: var(--sky-bottom);
+    will-change: transform;
+  }
+
+  /* ---------- gear notes ---------- */
+  .gear-notes {
+    padding: var(--space-7) var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .gear-notes .note { border-top: 3px solid var(--treeline); padding-top: var(--space-3); }
+  .gear-notes .note h3 { font-family: "Fjalla One"; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2); }
+  .gear-notes .note p { color: var(--ink-soft); margin: 0; font-size: 0.95rem; }
+  @media (max-width: 760px) { .gear-notes { grid-template-columns: 1fr; } }
+
+  footer { padding: var(--space-5); border-top: 1px solid var(--rule); text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
+
+  /* ---------- reduced motion: off, not smaller ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .scene .layer { animation: none !important; transform: none !important; }
+    .progress-rail { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="wordmark">Ridgeline Supply</span>
+  <nav>
+    <a href="#trail">Trail Gear</a>
+    <a href="#notes">Field Notes</a>
+    <a href="#repair">Repair</a>
+  </nav>
+</header>
+
+<div class="progress-rail" aria-hidden="true"><div class="marker" id="rail-marker"></div></div>
+
+<main>
+  <section class="scene" data-parallax-scene id="trail">
+    <div class="layer sky"></div>
+    <div class="layer ridge-far" data-depth="0.18"></div>
+    <div class="layer ridge-near" data-depth="0.32"></div>
+    <div class="layer treeline" data-depth="0.5"></div>
+    <div class="scene-scrim" aria-hidden="true"></div>
+    <div class="scene-copy">
+      <span class="kicker">Since the First Bad Weekend Out</span>
+      <h1>Built for the miles between trailheads.</h1>
+    </div>
+  </section>
+
+  <section class="gear-notes" id="notes">
+    <div class="note">
+      <h3>Materials</h3>
+      <p>Ripstop and webbing rated past what the label requires, because "past the spec sheet" is where a bad week on trail actually happens.</p>
+    </div>
+    <div class="note">
+      <h3>Field-Tested</h3>
+      <p>Every pack spends a season with someone who didn't ask for one and doesn't know we made it — their complaints go straight into the next revision.</p>
+    </div>
+    <div class="note" id="repair">
+      <h3>Repair Program</h3>
+      <p>Send it back with a torn strap or a blown zipper. We fix it, ship it back, and tell you exactly what broke so it doesn't happen twice.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Ridgeline Supply — gear that comes back from the trip in better shape to tell you what worked.
+</footer>
+
+<script>
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const supportsScrollTimeline = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline', 'view()');
+
+  // Only attach the JS depth-layer loop when the browser lacks native
+  // animation-timeline support — otherwise the two mechanisms would fight
+  // over the same transform property on every frame.
+  window.usingFallback = !supportsScrollTimeline;
+  if (!supportsScrollTimeline && !prefersReduced) {
+    const layers = document.querySelectorAll('[data-parallax-scene] .layer[data-depth]');
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      layers.forEach((el) => {
+        const depth = parseFloat(el.dataset.depth);
+        el.style.transform = `translate3d(0, ${(y * depth).toFixed(1)}px, 0)`;
+      });
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+  }
+
+  // Scroll progress rail — plain rAF, independent of the depth-layer mechanism.
+  const marker = document.getElementById('rail-marker');
+  const rail = document.querySelector('.progress-rail');
+  if (marker && rail && !prefersReduced) {
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      const travel = rail.clientHeight - marker.clientHeight;
+      marker.style.transform = `translateY(${(progress * travel).toFixed(1)}px)`;
+      ticking = false;
+    };
+    update();
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>
+
+</body>
+</html>

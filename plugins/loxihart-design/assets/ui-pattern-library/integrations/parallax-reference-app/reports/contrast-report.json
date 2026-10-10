@@ -1,0 +1,96 @@
+{
+  "results": [
+    {
+      "id": "dark-primary-text",
+      "foreground": "#f8fafc",
+      "background": "#0b1020",
+      "ratio": 18.095,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "dark-secondary-text",
+      "foreground": "#cbd5e1",
+      "background": "#111827",
+      "ratio": 11.948,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "dark-action-label",
+      "foreground": "#082f49",
+      "background": "#7dd3fc",
+      "ratio": 8.324,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "dark-focus-indicator",
+      "foreground": "#fcd34d",
+      "background": "#0b1020",
+      "ratio": 13.13,
+      "threshold": 3.0,
+      "usage": "UI component",
+      "passed": true
+    },
+    {
+      "id": "dark-boundary",
+      "foreground": "#64748b",
+      "background": "#111827",
+      "ratio": 3.728,
+      "threshold": 3.0,
+      "usage": "UI component",
+      "passed": true
+    },
+    {
+      "id": "light-primary-text",
+      "foreground": "#0f172a",
+      "background": "#f8fafc",
+      "ratio": 17.063,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "light-secondary-text",
+      "foreground": "#334155",
+      "background": "#ffffff",
+      "ratio": 10.355,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "light-action-label",
+      "foreground": "#ffffff",
+      "background": "#0369a1",
+      "ratio": 5.934,
+      "threshold": 4.5,
+      "usage": "normal text",
+      "passed": true
+    },
+    {
+      "id": "light-focus-indicator",
+      "foreground": "#92400e",
+      "background": "#f8fafc",
+      "ratio": 6.776,
+      "threshold": 3.0,
+      "usage": "UI component",
+      "passed": true
+    },
+    {
+      "id": "light-boundary",
+      "foreground": "#64748b",
+      "background": "#ffffff",
+      "ratio": 4.759,
+      "threshold": 3.0,
+      "usage": "UI component",
+      "passed": true
+    }
+  ],
+  "normalTextCriterion": "[SOURCED: WCAG 2.2 SC 1.4.3, Level AA \u2014 four-and-one-half to one]",
+  "uiCriterion": "[SOURCED: WCAG 2.2 SC 1.4.11, Level AA \u2014 three to one]"
+}

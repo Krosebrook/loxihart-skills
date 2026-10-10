@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Shimmer Sheen Highlight</title>
+<!--
+  PATTERN: Shimmer Sheen Highlight
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Low
+
+  WHAT THIS IS: a diagonal light-sweep gloss for emphasis (e.g. a premium
+  badge or CTA) — distinct from Skeleton Screen Shimmer's loading-state
+  sweep; this one runs on a hover/periodic trigger over REAL content, not
+  a placeholder.
+
+  ADAPT THIS BY:
+    - Wrapping any element in .sheen-wrap; the sweep runs on hover here,
+      swap the trigger for a periodic timer if you want it ambient.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Fully decorative, aria-hidden, fully removable under reduced motion
+      with zero functional loss.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .sheen-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  .sheen-wrap::after {
+    content: "";
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 40%; height: 200%;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(255,255,255,0.35) 45%,
+      rgba(255,255,255,0.35) 55%,
+      transparent 100%
+    );
+    transform: translateX(-40%) skewX(-15deg);
+    pointer-events: none;
+    transition: none;
+  }
+  .sheen-wrap:hover::after {
+    animation: sheen-sweep 900ms ease-in-out;
+  }
+  @keyframes sheen-sweep { to { transform: translateX(340%) skewX(-15deg); } }
+
+  .badge {
+    padding: 1rem 2rem; border-radius: 12px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white; font-weight: 700; font-size: 1rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sheen-wrap::after { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="sheen-wrap" aria-hidden="false">
+    <div class="badge">Premium</div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const wrap = document.querySelector('.sheen-wrap');
+      console.assert(wrap && wrap.children.length === 1,
+        '[smoke] sheen effect is a CSS pseudo-element — no extra DOM node created for a purely decorative sweep');
+    })();
+  </script>
+</body>
+</html>

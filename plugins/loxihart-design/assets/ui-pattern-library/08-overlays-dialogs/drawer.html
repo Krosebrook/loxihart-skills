@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Drawer</title>
+<!--
+  PATTERN: Drawer (slide-over panel)
+  CATEGORY: Overlays & Dialogs
+  PRIORITY: High  |  RISK: Medium
+
+  WHAT THIS IS: an edge-anchored panel that slides in over the page. Built
+  on <dialog> + showModal() for the same reasons as Modal Dialog — the
+  focus trap and inert backdrop are the platform's job.
+
+  ADAPT THIS BY:
+    - data-side="left|right" on the dialog controls the anchor edge.
+    - Swap the panel contents; open/close/focus wiring is generic.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - A drawer is a modal. It looks like page furniture, which tempts people
+      to build it as a plain div — and then content behind it stays
+      focusable, so Tab walks invisibly out of the drawer and into the page
+      underneath. If the backdrop blocks interaction visually it must block
+      it programmatically too.
+    - The slide translation is the ONLY thing removed under reduced motion.
+      The drawer still appears; it just appears instead of sliding. Removing
+      the appearance would remove the function.
+    - Escape closes and focus returns to the invoker — same contract as any
+      modal.
+-->
+<style>
+  :root { --accent: #2563eb; --border: #cbd5e1; --dur: 260ms; --ease: cubic-bezier(0.32,0.72,0,1); }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0;
+  }
+  button {
+    font: inherit; cursor: pointer; border-radius: 8px; min-height: 44px;
+    padding: 0.6rem 1.1rem; border: 1px solid var(--border); background: #fff;
+  }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+  dialog.drawer {
+    border: none; padding: 0; margin: 0;
+    height: 100dvh; max-height: 100dvh;
+    width: min(360px, 88vw); max-width: 88vw;
+    box-shadow: 0 0 48px -8px rgba(15,23,42,0.4);
+  }
+  dialog.drawer[data-side="right"] { margin-left: auto; margin-right: 0; }
+  dialog.drawer[data-side="left"]  { margin-right: auto; margin-left: 0; }
+  dialog.drawer::backdrop { background: rgba(15,23,42,0.5); }
+
+  dialog.drawer[open] { animation: slide-in var(--dur) var(--ease); }
+  dialog.drawer[data-side="left"][open] { animation-name: slide-in-left; }
+  dialog.drawer[open]::backdrop { animation: fade-in var(--dur) ease; }
+  @keyframes slide-in      { from { transform: translateX(100%); } }
+  @keyframes slide-in-left { from { transform: translateX(-100%); } }
+  @keyframes fade-in { from { opacity: 0; } }
+
+  .drawer-inner { display: flex; flex-direction: column; height: 100%; }
+  .drawer-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 1rem 1.1rem; border-bottom: 1px solid var(--border);
+  }
+  .drawer-head h2 { margin: 0; font-size: 1.05rem; }
+  .drawer-head h2:focus { outline: none; }
+  .icon-btn { min-height: 36px; min-width: 36px; padding: 0.35rem; display: grid; place-items: center; }
+  .drawer-body { padding: 1.1rem; overflow: auto; flex: 1; font-size: 0.9375rem; line-height: 1.6; color: #334155; }
+  .drawer-body p { margin: 0 0 0.9rem; }
+  .drawer-foot { padding: 1rem 1.1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Appears instantly — the panel still shows, only the slide is dropped. */
+    dialog.drawer[open], dialog.drawer[open]::backdrop { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div style="display:flex;gap:0.5rem">
+    <button class="btn-primary" id="openRight">Open drawer</button>
+    <button id="openLeft">Open from left</button>
+  </div>
+
+  <dialog class="drawer" id="drawer" data-side="right" aria-labelledby="drawerTitle">
+    <div class="drawer-inner">
+      <div class="drawer-head">
+        <h2 id="drawerTitle" tabindex="-1">Filters</h2>
+        <button class="icon-btn" id="closeBtn" aria-label="Close filters">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body">
+        <p>Content behind this panel is inert — Tab cannot reach it, because
+           <code>showModal()</code> makes the rest of the document
+           non-interactive.</p>
+        <p>Try tabbing: focus cycles the heading, close button and the two
+           buttons below, and never escapes into the page.</p>
+      </div>
+      <div class="drawer-foot">
+        <button class="btn-primary" id="applyBtn" style="flex:1">Apply</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </div>
+  </dialog>
+
+  <p id="result" role="status" aria-live="polite"
+     style="position:fixed;bottom:1.5rem;font-size:0.875rem;color:#475569;min-height:1.2em"></p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const drawer = /** @type {HTMLDialogElement} */ (document.getElementById('drawer'));
+      const openRight = /** @type {HTMLButtonElement} */ (document.getElementById('openRight'));
+      const openLeft = /** @type {HTMLButtonElement} */ (document.getElementById('openLeft'));
+      const closeBtn = /** @type {HTMLButtonElement} */ (document.getElementById('closeBtn'));
+      const applyBtn = /** @type {HTMLButtonElement} */ (document.getElementById('applyBtn'));
+      const resetBtn = /** @type {HTMLButtonElement} */ (document.getElementById('resetBtn'));
+      const title = /** @type {HTMLElement} */ (document.getElementById('drawerTitle'));
+      const result = /** @type {HTMLElement} */ (document.getElementById('result'));
+
+      /** @type {HTMLElement|null} */
+      let invoker = null;
+
+      function open(side) {
+        invoker = /** @type {HTMLElement} */ (document.activeElement);
+        drawer.dataset.side = side;
+        drawer.showModal();
+        title.focus();
+      }
+
+      drawer.addEventListener('close', () => {
+        result.textContent = drawer.returnValue === 'apply' ? 'Filters applied' : 'Drawer closed';
+        if (invoker && document.contains(invoker)) invoker.focus();
+        invoker = null;
+      });
+
+      openRight.addEventListener('click', () => open('right'));
+      openLeft.addEventListener('click', () => open('left'));
+      closeBtn.addEventListener('click', () => drawer.close('close'));
+      applyBtn.addEventListener('click', () => drawer.close('apply'));
+      resetBtn.addEventListener('click', () => { result.textContent = 'Filters reset'; });
+      drawer.addEventListener('click', (e) => { if (e.target === drawer) drawer.close('dismiss'); });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(drawer.tagName === 'DIALOG',
+        '[smoke] drawer is a real modal — background is inert, not just visually covered');
+      console.assert(closeBtn.hasAttribute('aria-label'),
+        '[smoke] icon-only close button has an accessible name');
+      console.assert(drawer.getAttribute('aria-labelledby') === 'drawerTitle',
+        '[smoke] drawer is labelled by its heading');
+      console.assert(!drawer.open, '[smoke] drawer starts closed');
+    })();
+  </script>
+</body>
+</html>

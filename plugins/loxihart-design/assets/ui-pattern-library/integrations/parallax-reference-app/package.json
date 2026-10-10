@@ -1,0 +1,18 @@
+{
+  "name": "full-spectrum-parallax-reference-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Dependency-free target application integration for Pattern 001 Parallax Scrolling.",
+  "type": "module",
+  "scripts": {
+    "build": "python scripts/build.py",
+    "test": "python tests/run_browser_checks.py",
+    "verify": "python tests/run_browser_checks.py"
+  },
+  "runtimeDependencies": [],
+  "testTooling": [
+    "Python Playwright",
+    "Chromium",
+    "TypeScript compiler"
+  ]
+}

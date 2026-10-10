@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Liquid Blob Fusion</title>
+<!--
+  PATTERN: Liquid Blob Fusion
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: Medium
+
+  WHAT THIS IS: two blobs that visually merge into one as they approach,
+  via the classic SVG "goo" filter (blur + high-contrast threshold via
+  feColorMatrix), driven by cursor proximity.
+
+  ADAPT THIS BY:
+    - Point at whatever two elements should fuse; BLUR_STD_DEVIATION and
+      the feColorMatrix threshold values control how "gooey" it looks.
+
+  DO NOT STRIP WHEN ADAPTING (Risk: Medium — this is the actual risk):
+    - SVG filters, especially feGaussianBlur at nontrivial radii, are
+      genuinely expensive to composite, particularly on low-end/mobile
+      GPUs. This is the single most performance-risky pattern in the set.
+      Test on real low-end hardware before shipping, not just a dev
+      machine. Keep the filter region (`filter` bounding box) as tight
+      as possible.
+    - Fully decorative — aria-hidden, fully removable under reduced motion.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .blob-stage {
+    position: relative;
+    width: 360px; height: 220px;
+  }
+  .blob-stage svg { width: 100%; height: 100%; }
+  .blob {
+    fill: #38bdf8;
+    filter: url(#goo);
+  }
+  .hint { color: #cbd5e1; font-size: 0.8125rem; margin-top: 0.75rem; text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob-stage { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="blob-stage" id="blobStage" aria-hidden="true">
+      <svg viewBox="0 0 360 220">
+        <defs>
+          <filter id="goo" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="goo" />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+        <g class="blob">
+          <circle id="blobA" cx="120" cy="110" r="42" />
+          <circle id="blobB" cx="240" cy="110" r="42" />
+        </g>
+      </svg>
+    </div>
+    <p class="hint" id="hint">Move your pointer across the stage — the blobs merge as they get close.</p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const hint = document.getElementById('hint');
+      if (reduceMotion) {
+        hint.textContent = 'Reduced motion is on — this decorative effect is skipped entirely.';
+        return;
+      }
+
+      const stage = document.getElementById('blobStage');
+      const blobA = document.getElementById('blobA');
+      const blobB = document.getElementById('blobB');
+      let rafPending = false;
+      let latestX = 0.5;
+
+      stage.addEventListener('pointermove', (e) => {
+        const rect = stage.getBoundingClientRect();
+        latestX = (e.clientX - rect.left) / rect.width;
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(() => {
+            rafPending = false;
+            const viewBoxWidth = 360;
+            const cx = latestX * viewBoxWidth;
+            blobA.setAttribute('cx', String(Math.max(60, cx - 60)));
+            blobB.setAttribute('cx', String(Math.min(300, cx + 60)));
+          });
+        }
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(document.getElementById('goo'),
+        '[smoke] SVG goo filter present and referenced');
+      console.assert(stage.getAttribute('aria-hidden') === 'true',
+        '[smoke] purely decorative stage is hidden from assistive tech');
+    })();
+  </script>
+</body>
+</html>

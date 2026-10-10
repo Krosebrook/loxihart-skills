@@ -1,0 +1,19 @@
+{
+  "name": "ui-pattern-library-verify",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "node phase1-typecheck.mjs",
+    "engines": "node phase1-harness.mjs",
+    "behavior": "node phase0-behavior-check.mjs",
+    "behavior:all": "node phase2-behavior-all.mjs",
+    "mutation": "node mutation-test.mjs",
+    "mutation:phase2": "node mutate-phase2.mjs",
+    "all": "npm run typecheck && npm run engines && npm run behavior && npm run behavior:all && npm run mutation && npm run mutation:phase2"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0",
+    "axe-core": "^4.11.0",
+    "typescript": "^5.9.0"
+  }
+}

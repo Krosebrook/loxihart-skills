@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Staggered Icon Pop</title>
+<!--
+  PATTERN: Staggered Icon Pop
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Low  |  RISK: Low
+
+  WHAT THIS IS: a cluster of icons scaling/popping in sequentially with
+  a slight overshoot, staggered by index — same delay-cap mechanism as
+  Staggered Card Entry, applied to a smaller, denser cluster.
+
+  ADAPT THIS BY:
+    - Swapping the SVG icons for your own icon set.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Icons here are purely decorative flourish attached to already-labelled
+      buttons — aria-hidden on the icon, real text/aria-label on the button.
+    - Reduced motion removes the pop entirely; icons are simply present.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .icon-row { display: flex; gap: 0.75rem; }
+  button.icon-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 1px solid #e2e8f0; background: white; cursor: pointer;
+    display: grid; place-items: center; color: #2563eb;
+    opacity: 0; transform: scale(0);
+  }
+  button.icon-btn.in-view {
+    animation: pop-in 380ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  @keyframes pop-in {
+    0%   { opacity: 0; transform: scale(0); }
+    60%  { opacity: 1; transform: scale(1.15); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  button.icon-btn:hover { background: #eff6ff; }
+  button.icon-btn:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    button.icon-btn { opacity: 1; transform: none; }
+    button.icon-btn.in-view { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="icon-row" id="iconRow"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const labels = ['Share', 'Save', 'Print', 'Download', 'Delete'];
+      const icons = [
+        '<path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7M16 6l-4-4-4 4M12 2v13"/>',
+        '<path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+        '<path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/>',
+        '<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
+        '<path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>',
+      ];
+      const row = document.getElementById('iconRow');
+
+      labels.forEach((label, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'icon-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', label);
+        btn.style.setProperty('--i', String(i));
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${icons[i]}</svg>`;
+        row.appendChild(btn);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('.icon-btn').forEach(el => observer.observe(el));
+
+      // --- inline smoke test -------------------------------------------
+      document.querySelectorAll('.icon-btn').forEach(btn => {
+        console.assert(btn.hasAttribute('aria-label'),
+          '[smoke] every icon-only button has a real accessible name, independent of the decorative SVG');
+      });
+    })();
+  </script>
+</body>
+</html>

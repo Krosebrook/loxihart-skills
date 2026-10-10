@@ -1,0 +1,13 @@
+# Copy to .dev.vars for `wrangler dev` local runs. NEVER commit real values (.dev.vars is gitignored).
+# Production secrets go via `wrangler secret put`, NOT this file.
+
+# --- Provider keys (server-side only — the entire point of this proxy) ---
+ANTHROPIC_API_KEY=sk-ant-REPLACE
+OPENAI_API_KEY=sk-proj-REPLACE
+GOOGLE_API_KEY=AIza-REPLACE
+
+# --- Auth mode: configure exactly ONE path ---
+# (A) Public browser tools -> Cloudflare Turnstile (no reusable secret in the browser):
+TURNSTILE_SECRET=0x4AAA-REPLACE
+# (B) Server-to-server callers only -> shared bearer token (do NOT embed in client HTML):
+FF_PROXY_TOKEN=replace-with-a-64-char-random-string

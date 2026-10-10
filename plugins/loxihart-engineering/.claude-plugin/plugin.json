@@ -1,0 +1,13 @@
+{
+  "name": "loxihart-engineering",
+  "version": "1.0.0",
+  "description": "Engineering workflows: debugging, testing, refactoring, scripts, stack operations.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "loxihart"
+  ]
+}

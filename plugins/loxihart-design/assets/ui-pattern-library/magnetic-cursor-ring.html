@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Magnetic Cursor Ring</title>
+<!--
+  PATTERN: Magnetic Cursor Ring
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Low  |  RISK: Medium
+
+  WHAT THIS IS: a custom ring that follows the cursor and eases toward
+  snapping around nearby "magnetic" targets instead of tracking the raw
+  cursor position exactly.
+
+  ADAPT THIS BY:
+    - Adding data-magnetic to any element the ring should snap toward.
+
+  DO NOT STRIP WHEN ADAPTING (both are deliberate safety choices):
+    - matchMedia('(pointer: fine)') gate — this never renders on touch
+      devices. A custom cursor overlay is actively counterproductive
+      where there's no real cursor to augment.
+    - The NATIVE CURSOR IS NEVER HIDDEN. This ring is an addition on top
+      of the real cursor, not a replacement for it. Fully hiding the OS
+      cursor in favor of a JS-drawn one breaks OS-level cursor
+      accommodations (size, contrast, color) that low-vision users may
+      depend on — that trade-off is not worth the visual polish.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 2rem;
+  }
+  .arena { display: flex; gap: 2rem; }
+  .magnet-target {
+    width: 120px; height: 80px;
+    border-radius: 10px;
+    background: #1e293b; color: #e2e8f0;
+    display: grid; place-items: center;
+    font-size: 0.875rem; border: 1px solid #334155;
+  }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 32px; height: 32px;
+    border: 1.5px solid #38bdf8;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-9999px, -9999px);
+    will-change: transform, width, height;
+    z-index: 999;
+  }
+  .no-pointer-notice { color: #cbd5e1; font-size: 0.8125rem; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="arena">
+    <div class="magnet-target" data-magnetic>Hover near me</div>
+    <div class="magnet-target" data-magnetic>Or me</div>
+  </div>
+  <p class="no-pointer-notice" id="noPointerNotice"></p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const finePointer = matchMedia('(pointer: fine)').matches;
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const notice = document.getElementById('noPointerNotice');
+
+      if (!finePointer || reduceMotion) {
+        notice.textContent = !finePointer
+          ? 'No fine pointer detected — the cursor ring is skipped entirely on this device.'
+          : 'Reduced motion is on — the cursor ring is skipped.';
+        return;
+      }
+
+      const ring = document.createElement('div');
+      ring.className = 'cursor-ring';
+      ring.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(ring);
+
+      const magnets = Array.from(document.querySelectorAll('[data-magnetic]'));
+      const SNAP_RADIUS = 60;
+      let target = { x: -9999, y: -9999, w: 32, h: 32, r: 16 };
+      let current = { ...target };
+      let rafId = null;
+
+      function nearestMagnet(x, y) {
+        let best = null, bestDist = Infinity;
+        for (const el of magnets) {
+          const r = el.getBoundingClientRect();
+          const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+          const dist = Math.hypot(x - cx, y - cy);
+          if (dist < bestDist) { bestDist = dist; best = { el, r, dist }; }
+        }
+        return best;
+      }
+
+      document.addEventListener('pointermove', (e) => {
+        const nearest = nearestMagnet(e.clientX, e.clientY);
+        if (nearest && nearest.dist < SNAP_RADIUS) {
+          target = { x: nearest.r.left + nearest.r.width / 2, y: nearest.r.top + nearest.r.height / 2,
+                     w: nearest.r.width + 12, h: nearest.r.height + 12, r: 10 };
+        } else {
+          target = { x: e.clientX, y: e.clientY, w: 32, h: 32, r: 16 };
+        }
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      });
+
+      function tick() {
+        rafId = null;
+        // ease current toward target (simple lerp) for the "magnetic" feel
+        current.x += (target.x - current.x) * 0.25;
+        current.y += (target.y - current.y) * 0.25;
+        current.w += (target.w - current.w) * 0.25;
+        current.h += (target.h - current.h) * 0.25;
+        current.r += (target.r - current.r) * 0.25;
+        ring.style.width = current.w + 'px';
+        ring.style.height = current.h + 'px';
+        ring.style.borderRadius = current.r + 'px';
+        ring.style.transform = `translate(${current.x - current.w / 2}px, ${current.y - current.h / 2}px)`;
+        if (Math.hypot(target.x - current.x, target.y - current.y) > 0.5) {
+          rafId = requestAnimationFrame(tick);
+        }
+      }
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(ring.getAttribute('aria-hidden') === 'true',
+        '[smoke] decorative cursor ring is hidden from assistive tech');
+      console.assert(getComputedStyle(document.documentElement).cursor !== 'none',
+        '[smoke] native OS cursor is never hidden by this pattern');
+    })();
+  </script>
+</body>
+</html>

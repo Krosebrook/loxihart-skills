@@ -1,0 +1,13 @@
+{
+  "name": "loxihart-business",
+  "version": "1.0.0",
+  "description": "Business operations, marketing, content, and digital product launches.",
+  "author": {
+    "name": "Kyle Rosebrook"
+  },
+  "license": "MIT",
+  "keywords": [
+    "business",
+    "loxihart"
+  ]
+}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Hover/Click Zoom Bounds</title>
+<!--
+  PATTERN: Hover/Click Zoom Bounds
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Medium  |  RISK: Medium
+
+  WHAT THIS IS: a magnified lens over an image, tracking the cursor,
+  clamped so the zoomed view never shows past the image's own edges.
+
+  ADAPT THIS BY:
+    - Swapping the image src; ZOOM_FACTOR controls magnification.
+
+  DO NOT STRIP WHEN ADAPTING (Tier 4 requirement — this is the load-bearing
+  accessibility decision in this file):
+    - Continuous pointer-tracked zoom has NO meaningful keyboard
+      equivalent — you cannot "drag a keyboard" across an image. The
+      functional capability (inspect image detail up close) MUST remain
+      reachable without a pointer, which is why there is a real, focusable
+      "View full size" button below the image. Remove the mouse-follow
+      lens and you've only removed decoration; remove that button and
+      you've removed a real capability from keyboard users.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 0.75rem;
+  }
+  .zoom-frame {
+    position: relative;
+    width: 320px; height: 220px;
+    border-radius: 10px; overflow: hidden;
+    cursor: zoom-in;
+  }
+  .zoom-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lens {
+    position: absolute; inset: 0;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 120ms ease-out;
+    pointer-events: none;
+  }
+  .zoom-frame.active .lens { opacity: 1; }
+
+  button.full-size-btn {
+    padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid #cbd5e1;
+    background: white; cursor: pointer; font-size: 0.8125rem;
+  }
+
+  dialog.full-size-dialog { border: none; border-radius: 12px; padding: 0; max-width: 90vw; }
+  dialog.full-size-dialog img { display: block; max-width: 100%; max-height: 80vh; }
+  dialog.full-size-dialog::backdrop { background: rgba(0,0,0,0.6); }
+  button.close-dialog { position: absolute; top: 8px; right: 8px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lens { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="zoom-frame" id="zoomFrame">
+    <img id="zoomImg" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='440'%3E%3Crect width='640' height='440' fill='%23475569'/%3E%3Ccircle cx='200' cy='150' r='70' fill='%23f59e0b'/%3E%3Cpath d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/%3E%3C/svg%3E" alt="Product photo, wide angle" /><rect width='640' height='440' fill='%23475569'/><circle cx='200' cy='150' r='70' fill='%23f59e0b'/><path d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/></svg>" alt="Product photo, wide angle" />
+    <div class="lens" id="lens"></div>
+  </div>
+  <button class="full-size-btn" id="fullSizeBtn">View full size (keyboard/no-pointer path)</button>
+
+  <dialog class="full-size-dialog" id="fullSizeDialog">
+    <button class="close-dialog" id="closeDialogBtn" aria-label="Close full-size view">×</button>
+    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='440'%3E%3Crect width='640' height='440' fill='%23475569'/%3E%3Ccircle cx='200' cy='150' r='70' fill='%23f59e0b'/%3E%3Cpath d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/%3E%3C/svg%3E" alt="Product photo, full size" /><rect width='640' height='440' fill='%23475569'/><circle cx='200' cy='150' r='70' fill='%23f59e0b'/><path d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/></svg>" alt="Product photo, full size" />
+  </dialog>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const frame = document.getElementById('zoomFrame');
+      const img = /** @type {HTMLImageElement} */ (document.getElementById('zoomImg'));
+      const lens = document.getElementById('lens');
+      const fullSizeBtn = document.getElementById('fullSizeBtn');
+      const dialog = /** @type {HTMLDialogElement} */ (document.getElementById('fullSizeDialog'));
+      const closeDialogBtn = document.getElementById('closeDialogBtn');
+      const ZOOM_FACTOR = 2.2;
+
+      lens.style.backgroundImage = `url(${img.src})`;
+
+      function updateLens(clientX, clientY) {
+        const rect = frame.getBoundingClientRect();
+        const x = Math.max(0, Math.min(rect.width, clientX - rect.left));
+        const y = Math.max(0, Math.min(rect.height, clientY - rect.top));
+        const bgW = rect.width * ZOOM_FACTOR;
+        const bgH = rect.height * ZOOM_FACTOR;
+        // Clamp the background position so the zoomed view never scrolls
+        // past the real image edges, regardless of cursor position.
+        const bgX = Math.max(rect.width - bgW, Math.min(0, -(x * ZOOM_FACTOR - rect.width / 2)));
+        const bgY = Math.max(rect.height - bgH, Math.min(0, -(y * ZOOM_FACTOR - rect.height / 2)));
+        lens.style.backgroundSize = `${bgW}px ${bgH}px`;
+        lens.style.backgroundPosition = `${bgX}px ${bgY}px`;
+      }
+
+      frame.addEventListener('pointerenter', () => frame.classList.add('active'));
+      frame.addEventListener('pointermove', (e) => updateLens(e.clientX, e.clientY));
+      frame.addEventListener('pointerleave', () => frame.classList.remove('active'));
+
+      // Keyboard/no-pointer equivalent path — this is the real requirement,
+      // not a nice-to-have.
+      fullSizeBtn.addEventListener('click', () => dialog.showModal());
+      closeDialogBtn.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('cancel', () => dialog.close());
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(fullSizeBtn.tagName === 'BUTTON',
+        '[smoke] a real, focusable keyboard path to the zoomed detail exists independent of pointer hover');
+      console.assert(dialog.tagName === 'DIALOG',
+        '[smoke] native <dialog> handles focus trapping and Escape-to-close for free');
+    })();
+  </script>
+</body>
+</html>

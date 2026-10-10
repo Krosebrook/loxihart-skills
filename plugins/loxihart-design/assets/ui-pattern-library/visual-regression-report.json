@@ -1,0 +1,166 @@
+{
+  "matchThreshold": 0.01,
+  "tolerance": 100,
+  "results": [
+    {
+      "name": "download-progress-wave",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "number-counter-ticker",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "progress-button-spinner",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "skeleton-screen-shimmer",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "audio-ui-sound-click",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "copy-to-clipboard-banner",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "haptic-vibration-feedback",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "password-peek-toggle",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "pulse-ripple-beacon",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "card-lift-perspective",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "ghost-trail-duplicate",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "hover-click-zoom-bounds",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "magnetic-cursor-ring",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "rubber-band-squish",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "staggered-card-entry",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "staggered-icon-pop",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "tilt-parallax-angle",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "image-hotspot-pulse",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "slide-to-unlock-fader",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "underline-growth-track",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "border-dash-spin",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "color-spill-wipe",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "drawing-path-tracing",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "glow-perimeter-trail",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "liquid-blob-fusion",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "scratch-card-reveal",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "shimmer-sheen-highlight",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "text-highlighting-strike",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "typing-effect-reset",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "dark-mode-flashbang-toggle",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "dual-tone-inversion",
+      "status": "MATCH",
+      "detail": ""
+    },
+    {
+      "name": "image-glitch-flicker",
+      "status": "MATCH",
+      "detail": ""
+    }
+  ]
+}

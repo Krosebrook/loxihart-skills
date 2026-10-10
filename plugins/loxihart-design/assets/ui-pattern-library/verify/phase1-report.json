@@ -1,0 +1,1555 @@
+{
+  "engines": {
+    "chromium": [
+      {
+        "file": "01-loading-progress-feedback/download-progress-wave.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/number-counter-ticker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/progress-button-spinner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 23,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 8,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/card-lift-perspective.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/rubber-band-squish.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 2,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-card-entry.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 30,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-icon-pop.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 18,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/underline-growth-track.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 13,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      }
+    ],
+    "firefox": [
+      {
+        "file": "01-loading-progress-feedback/download-progress-wave.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/number-counter-ticker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/progress-button-spinner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 23,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 8,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/card-lift-perspective.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/rubber-band-squish.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 2,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-card-entry.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 30,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-icon-pop.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 18,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/underline-growth-track.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 13,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      }
+    ],
+    "webkit": [
+      {
+        "file": "01-loading-progress-feedback/download-progress-wave.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/number-counter-ticker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/progress-button-spinner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 23,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 8,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/card-lift-perspective.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 11,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 14,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/rubber-band-squish.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 2,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-card-entry.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 30,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/staggered-icon-pop.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 18,
+        "loadErr": null
+      },
+      {
+        "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 9,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 7,
+        "loadErr": null
+      },
+      {
+        "file": "04-navigation-wayfinding/underline-growth-track.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 6,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 13,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 3,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      },
+      {
+        "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 4,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 5,
+        "loadErr": null
+      },
+      {
+        "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+        "status": "PASS",
+        "errs": [],
+        "smoke": [],
+        "elements": 10,
+        "loadErr": null
+      }
+    ]
+  },
+  "axe": [
+    {
+      "file": "01-loading-progress-feedback/download-progress-wave.html",
+      "violations": []
+    },
+    {
+      "file": "01-loading-progress-feedback/number-counter-ticker.html",
+      "violations": []
+    },
+    {
+      "file": "01-loading-progress-feedback/progress-button-spinner.html",
+      "violations": []
+    },
+    {
+      "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+      "violations": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+      "violations": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+      "violations": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+      "violations": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+      "violations": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/card-lift-perspective.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/rubber-band-squish.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-card-entry.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-icon-pop.html",
+      "violations": []
+    },
+    {
+      "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+      "violations": []
+    },
+    {
+      "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+      "violations": []
+    },
+    {
+      "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+      "violations": []
+    },
+    {
+      "file": "04-navigation-wayfinding/underline-growth-track.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+      "violations": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+      "violations": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+      "violations": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+      "violations": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+      "violations": []
+    }
+  ],
+  "a11yTree": [
+    {
+      "file": "01-loading-progress-feedback/download-progress-wave.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 1,
+        "button": 1,
+        "image": 1,
+        "progressbar": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "01-loading-progress-feedback/number-counter-ticker.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 6,
+        "StaticText": 6,
+        "InlineTextBox": 6
+      }
+    },
+    {
+      "file": "01-loading-progress-feedback/progress-button-spinner.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "paragraph": 1,
+        "status": 1,
+        "StaticText": 2,
+        "InlineTextBox": 5
+      }
+    },
+    {
+      "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "status": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "checkbox": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 1,
+        "button": 1,
+        "status": 1,
+        "StaticText": 1,
+        "image": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "paragraph": 1,
+        "checkbox": 1,
+        "status": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 3,
+        "LabelText": 1,
+        "StaticText": 2,
+        "textbox": 1,
+        "button": 1,
+        "InlineTextBox": 2,
+        "image": 1
+      }
+    },
+    {
+      "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "paragraph": 2,
+        "image": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/card-lift-perspective.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "heading": 1,
+        "paragraph": 1,
+        "StaticText": 2,
+        "InlineTextBox": 3
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 2,
+        "button": 1,
+        "image": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "StaticText": 2,
+        "paragraph": 1,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/rubber-band-squish.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-card-entry.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "StaticText": 19,
+        "generic": 1,
+        "InlineTextBox": 28,
+        "heading": 9,
+        "paragraph": 9
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-icon-pop.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 1,
+        "button": 5
+      }
+    },
+    {
+      "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 1,
+        "image": 1,
+        "StaticText": 1,
+        "button": 2,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 3,
+        "paragraph": 1,
+        "slider": 1,
+        "StaticText": 3,
+        "InlineTextBox": 4
+      }
+    },
+    {
+      "file": "04-navigation-wayfinding/underline-growth-track.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "navigation": 1,
+        "link": 3,
+        "StaticText": 3,
+        "InlineTextBox": 3
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 1,
+        "image": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 3,
+        "button": 1,
+        "StaticText": 3,
+        "InlineTextBox": 3
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "paragraph": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 2,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "paragraph": 1,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 2,
+        "button": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 2,
+        "StaticText": 1,
+        "InlineTextBox": 1
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 5,
+        "paragraph": 1,
+        "button": 1,
+        "StaticText": 7,
+        "deletion": 1,
+        "InlineTextBox": 12
+      }
+    },
+    {
+      "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "image": 1
+      }
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "paragraph": 1,
+        "button": 1,
+        "StaticText": 2,
+        "InlineTextBox": 2
+      }
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "button": 1,
+        "paragraph": 1,
+        "StaticText": 4,
+        "code": 1,
+        "InlineTextBox": 9
+      }
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+      "problems": [],
+      "roles": {
+        "RootWebArea": 1,
+        "generic": 3,
+        "button": 1,
+        "paragraph": 1,
+        "image": 1,
+        "StaticText": 3,
+        "InlineTextBox": 5
+      }
+    }
+  ],
+  "visual": [
+    {
+      "file": "01-loading-progress-feedback/download-progress-wave.html",
+      "visible": 9,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "01-loading-progress-feedback/number-counter-ticker.html",
+      "visible": 10,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "01-loading-progress-feedback/progress-button-spinner.html",
+      "visible": 13,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "01-loading-progress-feedback/skeleton-screen-shimmer.html",
+      "visible": 12,
+      "zeroSize": 9,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/audio-ui-sound-click.html",
+      "visible": 4,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/copy-to-clipboard-banner.html",
+      "visible": 7,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/haptic-vibration-feedback.html",
+      "visible": 6,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/password-peek-toggle.html",
+      "visible": 8,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "02-action-feedback-confirmation/pulse-ripple-beacon.html",
+      "visible": 12,
+      "zeroSize": 1,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/card-lift-perspective.html",
+      "visible": 3,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/ghost-trail-duplicate.html",
+      "visible": 10,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/hover-click-zoom-bounds.html",
+      "visible": 7,
+      "zeroSize": 5,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/magnetic-cursor-ring.html",
+      "visible": 4,
+      "zeroSize": 1,
+      "offscreen": 1,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/rubber-band-squish.html",
+      "visible": 1,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-card-entry.html",
+      "visible": 29,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/staggered-icon-pop.html",
+      "visible": 17,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "03-motion-transform-effects/tilt-parallax-angle.html",
+      "visible": 2,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "04-navigation-wayfinding/image-hotspot-pulse.html",
+      "visible": 7,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "04-navigation-wayfinding/slide-to-unlock-fader.html",
+      "visible": 6,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "04-navigation-wayfinding/underline-growth-track.html",
+      "visible": 4,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/border-dash-spin.html",
+      "visible": 4,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/color-spill-wipe.html",
+      "visible": 5,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/drawing-path-tracing.html",
+      "visible": 3,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/glow-perimeter-trail.html",
+      "visible": 2,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/liquid-blob-fusion.html",
+      "visible": 7,
+      "zeroSize": 5,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/scratch-card-reveal.html",
+      "visible": 4,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/shimmer-sheen-highlight.html",
+      "visible": 2,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/text-highlighting-strike.html",
+      "visible": 9,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "05-visual-enhancement-decorative/typing-effect-reset.html",
+      "visible": 3,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dark-mode-flashbang-toggle.html",
+      "visible": 3,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/dual-tone-inversion.html",
+      "visible": 4,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    },
+    {
+      "file": "06-theming-display-mode-elevated-risk/image-glitch-flicker.html",
+      "visible": 9,
+      "zeroSize": 0,
+      "offscreen": 0,
+      "midPainted": true,
+      "flat": false,
+      "flags": []
+    }
+  ]
+}

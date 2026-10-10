@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Dual-Tone Inversion</title>
+<!--
+  PATTERN: Dual-Tone Inversion
+  CATEGORY: Theming & Display-Mode Transitions
+  PRIORITY: Low  |  RISK: Medium
+
+  WHAT THIS IS: a hover/active state that swaps a genuine duotone color
+  pair (fg<->bg) rather than a blanket CSS filter: invert(1). Custom-
+  property swap is the primary technique here, not filter: invert() —
+  invert() produces unpredictable results over photos/complex content and
+  can't be art-directed per-element the way explicit color pairs can.
+
+  ADAPT THIS BY:
+    - Defining your own --tone-a/--tone-b pair per element.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - This is a static STATE swap, not continuous motion — under reduced
+      motion, only the transition DURATION collapses near-instant; the
+      swap itself still happens (removing it would remove real hover
+      feedback, not just decoration).
+-->
+<style>
+  :root { --dur-invert: 180ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 1.5rem;
+  }
+  .row { display: flex; gap: 1rem; }
+
+  .duotone-card {
+    --tone-a: #0f172a; --tone-b: #fbbf24;
+    width: 160px; height: 100px; border-radius: 12px;
+    background: var(--tone-a); color: var(--tone-b);
+    display: grid; place-items: center; font-weight: 700;
+    border: none; cursor: pointer;
+    transition: background var(--dur-invert) linear, color var(--dur-invert) linear;
+  }
+  .duotone-card:hover, .duotone-card:focus-visible {
+    background: var(--tone-b); color: var(--tone-a);
+    outline: none;
+  }
+  .duotone-card:focus-visible { box-shadow: 0 0 0 2px #2563eb; }
+
+  .filter-note { font-size: 0.75rem; color: #475569; max-width: 34ch; text-align: center; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .duotone-card { transition-duration: 1ms; }
+  }
+</style>
+</head>
+<body>
+  <div class="row">
+    <button class="duotone-card">Hover me</button>
+  </div>
+  <p class="filter-note">
+    A blanket <code>filter: invert(1)</code> is a valid quick alternative
+    for simple flat-color elements, but avoid it over photos or gradients —
+    it inverts everything indiscriminately, including things you didn't
+    intend to flip.
+  </p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const card = document.querySelector('.duotone-card');
+      console.assert(card.tagName === 'BUTTON',
+        '[smoke] native button used — hover AND focus both trigger the state swap');
+    })();
+  </script>
+</body>
+</html>

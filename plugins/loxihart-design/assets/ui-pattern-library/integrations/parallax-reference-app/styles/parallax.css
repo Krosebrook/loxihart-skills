@@ -1,0 +1,176 @@
+/* Pattern 001 token mapping: generic pilot contract -> reference design system. */
+[data-fsp-pattern="001"] {
+  --fsp-001-surface: var(--surface-default);
+  --fsp-001-text: var(--text-primary);
+  --fsp-001-accent: var(--action-primary);
+  --fsp-001-border: var(--border-default);
+  --fsp-001-target-min: var(--target-minimum);
+  --fsp-001-focus-width: var(--focus-ring-width);
+  --fsp-001-gap: var(--space-4);
+  --fsp-001-radius: var(--radius-lg);
+  --fsp-001-duration: var(--duration-standard);
+  --fsp-001-easing: var(--easing-standard);
+  --fsp-001-travel: clamp(2rem, 8vw, 7rem); /* [GENERATED: bounded layer travel mapped to viewport width] */
+
+  --parallax-progress: 0;
+  position: relative;
+  min-block-size: 160svh; /* [GENERATED: creates a scroll range while avoiding legacy viewport-unit collapse] */
+  color: var(--fsp-001-text);
+  background: var(--surface-canvas);
+  isolation: isolate;
+}
+
+@supports (min-block-size: 100dvh) {
+  [data-fsp-pattern="001"] { min-block-size: 160dvh; /* [GENERATED: dynamic viewport integration for mobile browser chrome changes] */ }
+}
+
+.parallax-stage {
+  position: sticky;
+  inset-block-start: 0;
+  display: grid;
+  min-block-size: 100svh; /* [GENERATED: stable viewport fallback] */
+  place-items: center;
+  overflow: clip;
+}
+
+@supports (min-block-size: 100dvh) {
+  .parallax-stage { min-block-size: 100dvh; /* [GENERATED: dynamic viewport height integration] */ }
+}
+
+.parallax-layer {
+  --parallax-depth: 0.5; /* [GENERATED: neutral fallback depth] */
+  position: absolute;
+  inset: -10%; /* [GENERATED: overscan prevents exposed edges during bounded transforms] */
+  pointer-events: none;
+  transform: translate3d(
+    0,
+    calc(var(--parallax-progress) * var(--parallax-depth) * var(--fsp-001-travel) * -1),
+    0
+  );
+  transition: opacity var(--fsp-001-duration) var(--fsp-001-easing);
+}
+
+[data-fsp-pattern="001"][data-active="true"] .parallax-layer { will-change: transform; }
+[data-fsp-pattern="001"]:not([data-active="true"]) .parallax-layer { will-change: auto; }
+
+.parallax-layer--grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--action-primary) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--action-primary) 18%, transparent) 1px, transparent 1px); /* [GENERATED: decorative grid treatment] */
+  background-size: 3rem 3rem; /* [GENERATED: decorative grid scale] */
+  mask-image: radial-gradient(circle at center, black, transparent 75%); /* [GENERATED: bounded grid fade] */
+}
+
+.parallax-layer--orb::before,
+.parallax-layer--orb::after {
+  content: "";
+  position: absolute;
+  inline-size: clamp(18rem, 40vw, 36rem); /* [GENERATED: responsive decorative orb size] */
+  aspect-ratio: 1; /* [GENERATED: circular decorative geometry] */
+  border-radius: 50%; /* [GENERATED: circular decorative geometry] */
+  filter: blur(3rem); /* [GENERATED: bounded static blur; the filter itself is not animated] */
+  opacity: 0.34; /* [GENERATED: low-emphasis decorative opacity] */
+  background: var(--action-primary);
+}
+
+.parallax-layer--orb::before { inset-block-start: 10%; inset-inline-start: 3%; /* [GENERATED: decorative placement] */ }
+.parallax-layer--orb::after { inset-block-end: 2%; inset-inline-end: 5%; /* [GENERATED: decorative placement] */ }
+
+.parallax-content {
+  position: relative;
+  z-index: 2; /* [GENERATED: places semantic content above decorative layers] */
+  inline-size: min(74rem, calc(100% - (var(--space-4) * 2))); /* [GENERATED: responsive content measure] */
+  padding: clamp(var(--space-6), 5vw, var(--space-12));
+  border: var(--fsp-001-focus-width) solid color-mix(in srgb, var(--fsp-001-border) 78%, transparent);
+  border-radius: calc(var(--fsp-001-radius) * 1.5); /* [GENERATED: larger hero surface radius] */
+  background: color-mix(in srgb, var(--fsp-001-surface) 86%, transparent);
+  box-shadow: 0 2rem 5rem color-mix(in srgb, black 40%, transparent); /* [GENERATED: static elevation treatment] */
+  backdrop-filter: blur(1.25rem); /* [GENERATED: bounded hero backdrop treatment] */
+}
+
+.parallax-eyebrow {
+  margin: 0 0 var(--space-4);
+  color: var(--action-primary);
+  font-weight: 700; /* [GENERATED: emphasized eyebrow weight] */
+  letter-spacing: 0.08em; /* [GENERATED: uppercase label tracking] */
+  text-transform: uppercase;
+}
+
+.parallax-title {
+  max-inline-size: 11ch; /* [GENERATED: display heading measure] */
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: var(--line-display);
+  letter-spacing: -0.05em; /* [GENERATED: display heading tracking] */
+}
+
+.parallax-summary {
+  max-inline-size: 58ch; /* [GENERATED: readable summary measure] */
+  margin-block: var(--space-6);
+  color: var(--text-secondary);
+}
+
+.parallax-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: max(var(--fsp-001-target-min), 2.75rem); /* [GENERATED: comfortable control height above the Level AA minimum] */
+  padding: var(--space-2) var(--space-4);
+  border: var(--fsp-001-focus-width) solid var(--action-primary);
+  border-radius: var(--radius-pill);
+  color: var(--action-primary-foreground);
+  background: var(--action-primary);
+  font: inherit;
+  font-weight: 700; /* [GENERATED: strong control label weight] */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button--secondary {
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  border-color: var(--border-default);
+}
+
+.parallax-status {
+  min-block-size: 1.5em; /* [GENERATED: reserves status space to prevent layout shift] */
+  margin-block: var(--space-4) 0;
+  color: var(--text-secondary);
+  font-size: 0.95em; /* [GENERATED: secondary status-text scale] */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-fsp-pattern="001"] { scroll-behavior: auto; }
+
+  [data-fsp-pattern="001"] .parallax-layer {
+    transform: none !important;
+    transition-duration: var(--duration-instant);
+    will-change: auto !important;
+  }
+}
+
+[data-fsp-pattern="001"][data-motion="disabled"] .parallax-layer,
+[data-fsp-pattern="001"][data-motion="suspended"] .parallax-layer {
+  transform: none;
+  will-change: auto;
+}
+
+@media (forced-colors: active) {
+  .parallax-content {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .parallax-layer { display: none; }
+  .button { forced-color-adjust: auto; }
+}

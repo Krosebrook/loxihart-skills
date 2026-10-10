@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0",
+  "ticket": "SD-000000",
+  "serial": "",
+  "model": "",
+  "hostname": "",
+  "authorizedUser": "",
+  "sopVersion": "3.1",
+  "openedAt": "",
+  "openedBy": "",
+  "imagingPort": null,
+  "productionPort": null,
+  "taskSequence": "",
+  "secureBootTemporarilyDisabled": false,
+  "gates": [
+    { "id": 0, "name": "Authorization & Prerequisites", "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 1, "name": "BIOS Configuration",            "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 2, "name": "Network Preparation",           "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 3, "name": "PXE Boot & Task Sequence",      "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 4, "name": "Image Apply",                   "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 5, "name": "Identity",                      "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 6, "name": "Remote Access",                 "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 7, "name": "Security Baseline",             "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 8, "name": "VLAN Migration",                "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" },
+    { "id": 9, "name": "Validation & Closure",          "status": "PENDING", "at": null, "by": null, "evidence": [], "note": "" }
+  ],
+  "escalations": [],
+  "hardStopsHit": [],
+  "waivers": [],
+  "validationReport": null,
+  "_vocabulary": {
+    "gateStatus": ["PENDING", "IN_PROGRESS", "PASS", "FAIL", "BLOCKED", "WAIVED"],
+    "waiverShape": { "gate": 0, "authorizedBy": "L4 engineer name", "reason": "", "at": "" },
+    "escalationShape": { "gate": 0, "tier": "L2|L3|L4", "at": "", "symptom": "", "resolved": false },
+    "hardStopShape": { "rule": 1, "at": "", "trigger": "", "haltedAtGate": 0 },
+    "rules": [
+      "Only an L4 engineer may set a gate to WAIVED, and only with a name and a reason.",
+      "Hard stops cannot be waived by any tier.",
+      "Gate 7 AD escrow evidence is never waivable.",
+      "Evidence filenames follow <TICKET>-g<N>-<artifact>.<ext>."
+    ]
+  }
+}

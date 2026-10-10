@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Rubber-Band Squish</title>
+<!--
+  PATTERN: Rubber-Band Squish
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: an elastic squash-then-overshoot-then-settle deformation
+  on press/release, via the Web Animations API (not a CSS @keyframes
+  loop — this fires once per press, driven by JS, so WAAPI's .animate()
+  with an explicit keyframe list is the right tool).
+
+  ADAPT THIS BY:
+    - Calling squish(el) from whatever your real press handler is.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Under reduced motion, the transform animation is skipped entirely —
+      the :active state's plain opacity/brightness change (pure CSS,
+      untouched by this JS) is what's left, and that's sufficient
+      functional feedback.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  button.squish-btn {
+    padding: 1rem 2rem; border-radius: 12px; border: none;
+    background: #b45309; color: white; font-weight: 700; font-size: 1rem;
+    cursor: pointer;
+  }
+  button.squish-btn:active { filter: brightness(0.92); }
+  button.squish-btn:focus-visible { outline: 2px solid #b45309; outline-offset: 3px; }
+</style>
+</head>
+<body>
+  <button class="squish-btn" id="squishBtn">Press me</button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const btn = document.getElementById('squishBtn');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function squish(el) {
+        if (reduceMotion) return; // :active's plain style change is the fallback
+        el.animate(
+          [
+            { transform: 'scale(1, 1)' },
+            { transform: 'scale(0.92, 1.08)', offset: 0.3 },
+            { transform: 'scale(1.04, 0.98)', offset: 0.6 },
+            { transform: 'scale(1, 1)' },
+          ],
+          { duration: 380, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }
+        );
+      }
+
+      btn.addEventListener('pointerdown', () => squish(btn));
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(typeof btn.animate === 'function',
+        '[smoke] Web Animations API available for the squish keyframes');
+    })();
+  </script>
+</body>
+</html>

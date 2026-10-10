@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Card Lift Perspective</title>
+<!--
+  PATTERN: Card Lift Perspective
+  CATEGORY: Motion & Transform Effects
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a card that elevates with shadow + subtle perspective on
+  hover/focus. This is the simplest pattern in the set — pure CSS,
+  triggered by :hover and :focus-visible, no JS required at all.
+
+  ADAPT THIS BY:
+    - Applying .lift-card to any card-shaped element.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - :focus-visible alongside :hover — a keyboard user tabbing to the
+      card gets the same feedback a mouse user hovering it gets. Hover-only
+      implementations are a common, easy-to-miss a11y gap.
+    - Under reduced motion the elevation CHANGE still happens (it's a
+      state, not motion, once instant) — only the transition's DURATION
+      is collapsed near-zero, not the shadow/lift effect itself.
+-->
+<style>
+  :root { --dur-lift: 220ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .lift-card {
+    width: 240px; padding: 1.25rem;
+    background: white; border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    transform: translateY(0) perspective(600px) rotateX(0deg);
+    transition: transform var(--dur-lift) cubic-bezier(0.4,0,0.2,1),
+                box-shadow var(--dur-lift) cubic-bezier(0.4,0,0.2,1);
+    cursor: pointer;
+    /* button reset — this is a native <button>, not a div+role="button" */
+    border: none; font: inherit; text-align: left; display: block;
+  }
+  .lift-card:hover, .lift-card:focus-visible {
+    transform: translateY(-8px) perspective(600px) rotateX(4deg);
+    box-shadow: 0 20px 32px -8px rgba(0,0,0,0.18);
+    outline: none;
+  }
+  .lift-card:focus-visible { box-shadow: 0 20px 32px -8px rgba(0,0,0,0.18), 0 0 0 2px #2563eb; }
+  .lift-card h3 { margin: 0 0 0.4rem; font-size: 1rem; }
+  .lift-card p { margin: 0; font-size: 0.8125rem; color: #475569; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lift-card { transition-duration: 1ms; }
+  }
+</style>
+</head>
+<body>
+  <button class="lift-card" type="button">
+    <h3>Quarterly report</h3>
+    <p>Hover or tab to this card — the lift fires on both.</p>
+  </button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      // --- inline smoke test -------------------------------------------
+      const card = document.querySelector('.lift-card');
+      console.assert(card.tagName === 'BUTTON',
+        '[smoke] native <button> used instead of div+role=button+tabindex — keyboard operability and Enter/Space activation come for free');
+    })();
+  </script>
+</body>
+</html>

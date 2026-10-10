@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Confirm Dialog</title>
+<!--
+  PATTERN: Confirm Dialog (destructive action)
+  CATEGORY: Overlays & Dialogs
+  PRIORITY: High  |  RISK: High
+
+  WHAT THIS IS: a confirmation gate before an irreversible action, using
+  <dialog> with role="alertdialog".
+
+  ADAPT THIS BY:
+    - confirmDestructive({ title, body, confirmLabel }) returns a Promise
+      resolving true/false. Await it before performing the action.
+
+  DO NOT STRIP WHEN ADAPTING — the differences from a normal modal are
+  deliberate, and every one of them is a safety property:
+    - role="alertdialog", not "dialog". It tells assistive tech this
+      interrupts for a consequential decision, and the body text is
+      announced with the title rather than waiting to be explored.
+    - INITIAL FOCUS IS ON CANCEL, not Confirm. A user who dismisses reflexively
+      with Enter should get the safe outcome. Focusing the destructive button
+      turns a stray keypress into data loss.
+    - NO BACKDROP-CLICK DISMISS. Normal modals close on outside click; this
+      one deliberately does not, so a stray click cannot resolve a
+      destructive decision either way. That difference is the point.
+    - Escape resolves to CANCEL, never to confirm. Cancelling must always be
+      the outcome of an ambiguous exit.
+    - The confirm button names the ACTION ("Delete 3 projects"), not "OK".
+      Screen-reader users often navigate by buttons and hear the label out
+      of context; "OK" tells them nothing about what they are agreeing to.
+    - No auto-dismiss timer, ever. A destructive prompt that vanishes on its
+      own is a trap.
+-->
+<style>
+  :root { --danger: #b91c1c; --accent: #2563eb; --border: #cbd5e1; --dur: 160ms; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0;
+  }
+  button {
+    font: inherit; cursor: pointer; border-radius: 8px; min-height: 44px;
+    padding: 0.6rem 1.1rem; border: 1px solid var(--border); background: #fff;
+  }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); font-weight: 600; }
+  .btn-danger:focus-visible { outline-color: var(--danger); }
+
+  dialog {
+    border: none; border-radius: 14px; padding: 1.35rem;
+    max-width: min(420px, calc(100vw - 2rem));
+    box-shadow: 0 24px 48px -12px rgba(15,23,42,0.4);
+  }
+  dialog::backdrop { background: rgba(15,23,42,0.6); }
+  dialog[open] { animation: pop var(--dur) cubic-bezier(0.16,1,0.3,1); }
+  @keyframes pop { from { opacity: 0; transform: scale(0.97); } }
+
+  .cd-title { margin: 0 0 0.5rem; font-size: 1.05rem; display: flex; gap: 0.6rem; align-items: center; }
+  .cd-title:focus { outline: none; }
+  .cd-icon { flex: none; color: var(--danger); }
+  .cd-body { margin: 0 0 1.25rem; font-size: 0.9375rem; line-height: 1.6; color: #334155; }
+  .cd-foot { display: flex; justify-content: flex-end; gap: 0.5rem; }
+  @media (prefers-reduced-motion: reduce) { dialog[open] { animation: none; } }
+</style>
+</head>
+<body>
+  <div>
+    <button class="btn-danger" id="deleteBtn">Delete 3 projects</button>
+    <p id="result" role="status" aria-live="polite"
+       style="font-size:0.875rem;color:#475569;min-height:1.2em;margin-top:1rem"></p>
+  </div>
+
+  <dialog id="confirmDlg" role="alertdialog" aria-labelledby="cdTitle" aria-describedby="cdBody">
+    <h2 class="cd-title" id="cdTitle" tabindex="-1">
+      <svg class="cd-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+        <path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>
+      </svg>
+      Delete 3 projects?
+    </h2>
+    <p class="cd-body" id="cdBody">
+      This permanently removes the projects and all of their history.
+      This action cannot be undone.
+    </p>
+    <div class="cd-foot">
+      <button id="cdCancel">Cancel</button>
+      <button class="btn-danger" id="cdConfirm">Delete 3 projects</button>
+    </div>
+  </dialog>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const dlg = /** @type {HTMLDialogElement} */ (document.getElementById('confirmDlg'));
+      const cancelBtn = /** @type {HTMLButtonElement} */ (document.getElementById('cdCancel'));
+      const confirmBtn = /** @type {HTMLButtonElement} */ (document.getElementById('cdConfirm'));
+      const titleEl = /** @type {HTMLElement} */ (document.getElementById('cdTitle'));
+      const deleteBtn = /** @type {HTMLButtonElement} */ (document.getElementById('deleteBtn'));
+      const result = /** @type {HTMLElement} */ (document.getElementById('result'));
+
+      /** @type {HTMLElement|null} */ let invoker = null;
+
+      /** @returns {Promise<boolean>} true only on explicit confirmation. */
+      function confirmDestructive() {
+        invoker = /** @type {HTMLElement} */ (document.activeElement);
+        dlg.showModal();
+        // Focus CANCEL, not the destructive button. A reflexive Enter must
+        // produce the safe outcome.
+        cancelBtn.focus();
+        return new Promise((resolve) => {
+          dlg.addEventListener('close', () => {
+            if (invoker && document.contains(invoker)) invoker.focus();
+            invoker = null;
+            resolve(dlg.returnValue === 'confirm');
+          }, { once: true });
+        });
+      }
+
+      cancelBtn.addEventListener('click', () => dlg.close('cancel'));
+      confirmBtn.addEventListener('click', () => dlg.close('confirm'));
+
+      // Escape must resolve to CANCEL. Native `cancel` sets returnValue to
+      // '' which is already falsy, but set it explicitly so the intent is
+      // visible rather than depending on a default.
+      dlg.addEventListener('cancel', () => { dlg.returnValue = 'cancel'; });
+
+      // NO backdrop-click handler here, deliberately — see the header note.
+
+      deleteBtn.addEventListener('click', async () => {
+        const confirmed = await confirmDestructive();
+        result.textContent = confirmed
+          ? '3 projects deleted'
+          : 'Cancelled — nothing was deleted';
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(dlg.getAttribute('role') === 'alertdialog',
+        '[smoke] role=alertdialog so the body text is announced with the title');
+      console.assert(dlg.hasAttribute('aria-describedby'),
+        '[smoke] consequences are wired via aria-describedby');
+      console.assert(!/^(ok|yes|confirm)$/i.test(confirmBtn.textContent.trim()),
+        '[smoke] confirm button names the action, not "OK" — it is heard out of context');
+      console.assert(
+        confirmBtn.compareDocumentPosition(cancelBtn) & Node.DOCUMENT_POSITION_PRECEDING,
+        '[smoke] Cancel precedes Confirm in the DOM, so Tab order reaches the safe option first');
+      console.assert(!dlg.open, '[smoke] dialog starts closed');
+    })();
+  </script>
+</body>
+</html>

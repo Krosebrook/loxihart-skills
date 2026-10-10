@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Scratch-Card Reveal</title>
+<!--
+  PATTERN: Scratch-Card Reveal
+  CATEGORY: Visual Enhancement & Decorative Effects
+  PRIORITY: Low  |  RISK: High
+
+  WHAT THIS IS: a Canvas overlay the user drags a finger/pointer across
+  to "scratch off," revealing content underneath as enough is cleared.
+
+  ADAPT THIS BY:
+    - Swapping the revealed content and the scratch-color/texture.
+
+  DO NOT STRIP WHEN ADAPTING (Risk: High — this is non-negotiable, not
+  an enhancement):
+    - The "Reveal instantly" button. SC 2.5.1 (Pointer Gestures) requires
+      a non-path-based alternative for any drag/gesture interaction —
+      scratching is inherently path-dependent and has no keyboard
+      equivalent, so a plain button that reveals everything immediately
+      is the actual compliance requirement, not a nice-to-have shortcut.
+    - Canvas redraw is rAF-gated during active dragging, not per pointer
+      event — drawing on every pointermove without a frame gate is a
+      real, easily-hit performance problem on this pattern specifically.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 0.75rem;
+    flex-direction: column;
+  }
+  .scratch-frame {
+    position: relative;
+    width: 280px; height: 160px;
+    border-radius: 12px; overflow: hidden;
+  }
+  .prize-layer {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: white; font-weight: 800; font-size: 1.25rem;
+  }
+  canvas.scratch-canvas {
+    position: absolute; inset: 0;
+    touch-action: none; cursor: grab;
+  }
+  button.reveal-btn { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid #cbd5e1; background: white; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="scratch-frame" id="scratchFrame">
+    <div class="prize-layer">You won 15% off!</div>
+    <canvas class="scratch-canvas" id="scratchCanvas" aria-hidden="true"></canvas>
+  </div>
+  <button class="reveal-btn" id="revealBtn">Reveal instantly (no drag required)</button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const frame = document.getElementById('scratchFrame');
+      const canvas = /** @type {HTMLCanvasElement} */ (document.getElementById('scratchCanvas'));
+      const revealBtn = /** @type {HTMLButtonElement} */ (document.getElementById('revealBtn'));
+      const ctx = canvas.getContext('2d');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let width, height, revealed = false;
+
+      function resize() {
+        const rect = frame.getBoundingClientRect();
+        width = canvas.width = rect.width;
+        height = canvas.height = rect.height;
+        paintScratchLayer();
+      }
+      function paintScratchLayer() {
+        ctx.globalCompositeOperation = 'source-over';
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, '#c0c0c0');
+        gradient.addColorStop(1, '#a3a3a3');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+        ctx.fillStyle = 'rgba(0,0,0,0.15)';
+        ctx.font = '13px system-ui';
+        ctx.fillText('scratch here', width / 2 - 34, height / 2);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let dragging = false;
+      let rafPending = false;
+      let pendingPoints = [];
+
+      function scratchAt(x, y) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 18, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      function flushScratches() {
+        rafPending = false;
+        pendingPoints.forEach(p => scratchAt(p.x, p.y));
+        pendingPoints = [];
+        checkRevealThreshold();
+      }
+
+      function checkRevealThreshold() {
+        if (revealed) return;
+        const data = ctx.getImageData(0, 0, width, height).data;
+        let cleared = 0;
+        for (let i = 3; i < data.length; i += 4 * 20) { // sample, not every pixel
+          if (data[i] === 0) cleared++;
+        }
+        const total = data.length / (4 * 20);
+        if (cleared / total > 0.55) revealFully();
+      }
+
+      function revealFully() {
+        revealed = true;
+        canvas.style.transition = reduceMotion ? 'none' : 'opacity 300ms ease-out';
+        canvas.style.opacity = '0';
+      }
+
+      canvas.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        canvas.setPointerCapture(e.pointerId);
+        const rect = canvas.getBoundingClientRect();
+        pendingPoints.push({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        if (!rafPending) { rafPending = true; requestAnimationFrame(flushScratches); }
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const rect = canvas.getBoundingClientRect();
+        pendingPoints.push({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        if (!rafPending) { rafPending = true; requestAnimationFrame(flushScratches); }
+      });
+      canvas.addEventListener('pointerup', () => { dragging = false; });
+
+      // Non-negotiable equivalent path — not an enhancement.
+      revealBtn.addEventListener('click', revealFully);
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(revealBtn.tagName === 'BUTTON',
+        '[smoke] a real, keyboard-operable non-drag reveal path exists (SC 2.5.1 requirement, not optional)');
+    })();
+  </script>
+</body>
+</html>

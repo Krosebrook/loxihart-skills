@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Image Glitch Flicker</title>
+<!--
+  PATTERN: Image Glitch Flicker
+  CATEGORY: Theming & Display-Mode Transitions
+  PRIORITY: Low  |  RISK: HIGH — ELEVATED RISK, MITIGATED BELOW
+
+  RISK STATEMENT — READ THIS FIRST:
+  Digital-glitch effects (RGB channel split, scanline flicker, frame
+  jitter) can cross the WCAG SC 2.3.1 flash threshold if rate or contrast
+  amplitude is high enough. Mitigations applied in this file:
+    - SINGLE-SHOT, not a loop. One appearance and one fade per activation
+      = one luminance transition pair. Jitter happens while opacity is HELD
+      CONSTANT, so the layers move without the brightness cycling.
+    - A cooldown caps sustained activation at ~1 flash/second, so
+      spam-clicking cannot manufacture a flash train.
+    - The ENTIRE effect is skipped outright under prefers-reduced-motion —
+      not toned down, removed.
+    - It fires only on an explicit user action (click), never on load,
+      scroll, or an ambient timer.
+
+  CORRECTION HISTORY — read before you "improve" this:
+  The first version toggled the layers on/off 6 times over 420ms and
+  carried a comment asserting that was "well under 3Hz." It was actually
+  ~14.3 steps/sec — roughly 7 flash cycles per second, a real SC 2.3.1
+  violation shipped inside the file that claimed to mitigate it. Static
+  review passed it; a browser load test caught it on the first run. If you
+  make this "punchier" by reintroducing a repeat loop, you reintroduce
+  that bug.
+
+  THIS FILE DOES NOT, BY ITSELF, CERTIFY WCAG 2.3.1 COMPLIANCE.
+  A text specification and conservative defaults reduce risk; they don't
+  replace measurement. Before shipping any specific real implementation
+  of this pattern, run the actual asset through a dedicated analysis tool
+  (e.g. the Trace Center's Photosensitive Epilepsy Analysis Tool) rather
+  than assuming these defaults are automatically safe for your exact
+  colors/contrast/timing.
+
+  ADAPT THIS BY:
+    - Swapping the image; BURST_MS/COOLDOWN_MS control the
+      effect's rate and length — do not raise the rate without re-checking
+      against a real analysis tool, not by eye.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #0f172a;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+    gap: 0.75rem;
+    flex-direction: column;
+  }
+  .glitch-frame {
+    position: relative;
+    width: 260px; height: 180px;
+    border-radius: 10px; overflow: hidden;
+  }
+  .glitch-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .glitch-frame .layer {
+    position: absolute; inset: 0;
+    mix-blend-mode: screen;
+    opacity: 0;
+    pointer-events: none;
+  }
+  button.trigger-btn {
+    padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid #334155;
+    background: #1e293b; color: #e2e8f0; cursor: pointer;
+  }
+  .risk-note { font-size: 0.75rem; color: #cbd5e1; max-width: 34ch; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="glitch-frame" id="glitchFrame">
+    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='440'%3E%3Crect width='640' height='440' fill='%23475569'/%3E%3Ccircle cx='200' cy='150' r='70' fill='%23f59e0b'/%3E%3Cpath d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/%3E%3C/svg%3E" alt="Decorative distressed-texture image" /><rect width='640' height='440' fill='%23475569'/><circle cx='200' cy='150' r='70' fill='%23f59e0b'/><path d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/></svg>" alt="Decorative distressed-texture image" />
+    <div class="layer" id="layerR" style="filter: sepia(1) hue-rotate(-50deg) saturate(6);"></div>
+    <div class="layer" id="layerB" style="filter: hue-rotate(180deg) saturate(4);"></div>
+  </div>
+  <button class="trigger-btn" id="triggerBtn">Trigger glitch burst</button>
+  <p class="risk-note">Skipped entirely if your OS/browser has reduced motion enabled.</p>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const frame = document.getElementById('glitchFrame');
+      const layerR = document.getElementById('layerR');
+      const layerB = document.getElementById('layerB');
+      const img = frame.querySelector('img');
+      const triggerBtn = /** @type {HTMLButtonElement} */ (document.getElementById('triggerBtn'));
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (reduceMotion) {
+        triggerBtn.disabled = true;
+        triggerBtn.textContent = 'Glitch effect disabled (reduced motion)';
+      }
+
+      layerR.style.backgroundImage = `url(${img.src})`;
+      layerR.style.backgroundSize = 'cover';
+      layerB.style.backgroundImage = `url(${img.src})`;
+      layerB.style.backgroundSize = 'cover';
+
+      // FLASH-RATE ARCHITECTURE — the reason this is a single shot, not a loop:
+      //
+      // An earlier version toggled the layers on/off 6 times across 420ms.
+      // That is 1000/70 = 14.3 steps per second — roughly 7 full on-off
+      // flash cycles per second, far over the SC 2.3.1 three-flashes-per-
+      // second threshold. Browser verification caught it; static review and
+      // a hand-written comment claiming "well under 3Hz" did not.
+      //
+      // Slowing that loop to 3Hz would technically comply but reads as
+      // broken blinking rather than a glitch. The fix is structural: ONE
+      // appearance and ONE fade-out per activation. The jitter happens while
+      // opacity is HELD CONSTANT, so the layers move without the luminance
+      // cycling — displacement is not a flash.
+      //
+      // Spam-clicking is the remaining vector: N activations per second = N
+      // flashes per second. The cooldown below caps activations at 1/sec.
+      const BURST_MS = 400;      // single appear-hold-fade cycle = 1 flash
+      const COOLDOWN_MS = 600;   // lockout after the burst
+      const MAX_FLASHES_PER_SEC = 1000 / (BURST_MS + COOLDOWN_MS); // = 1.0
+
+      function runBurst() {
+        if (reduceMotion) return; // hard gate, not a soft suggestion
+        triggerBtn.disabled = true;
+
+        // Opacity rises once and falls once. It never returns to 0 mid-burst,
+        // so this is a single luminance transition pair, not a flash train.
+        const opacityFrames = [
+          { opacity: 0 },
+          { opacity: 0.35, offset: 0.15 },
+          { opacity: 0.35, offset: 0.75 },
+          { opacity: 0 },
+        ];
+        const timing = /** @type {KeyframeAnimationOptions} */ ({ duration: BURST_MS, easing: 'linear', fill: 'forwards' });
+
+        layerR.animate(
+          opacityFrames.map((f, i) => ({
+            ...f,
+            // lateral jitter while opacity is held — movement, not flashing
+            transform: `translateX(${[0, 3, 5, 0][i]}px)`,
+          })),
+          timing
+        );
+        layerB.animate(
+          opacityFrames.map((f, i) => ({
+            ...f,
+            transform: `translateX(${[0, -3, -5, 0][i]}px)`,
+          })),
+          timing
+        );
+
+        setTimeout(() => {
+          layerR.style.opacity = '0';
+          layerB.style.opacity = '0';
+        }, BURST_MS);
+
+        setTimeout(() => { triggerBtn.disabled = false; }, BURST_MS + COOLDOWN_MS);
+      }
+
+      triggerBtn.addEventListener('click', runBurst);
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(MAX_FLASHES_PER_SEC < 3,
+        '[smoke] worst-case flash rate under sustained activation ('
+        + MAX_FLASHES_PER_SEC.toFixed(2) + '/sec) stays under the 3-per-second reference threshold');
+      console.assert(reduceMotion ? triggerBtn.disabled : true,
+        '[smoke] effect is hard-disabled, not just visually toned down, under reduced motion');
+    })();
+  </script>
+</body>
+</html>

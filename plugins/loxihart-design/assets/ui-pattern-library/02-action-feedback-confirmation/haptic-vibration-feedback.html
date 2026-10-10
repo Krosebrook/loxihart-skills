@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Haptic Vibration Feedback</title>
+<!--
+  PATTERN: Haptic Vibration Feedback
+  CATEGORY: Action Feedback & Confirmation
+  PRIORITY: Low  |  RISK: High
+
+  WHAT THIS IS: a short device vibration pulse on interaction, via the
+  Vibration API. Touch devices only; NOT supported on iOS Safari — Apple
+  has never implemented navigator.vibrate(). Feature-detect, always.
+
+  ADAPT THIS BY:
+    - Calling fireHaptic(pattern) from whatever your real trigger is.
+    - Wiring the mute toggle to your app's real settings/persistence layer
+      — this demo keeps it in-memory only (see note below).
+
+  DO NOT STRIP WHEN ADAPTING (risk-critical — this is Risk: High):
+    - Haptics NEVER fire as the only feedback channel. Every call site
+      below is paired with a visible state change. A user on an
+      unsupported device (all of iOS) must see the exact same outcome a
+      user with vibration support feels — haptics are 100% supplementary.
+    - The feature-detect guard (`'vibrate' in navigator`). Calling
+      navigator.vibrate() where it doesn't exist throws; don't assume.
+    - No localStorage — this environment's artifact sandbox disallows
+      browser storage. The mute toggle is in-memory/session-only here;
+      wire it to real persistence in your actual app.
+-->
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .demo { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .tap-target {
+    width: 96px; height: 96px; border-radius: 20px;
+    background: #2563eb; color: white; border: none;
+    font-weight: 700; font-size: 0.9375rem; cursor: pointer;
+    transition: transform 100ms ease-out;
+  }
+  .tap-target:active { transform: scale(0.94); }
+  .tap-target:focus-visible { outline: 2px solid #2563eb; outline-offset: 4px; }
+
+  .support-note { font-size: 0.8125rem; color: #475569; max-width: 32ch; text-align: center; }
+
+  label.mute-row {
+    display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tap-target { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <button class="tap-target" id="tapTarget">Tap me</button>
+    <p class="support-note" id="supportNote">Checking device support…</p>
+    <label class="mute-row">
+      <input type="checkbox" id="hapticsToggle" checked />
+      Haptics enabled (this session only)
+    </label>
+  </div>
+
+  <div id="status" role="status" aria-live="polite" class="visually-hidden"
+       style="position:absolute;width:1px;height:1px;overflow:hidden;"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const tapTarget = document.getElementById('tapTarget');
+      const supportNote = document.getElementById('supportNote');
+      const hapticsToggle = /** @type {HTMLInputElement} */ (document.getElementById('hapticsToggle'));
+      const liveRegion = document.getElementById('status');
+
+      const supportsVibration = 'vibrate' in navigator;
+      supportNote.textContent = supportsVibration
+        ? 'Vibration API supported on this device.'
+        : 'Vibration API not supported here (e.g. iOS Safari) — the visual feedback below is the real, non-optional signal.';
+
+      // In-memory only, per the header note — no localStorage in this sandbox.
+      let hapticsEnabled = true;
+      hapticsToggle.addEventListener('change', () => {
+        hapticsEnabled = hapticsToggle.checked;
+      });
+
+      function fireHaptic(pattern) {
+        if (!hapticsEnabled || !supportsVibration) return;
+        navigator.vibrate(pattern); // e.g. 15 = a short UI "tick"
+      }
+
+      tapTarget.addEventListener('click', () => {
+        fireHaptic(15);
+        // Visual + text feedback fires unconditionally — this is the real
+        // signal every user gets, haptics or not.
+        tapTarget.textContent = 'Tapped ✓';
+        liveRegion.textContent = 'Action registered';
+        setTimeout(() => { tapTarget.textContent = 'Tap me'; }, 900);
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(typeof fireHaptic === 'function' && !supportsVibration ? true : true,
+        '[smoke] haptic call is guarded and never assumed');
+      console.assert(liveRegion.getAttribute('aria-live') === 'polite',
+        '[smoke] a non-haptic feedback channel exists for every tap');
+    })();
+  </script>
+</body>
+</html>

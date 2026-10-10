@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferrous &amp; Fold — Objects Built to Outlast the Hand That Made Them</title>
+<!--
+  SMOKE TEST: on load, the hero shows a glow, an abstract case shape, and a
+  light sweep, all static. Scroll down — the three layers should drift at
+  visibly different rates (glow slowest, sweep fastest), clipped inside the
+  hero — nothing should visibly move past the hero's own edges. Continue to
+  "The Fold No. 3" — its silhouette should scale up by a small, single step
+  once it's centered, not continuously. Toggle OS "reduce motion" — both
+  effects must freeze in their resting pose with zero movement.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface: #12201B;
+    --surface-2: #182A23;
+    --ivory: #EFE9DB;
+    --ivory-soft: #B9B2A2;
+    --wine: #7A1F35;
+    --wine-soft: rgba(122, 31, 53, 0.25);
+    --rule: rgba(239, 233, 219, 0.12);
+    --space-2: 16px; --space-3: 24px; --space-4: 32px;
+    --space-5: 48px; --space-6: 64px; --space-7: 96px; --space-8: 140px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--ivory);
+    font-family: "Sora", -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2, .display {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-weight: 500;
+    margin: 0;
+  }
+  .kicker {
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ivory-soft);
+  }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-3) var(--space-5);
+    border-bottom: 1px solid var(--rule);
+  }
+  header .wordmark { font-family: "Cormorant Garamond", serif; font-size: 1.1rem; letter-spacing: 0.08em; }
+  nav { display: flex; gap: var(--space-4); }
+  nav a { color: var(--ivory-soft); text-decoration: none; font-size: 0.85rem; }
+  nav a:hover, nav a:focus-visible { color: var(--ivory); }
+  nav a:focus-visible { outline: 2px solid var(--wine); outline-offset: 4px; }
+
+  /* ---------- depth-layer parallax hero ---------- */
+  .hero-scene {
+    position: relative;
+    height: 92vh;
+    min-height: 560px;
+    overflow: hidden; /* clips layer travel to the hero's own bounds */
+    display: flex;
+    align-items: center;
+  }
+  .hero-scene .layer {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
+  .layer-back {
+    background: radial-gradient(circle at 62% 45%, var(--wine-soft), transparent 60%);
+  }
+  .layer-object {
+    display: flex; align-items: center; justify-content: center;
+  }
+  .layer-object .case {
+    width: min(38vw, 420px);
+    aspect-ratio: 1;
+    border-radius: 28% 28% 30% 30%;
+    background: linear-gradient(155deg, #23392F, #0F1B16 70%);
+    border: 1px solid rgba(239, 233, 219, 0.14);
+    position: relative;
+    transform: rotate(-4deg);
+  }
+  .layer-object .case::after {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border-radius: 50%;
+    border: 1px solid rgba(239, 233, 219, 0.18);
+    background: radial-gradient(circle at 35% 30%, rgba(239,233,219,0.08), transparent 65%);
+  }
+  .layer-sweep {
+    background: linear-gradient(115deg, transparent 40%, rgba(239, 233, 219, 0.14) 50%, transparent 60%);
+  }
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+    padding: 0 var(--space-6);
+    max-width: 620px;
+  }
+  .hero-copy h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.15;
+    margin-top: var(--space-3);
+  }
+  .hero-copy p { color: var(--ivory-soft); max-width: 42ch; margin-top: var(--space-3); }
+
+  @media (max-width: 720px) {
+    .hero-scene { height: 78vh; }
+    .layer-object .case { width: 62vw; }
+    .hero-copy { padding: 0 var(--space-4); }
+  }
+
+  /* ---------- scale-on-scroll focus piece ---------- */
+  .focus-piece {
+    padding: var(--space-8) var(--space-5);
+    background: var(--surface-2);
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: center;
+  }
+  .focus-shape { display: flex; justify-content: center; }
+  .fold-shape {
+    width: min(46vw, 320px);
+    aspect-ratio: 0.72;
+    background: linear-gradient(160deg, #1D2F27, #0D1712 75%);
+    border: 1px solid rgba(239, 233, 219, 0.14);
+    border-radius: 6px;
+    position: relative;
+    transform: scale(0.94);
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .fold-shape::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 8%;
+    bottom: 8%;
+    width: 1px;
+    background: rgba(239, 233, 219, 0.16);
+  }
+  .fold-shape.is-focused { transform: scale(1.06); }
+  .focus-copy .kicker { margin-bottom: var(--space-2); display: block; }
+  .focus-copy h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: var(--space-3); }
+  .focus-copy p { color: var(--ivory-soft); max-width: 40ch; }
+  @media (max-width: 720px) {
+    .focus-piece { grid-template-columns: 1fr; text-align: center; }
+    .focus-copy p { margin-inline: auto; }
+  }
+
+  /* ---------- craft notes ---------- */
+  .craft-notes {
+    padding: var(--space-7) var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .craft-notes .note h3 { font-family: "Sora"; font-size: 0.95rem; font-weight: 600; margin-bottom: var(--space-2); }
+  .craft-notes .note p { color: var(--ivory-soft); font-size: 0.92rem; margin: 0; }
+  @media (max-width: 760px) { .craft-notes { grid-template-columns: 1fr; } }
+
+  footer {
+    padding: var(--space-5);
+    border-top: 1px solid var(--rule);
+    text-align: center;
+    color: var(--ivory-soft);
+    font-size: 0.78rem;
+  }
+
+  /* ---------- reduced motion: off, not smaller ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scene .layer { transform: none !important; }
+    .fold-shape { transition: none !important; transform: scale(1) !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="wordmark">Ferrous &amp; Fold</span>
+  <nav>
+    <a href="#collection">Collection</a>
+    <a href="#atelier">Atelier</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero-scene" data-parallax-scene id="collection">
+    <div class="layer layer-back" data-depth="0.15"></div>
+    <div class="layer layer-object" data-depth="0.35"><div class="case"></div></div>
+    <div class="layer layer-sweep" data-depth="0.6"></div>
+    <div class="hero-copy">
+      <span class="kicker">The Standing Collection</span>
+      <h1>Objects built to outlast the hand that made them.</h1>
+      <p>No object leaves the bench with a projected lifespan. It leaves when we'd hand it to our own children without a second thought.</p>
+    </div>
+  </section>
+
+  <section class="focus-piece" id="atelier">
+    <div class="focus-shape"><div class="fold-shape" data-scale-target></div></div>
+    <div class="focus-copy">
+      <span class="kicker">Object 03</span>
+      <h2>The Fold No. 3</h2>
+      <p>A single hinge, cut from one billet instead of assembled from three parts. Fewer seams means fewer places for forty years of use to find a weakness.</p>
+    </div>
+  </section>
+
+  <section class="craft-notes">
+    <div class="note">
+      <h3>Materials</h3>
+      <p>Cold-forged brass-free alloy and full-grain leather, sourced from tanneries we've visited in person, not certified on paper alone.</p>
+    </div>
+    <div class="note">
+      <h3>Provenance</h3>
+      <p>Every piece is stamped with a batch number tied to the week it was finished — not for marketing, so we can trace a fault back to a specific afternoon.</p>
+    </div>
+    <div class="note">
+      <h3>Guarantee</h3>
+      <p>We repair anything we've made, for as long as we exist, at cost. That's the whole policy — no tiers, no fine print.</p>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  Ferrous &amp; Fold — small batches, no seasons, made to be repaired rather than replaced.
+</footer>
+
+<script>
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Depth-layer parallax — scoped visually by the hero's own overflow:hidden,
+  // so a simple window.scrollY read is enough; no relative-offset math needed.
+  const layers = document.querySelectorAll('[data-parallax-scene] .layer[data-depth]');
+  if (layers.length && !prefersReduced) {
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      layers.forEach((el) => {
+        const depth = parseFloat(el.dataset.depth);
+        el.style.transform = `translate3d(0, ${(y * depth).toFixed(1)}px, 0)`;
+      });
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+  }
+
+  // Scale-on-scroll: boolean toggle via IntersectionObserver, CSS transition
+  // does the actual animating (transform only).
+  const scaleTarget = document.querySelector('[data-scale-target]');
+  if (scaleTarget && !prefersReduced) {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => scaleTarget.classList.toggle('is-focused', e.isIntersecting)),
+      { threshold: 0.55 }
+    );
+    io.observe(scaleTarget);
+  }
+</script>
+
+</body>
+</html>

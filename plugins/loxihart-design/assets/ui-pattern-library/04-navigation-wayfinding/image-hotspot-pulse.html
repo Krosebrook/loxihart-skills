@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Image Hotspot Pulse</title>
+<!--
+  PATTERN: Image Hotspot Pulse
+  CATEGORY: Navigation & Wayfinding
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: pulsing dots over an image marking interactive/expandable
+  regions (e.g. product tagging), each opening a popover with details.
+
+  ADAPT THIS BY:
+    - Positioning .hotspot elements with inline top/left percentages
+      matching your real image's points of interest.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - Each hotspot is a real <button>, not a styled div — natively
+      focusable and Enter/Space-activatable.
+    - The popover satisfies SC 1.4.13 (Content on Hover or Focus): it's
+      dismissible via Escape or an explicit close, and persists on hover
+      of the popover itself (not dismissed by a stray pointer wobble).
+    - Reduced motion removes the pulse ring, keeps the static dot.
+-->
+<style>
+  :root { --hotspot-color: #f59e0b; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .image-frame { position: relative; width: 420px; }
+  .image-frame img { width: 100%; display: block; border-radius: 10px; }
+
+  button.hotspot {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--hotspot-color);
+    border: 2px solid white;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+  button.hotspot::before {
+    content: "";
+    position: absolute; inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--hotspot-color);
+    animation: hotspot-pulse 1.6s ease-out infinite;
+  }
+  @keyframes hotspot-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  button.hotspot:focus-visible { outline: 2px solid white; outline-offset: 2px; }
+
+  .popover {
+    position: absolute;
+    background: #0f172a; color: white;
+    padding: 0.5rem 0.75rem; border-radius: 8px;
+    font-size: 0.8125rem; white-space: nowrap;
+    display: none;
+    transform: translate(-50%, calc(-100% - 14px));
+  }
+  .popover.open { display: block; }
+  .popover button.close-popover {
+    margin-left: 0.5rem; background: none; border: none; color: #475569; cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    button.hotspot::before { animation: none; opacity: 0.4; inset: -4px; }
+  }
+</style>
+</head>
+<body>
+  <div class="image-frame">
+    <img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='440'%3E%3Crect width='640' height='440' fill='%23475569'/%3E%3Ccircle cx='200' cy='150' r='70' fill='%23f59e0b'/%3E%3Cpath d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/%3E%3C/svg%3E" alt="Living room furniture layout" /><rect width='640' height='440' fill='%23475569'/><circle cx='200' cy='150' r='70' fill='%23f59e0b'/><path d='M0 440 L220 210 L380 330 L520 200 L640 300 L640 440 Z' fill='%23334155'/></svg>" alt="Living room furniture layout" />
+    <button class="hotspot" style="top: 40%; left: 30%;" data-label="Lamp — $89" aria-label="View details: Lamp, $89"></button>
+    <button class="hotspot" style="top: 65%; left: 70%;" data-label="Sofa — $1,240" aria-label="View details: Sofa, $1,240"></button>
+    <div class="popover" id="popover" role="dialog" aria-live="polite"></div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const popover = document.getElementById('popover');
+      const hotspots = document.querySelectorAll('.hotspot');
+      let openedBy = null;
+
+      function openPopover(btn) {
+        const rect = btn.getBoundingClientRect();
+        const frameRect = document.querySelector('.image-frame').getBoundingClientRect();
+        popover.innerHTML = `${btn.dataset.label}<button class="close-popover" aria-label="Close details">×</button>`;
+        popover.style.top = (rect.top - frameRect.top) + 'px';
+        popover.style.left = (rect.left - frameRect.left + rect.width / 2) + 'px';
+        popover.classList.add('open');
+        openedBy = btn;
+        popover.querySelector('.close-popover').addEventListener('click', closePopover);
+      }
+      function closePopover() {
+        popover.classList.remove('open');
+        if (openedBy) openedBy.focus();
+        openedBy = null;
+      }
+
+      hotspots.forEach(btn => {
+        btn.addEventListener('click', () => openPopover(btn));
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && popover.classList.contains('open')) closePopover();
+      });
+
+      // --- inline smoke test -------------------------------------------
+      hotspots.forEach(btn => {
+        console.assert(btn.tagName === 'BUTTON' && btn.hasAttribute('aria-label'),
+          '[smoke] hotspot is a real focusable button with a real accessible name');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Download Progress Wave</title>
+<!--
+  PATTERN: Download Progress Wave
+  CATEGORY: Loading & Progress Feedback
+  PRIORITY: Medium  |  RISK: Low
+
+  WHAT THIS IS: a liquid-fill wave representing 0-100% download/upload
+  progress. The wave ripple is decorative; the FILL HEIGHT carries the
+  real information and is exposed natively for assistive tech.
+
+  ADAPT THIS BY:
+    - Feeding real progress events (XHR/fetch progress, WebSocket ticks)
+      into setProgress(percent) instead of the simulated timer below.
+
+  DO NOT STRIP WHEN ADAPTING:
+    - The hidden native <progress> element (or the role="progressbar" +
+      aria-valuenow triple) — the SVG wave alone is not accessible.
+    - Reduced motion keeps the fill-height transition (it's informational)
+      but removes the ripple's continuous horizontal motion.
+-->
+<style>
+  :root { --wave-color: #2563eb; --dur-ripple: 2.2s; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .demo { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+
+  .wave-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e2e8f0;
+    box-shadow: inset 0 0 0 3px #cbd5e1;
+  }
+  svg.wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .wave-shape {
+    fill: var(--wave-color);
+    animation: ripple var(--dur-ripple) linear infinite;
+  }
+  @keyframes ripple { to { transform: translateX(-50%); } }
+
+  .pct-label {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    mix-blend-mode: difference;
+  }
+
+  .native-progress { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+
+  button.start {
+    padding: 0.5rem 1.25rem; border-radius: 6px; border: 1px solid #cbd5e1;
+    background: white; cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wave-shape { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="demo">
+    <div class="wave-container">
+      <svg class="wave-svg" viewBox="0 0 200 200" preserveAspectRatio="none">
+        <!-- two identical wave tiles side by side; animating translateX(-50%)
+             on the pair loops seamlessly -->
+        <g id="waveGroup" class="wave-shape" style="transform: translate(0, 200px);">
+          <path d="M0,20 C25,0 75,40 100,20 C125,0 175,40 200,20 L200,200 L0,200 Z" />
+          <path d="M200,20 C225,0 275,40 300,20 C325,0 375,40 400,20 L400,200 L200,200 Z" />
+        </g>
+      </svg>
+      <div class="pct-label" id="pctLabel" aria-hidden="true">0%</div>
+      <progress class="native-progress" id="nativeProgress" value="0" max="100"></progress>
+    </div>
+    <button class="start" id="startBtn">Start download</button>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Defensive: this artifact preview sandbox's console omits
+      // console.assert, which is what threw on the last delivery. Shadow
+      // console locally (rather than mutating the real global object,
+      // which could itself fail if that object is frozen/proxied) so
+      // every console.assert(...) call below keeps working unchanged.
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+      const waveGroup = document.getElementById('waveGroup');
+      const pctLabel = document.getElementById('pctLabel');
+      const nativeProgress = /** @type {HTMLProgressElement} */ (document.getElementById('nativeProgress'));
+      const startBtn = /** @type {HTMLButtonElement} */ (document.getElementById('startBtn'));
+      let intervalId = null;
+
+      function setProgress(percent) {
+        percent = Math.max(0, Math.min(100, percent));
+        // 200 units of SVG height = 0-100%, water rises from the bottom.
+        const y = 200 - (percent / 100) * 200;
+        waveGroup.style.transform = `translate(0, ${y}px)`;
+        pctLabel.textContent = percent + '%';
+        nativeProgress.value = percent;
+        nativeProgress.setAttribute('aria-valuenow', String(percent));
+      }
+
+      function startSimulatedDownload() {
+        clearInterval(intervalId);
+        let percent = 0;
+        setProgress(0);
+        startBtn.disabled = true;
+        intervalId = setInterval(() => {
+          percent += Math.random() * 8 + 2;
+          if (percent >= 100) {
+            setProgress(100);
+            clearInterval(intervalId);
+            startBtn.disabled = false;
+            return;
+          }
+          setProgress(percent);
+        }, 150);
+      }
+
+      startBtn.addEventListener('click', startSimulatedDownload);
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(nativeProgress.tagName === 'PROGRESS',
+        '[smoke] native <progress> element carries the real value');
+      console.assert(pctLabel.getAttribute('aria-hidden') === 'true',
+        '[smoke] decorative percent label is hidden from assistive tech (native progress is the source of truth)');
+    })();
+  </script>
+</body>
+</html>

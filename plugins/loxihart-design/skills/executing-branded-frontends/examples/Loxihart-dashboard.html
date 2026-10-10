@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<!--
+  Profile:        Loxihart
+  Component:      Ticket Status Panel — service desk KPI summary
+  Differentiator: Monospaced counts to signal precision; asymmetric column widths
+                  imply data hierarchy rather than aesthetic balance
+  States:         loading (skeleton), empty, error, idle (data populated)
+  Brief ref:      inline gate passed
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Status Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --surface-base:    #0a0a0f;
+      --surface-raised:  #111118;
+      --surface-overlay: #18181f;
+      --border-primary:   #2a2a38;
+      --border-secondary: #1e1e28;
+      --accent:          hsl(262, 83%, 68%);
+      --accent-dim:      hsl(262, 60%, 45%);
+      --accent-glow:     hsla(262, 83%, 68%, 0.15);
+      --text-primary:    #f0f0f5;
+      --text-secondary:  #9898a8;
+      --text-tertiary:   #52525e;
+      --font-heading: 'Space Grotesk', 'DM Sans', sans-serif;
+      --font-body:    'Inter', 'DM Sans', system-ui, sans-serif;
+      --font-mono:    'IBM Plex Mono', 'Fira Code', monospace;
+      --text-xs:   11px;
+      --text-sm:   13px;
+      --text-base: 14px;
+      --text-md:   16px;
+      --text-lg:   20px;
+      --text-2xl:  32px;
+      --text-3xl:  48px;
+      --space-2:  8px;
+      --space-3:  12px;
+      --space-4:  16px;
+      --space-6:  24px;
+      --space-8:  32px;
+      --radius-sm:  4px;
+      --radius-md:  6px;
+      --radius-full: 999px;
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-error:   #ef4444;
+      --color-success-bg: rgba(34, 197, 94, 0.1);
+      --color-warning-bg: rgba(245, 158, 11, 0.1);
+      --color-error-bg:   rgba(239, 68, 68, 0.1);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+      --ease-out-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --duration-fast:   150ms;
+      --duration-slow:   400ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--surface-base);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-8);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* ── Panel ── */
+    .panel {
+      background: var(--surface-raised);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      width: 100%;
+      max-width: 560px;
+      overflow: hidden;
+    }
+
+    .panel__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    .panel__title {
+      font-family: var(--font-heading);
+      font-size: var(--text-md);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-full);
+      font-size: var(--text-xs);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge--live {
+      background: var(--color-success-bg);
+      color: var(--color-success);
+    }
+
+    /* ── Metrics grid — asymmetric: primary KPI wider ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;  /* intentional asymmetry */
+      gap: 1px;
+      background: var(--border-primary);     /* gap color = border */
+    }
+
+    .metric {
+      background: var(--surface-raised);
+      padding: var(--space-6) var(--space-4) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .metric__label {
+      font-size: var(--text-xs);
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Monospaced counts — the differentiator */
+    .metric__value {
+      font-family: var(--font-mono);         /* monospace = precision signal */
+      font-size: var(--text-3xl);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .metric--primary .metric__value {
+      color: var(--accent);                  /* accent on the primary KPI only */
+    }
+
+    .metric__delta {
+      font-size: var(--text-xs);
+      font-family: var(--font-mono);
+      color: var(--text-tertiary);
+    }
+
+    /* ── Ticket list ── */
+    .ticket-list {
+      padding: var(--space-3) 0;
+    }
+
+    .ticket {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-6);
+      border-bottom: 1px solid var(--border-secondary);
+      transition: background var(--duration-fast) var(--ease-out-smooth);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+    .ticket:last-child { border-bottom: none; }
+    .ticket:hover { background: var(--surface-overlay); }
+
+    .ticket__indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ticket__indicator--open     { background: var(--color-error); }
+    .ticket__indicator--progress { background: var(--color-warning); }
+    .ticket__indicator--resolved { background: var(--color-success); }
+
+    .ticket__id {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    .ticket__title {
+      font-size: var(--text-sm);
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ticket__meta {
+      font-size: var(--text-xs);
+      color: var(--text-tertiary);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+
+    /* ── Skeletons ── */
+    @keyframes shimmer {
+      from { background-position: -200% 0; }
+      to   { background-position: 200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface-raised) 25%, var(--surface-overlay) 50%, var(--surface-raised) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Entrance animation ── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .metric { animation: fadeSlideUp var(--duration-slow) var(--ease-out-smooth) both; }
+    .metric:nth-child(1) { animation-delay: 0ms; }
+    .metric:nth-child(2) { animation-delay: 60ms; }
+    .metric:nth-child(3) { animation-delay: 120ms; }
+
+    .ticket { animation: fadeSlideUp var(--duration-slow) var(--ease-out-smooth) both; }
+    .ticket:nth-child(1) { animation-delay: 180ms; }
+    .ticket:nth-child(2) { animation-delay: 220ms; }
+    .ticket:nth-child(3) { animation-delay: 260ms; }
+
+    /* ── State views ── */
+    .state-view {
+      padding: var(--space-8) var(--space-6);
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+    }
+    .state-view__action {
+      margin-top: var(--space-4);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: transparent;
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      transition: border-color var(--duration-fast), color var(--duration-fast);
+    }
+    .state-view__action:hover { border-color: var(--accent); color: var(--text-primary); }
+
+    .error-text { color: var(--color-error); font-size: var(--text-sm); }
+  </style>
+</head>
+<body>
+
+<main aria-label="Ticket status overview">
+  <section class="panel" id="ticket-panel">
+
+    <header class="panel__header">
+      <h1 class="panel__title">Ticket Status</h1>
+      <span class="badge badge--live" role="status">Live</span>
+    </header>
+
+    <!-- STATE: idle (populated) -->
+    <div id="state-idle">
+      <div class="metrics" role="group" aria-label="Ticket counts">
+        <div class="metric metric--primary" aria-label="24 open tickets">
+          <span class="metric__label">Open</span>
+          <span class="metric__value">24</span>
+          <span class="metric__delta">+3 since 8am</span>
+        </div>
+        <div class="metric" aria-label="8 tickets in progress">
+          <span class="metric__label">In Progress</span>
+          <span class="metric__value">08</span>
+          <span class="metric__delta">2 SLA risk</span>
+        </div>
+        <div class="metric" aria-label="142 tickets resolved">
+          <span class="metric__label">Resolved</span>
+          <span class="metric__value">142</span>
+          <span class="metric__delta">today</span>
+        </div>
+      </div>
+
+      <ol class="ticket-list" aria-label="Recent tickets">
+        <li>
+          <a href="#" class="ticket" aria-label="Ticket 1042: Network outage — Critical, 12 minutes ago">
+            <span class="ticket__indicator ticket__indicator--open" aria-hidden="true"></span>
+            <span>
+              <div class="ticket__id">#1042</div>
+              <div class="ticket__title">Network outage — Main office floor 3</div>
+            </span>
+            <span class="ticket__meta">12m ago</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="ticket" aria-label="Ticket 1041: VPN authentication failure, 34 minutes ago">
+            <span class="ticket__indicator ticket__indicator--progress" aria-hidden="true"></span>
+            <span>
+              <div class="ticket__id">#1041</div>
+              <div class="ticket__title">VPN authentication failure — remote users</div>
+            </span>
+            <span class="ticket__meta">34m ago</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="ticket" aria-label="Ticket 1039: Printer configuration, 1 hour ago">
+            <span class="ticket__indicator ticket__indicator--resolved" aria-hidden="true"></span>
+            <span>
+              <div class="ticket__id">#1039</div>
+              <div class="ticket__title">Printer configuration — HR department</div>
+            </span>
+            <span class="ticket__meta">1h ago</span>
+          </a>
+        </li>
+      </ol>
+    </div>
+
+    <!-- STATE: loading -->
+    <div id="state-loading" hidden aria-busy="true" aria-label="Loading ticket data...">
+      <div class="metrics">
+        <div class="metric">
+          <div class="skeleton" style="height:11px;width:40%;"></div>
+          <div class="skeleton" style="height:48px;width:60%;margin-top:8px;"></div>
+        </div>
+        <div class="metric">
+          <div class="skeleton" style="height:11px;width:50%;"></div>
+          <div class="skeleton" style="height:48px;width:60%;margin-top:8px;"></div>
+        </div>
+        <div class="metric">
+          <div class="skeleton" style="height:11px;width:55%;"></div>
+          <div class="skeleton" style="height:48px;width:60%;margin-top:8px;"></div>
+        </div>
+      </div>
+      <div style="padding:12px 0;">
+        <div class="skeleton" style="height:44px;margin:1px 0;"></div>
+        <div class="skeleton" style="height:44px;margin:1px 0;"></div>
+        <div class="skeleton" style="height:44px;margin:1px 0;"></div>
+      </div>
+    </div>
+
+    <!-- STATE: empty -->
+    <div id="state-empty" hidden>
+      <div class="state-view" role="status">
+        <p>No tickets in the queue.</p>
+        <button class="state-view__action" onclick="simulateLoad()">
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- STATE: error -->
+    <div id="state-error" hidden>
+      <div class="state-view" role="alert" aria-live="assertive">
+        <p class="error-text">Could not load ticket data</p>
+        <p style="margin-top:4px;font-size:11px;">Check network connection or contact support.</p>
+        <button class="state-view__action" onclick="simulateLoad()">
+          Try again
+        </button>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<script>
+  const STATES = ['idle', 'loading', 'empty', 'error'];
+
+  function showState(state) {
+    STATES.forEach(s => {
+      const el = document.getElementById('state-' + s);
+      if (el) el.hidden = s !== state;
+    });
+  }
+
+  function simulateLoad() {
+    showState('loading');
+    setTimeout(() => showState('idle'), 1200);
+  }
+
+  // Demo: cycle states via keyboard for review
+  let idx = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      idx = (idx + 1) % STATES.length;
+      showState(STATES[idx]);
+    }
+  });
+
+  // Initial state
+  showState('idle');
+</script>
+
+</body>
+</html>

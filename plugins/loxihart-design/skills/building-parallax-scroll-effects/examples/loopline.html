@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loopline — Automation That Reads the Room</title>
+<!--
+  SMOKE TEST: on a mouse/trackpad device, the small dots in the hero should
+  drift slightly opposite the cursor as it moves — nothing happens on a
+  touch device, by design. Scroll into "How It Runs" — five step-cards
+  should track horizontally as you scroll normally downward, then release
+  back to vertical scroll once the last card clears the viewport; resize the
+  window and re-scroll into the section — the horizontal distance should
+  still land exactly on the last card, not overshoot or fall short. Toggle
+  OS "reduce motion" — pointer drift and horizontal tracking both stop; the
+  step-cards should still all be reachable by scrolling normally (verify by
+  scrolling the whole page height, not just visually).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600&family=Manrope:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface: #0A0A0F;
+    --surface-2: #12121A;
+    --line: rgba(255, 255, 255, 0.09);
+    --text: #ECECF1;
+    --text-soft: #93939F;
+    --accent: #FF6A3D;
+    --accent-soft: rgba(255, 106, 61, 0.14);
+    --space-2: 16px; --space-3: 24px; --space-4: 32px;
+    --space-5: 48px; --space-6: 64px; --space-7: 96px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface);
+    color: var(--text);
+    font-family: "Manrope", -apple-system, sans-serif;
+    line-height: 1.6;
+  }
+  h1, h2 { font-family: "Bricolage Grotesque", sans-serif; margin: 0; letter-spacing: -0.01em; }
+  .mono { font-family: "Space Mono", monospace; }
+  .kicker { font-family: "Space Mono", monospace; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+
+  header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--line); }
+  header .wordmark { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 1rem; }
+  nav { display: flex; gap: var(--space-4); }
+  nav a { color: var(--text-soft); text-decoration: none; font-size: 0.85rem; }
+  nav a:hover, nav a:focus-visible { color: var(--text); }
+  nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  /* ---------- pointer-parallax hero ---------- */
+  .hero { position: relative; padding: var(--space-7) var(--space-5); min-height: 70vh; display: flex; align-items: center; overflow: hidden; }
+  .hero-copy { position: relative; z-index: 2; max-width: 640px; }
+  .hero-copy h1 { font-size: clamp(2.1rem, 5.5vw, 3.6rem); line-height: 1.1; margin-top: var(--space-3); }
+  .hero-copy p { color: var(--text-soft); max-width: 46ch; margin-top: var(--space-3); font-size: 1.05rem; }
+  .node-field { position: absolute; inset: 0; z-index: 1; }
+  .node-field svg { position: absolute; will-change: transform; }
+  .node-field svg circle { fill: var(--accent); }
+  .node-field svg line { stroke: var(--line); stroke-width: 1; }
+
+  /* ---------- horizontal scroll-linked panel ---------- */
+  .h-scroll-section { position: relative; background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .h-scroll-track { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; gap: var(--space-5); padding: 0 var(--space-6); will-change: transform; }
+  .h-scroll-intro { flex: 0 0 min(38vw, 380px); padding-right: var(--space-4); }
+  .h-scroll-intro .kicker { display: block; margin-bottom: var(--space-3); }
+  .h-scroll-intro h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+  .step-card {
+    flex: 0 0 min(46vw, 340px);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: var(--space-4);
+    height: min(52vh, 320px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .step-card .index { font-size: 0.75rem; color: var(--accent); }
+  .step-card h3 { font-family: "Bricolage Grotesque"; font-size: 1.15rem; margin: var(--space-3) 0 var(--space-2); }
+  .step-card p { color: var(--text-soft); font-size: 0.92rem; margin: 0; }
+
+  @media (max-width: 720px) {
+    .h-scroll-intro, .step-card { flex: 0 0 78vw; }
+  }
+
+  /* ---------- proof strip ---------- */
+  .proof { padding: var(--space-6) var(--space-5); display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); max-width: 1000px; margin: 0 auto; text-align: center; }
+  .proof .stat { font-family: "Bricolage Grotesque"; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .proof .label { color: var(--text-soft); font-size: 0.82rem; margin-top: var(--space-2); }
+  @media (max-width: 720px) { .proof { grid-template-columns: 1fr; } }
+
+  footer { padding: var(--space-5); border-top: 1px solid var(--line); text-align: center; color: var(--text-soft); font-size: 0.78rem; }
+
+  /* ---------- reduced motion: off, not smaller ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .node-field svg { transform: none !important; }
+    .h-scroll-track { position: static !important; height: auto !important; flex-wrap: wrap; transform: none !important; }
+    .h-scroll-section { height: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="wordmark">Loopline</span>
+  <nav>
+    <a href="#how-it-runs">Product</a>
+    <a href="#method">Method</a>
+    <a href="#proof">Pricing</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" data-pointer-parallax id="method">
+    <div class="node-field" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <span class="kicker">Workflow Engine</span>
+      <h1>Automation that reads the room.</h1>
+      <p>Loopline watches for the signal, decides what it means, and routes it — without a rules engine you have to babysit every time the data shifts shape.</p>
+    </div>
+  </section>
+
+  <section class="h-scroll-section" id="how-it-runs" data-h-scroll-section>
+    <div class="h-scroll-track" data-h-scroll-track>
+      <div class="h-scroll-intro">
+        <span class="kicker">How It Runs</span>
+        <h2>Five steps, one loop.</h2>
+      </div>
+
+      <article class="step-card">
+        <span class="index mono">01 / TRIGGER</span>
+        <div>
+          <h3>Catch the signal</h3>
+          <p>Any event source — webhook, queue, or a scheduled sweep — lands in the same intake, typed and validated before anything downstream sees it.</p>
+        </div>
+      </article>
+
+      <article class="step-card">
+        <span class="index mono">02 / ENRICH</span>
+        <div>
+          <h3>Fill in what's missing</h3>
+          <p>Loopline joins the event against context it already holds, so downstream steps get a complete record instead of a bare payload.</p>
+        </div>
+      </article>
+
+      <article class="step-card">
+        <span class="index mono">03 / ROUTE</span>
+        <div>
+          <h3>Decide, don't guess</h3>
+          <p>Routing rules are versioned and testable — you can replay last week's traffic against a rule change before it ever touches production.</p>
+        </div>
+      </article>
+
+      <article class="step-card">
+        <span class="index mono">04 / NOTIFY</span>
+        <div>
+          <h3>Tell the right human</h3>
+          <p>Escalations land as a single actionable message, not a wall of raw JSON someone has to decode at 2am.</p>
+        </div>
+      </article>
+
+      <article class="step-card">
+        <span class="index mono">05 / LEARN</span>
+        <div>
+          <h3>Feed the next run</h3>
+          <p>Every routing decision — and every override a human made — becomes training signal for the next version of the rule, not a discarded log line.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="proof" id="proof">
+    <div>
+      <div class="stat mono">6</div>
+      <div class="label">steps from signal to routed action</div>
+    </div>
+    <div>
+      <div class="stat mono">0</div>
+      <div class="label">rules engines you have to hand-edit weekly</div>
+    </div>
+    <div>
+      <div class="stat mono">1</div>
+      <div class="label">place every event lands, regardless of source</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Loopline — one intake, one routing layer, no glue code between them.
+</footer>
+
+<script>
+  const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(pointer: fine)').matches;
+
+  // Build a small, decorative node field — geometric primitives, not an icon
+  // pack. aria-hidden on the container already; nothing here carries content.
+  const field = document.querySelector('.node-field');
+  if (field) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const positions = [
+      { x: '12%', y: '20%', r: 4, depth: 18 },
+      { x: '78%', y: '15%', r: 3, depth: 30 },
+      { x: '85%', y: '55%', r: 5, depth: 14 },
+      { x: '55%', y: '75%', r: 3, depth: 26 },
+      { x: '25%', y: '68%', r: 4, depth: 22 },
+      { x: '48%', y: '30%', r: 2.5, depth: 34 },
+    ];
+    positions.forEach((p) => {
+      const svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('width', '12'); svg.setAttribute('height', '12');
+      svg.setAttribute('viewBox', '0 0 12 12');
+      svg.style.left = p.x; svg.style.top = p.y;
+      svg.dataset.pointerDepth = p.depth;
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', 6); c.setAttribute('cy', 6); c.setAttribute('r', p.r);
+      svg.appendChild(c);
+      field.appendChild(svg);
+    });
+  }
+
+  const hero = document.querySelector('[data-pointer-parallax]');
+  if (hero && finePointer && !prefersReduced) {
+    let rafId = null;
+    hero.addEventListener('pointermove', (e) => {
+      if (rafId) return;
+      const rect = hero.getBoundingClientRect();
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
+      rafId = requestAnimationFrame(() => {
+        hero.querySelectorAll('[data-pointer-depth]').forEach((el) => {
+          const strength = parseFloat(el.dataset.pointerDepth);
+          el.style.transform = `translate3d(${(nx * strength).toFixed(1)}px, ${(ny * strength).toFixed(1)}px, 0)`;
+        });
+        rafId = null;
+      });
+    }, { passive: true });
+  }
+
+  // Horizontal scroll-linked panel — measured on load and resize.
+  const track = document.querySelector('[data-h-scroll-track]');
+  const section = document.querySelector('[data-h-scroll-section]');
+  if (track && section && !prefersReduced) {
+    let distance = 0;
+    const measure = () => {
+      distance = Math.max(0, track.scrollWidth - window.innerWidth);
+      section.style.height = `${distance + window.innerHeight}px`;
+    };
+    measure();
+    window.addEventListener('resize', measure);
+
+    let ticking = false;
+    const update = () => {
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
+      const progress = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 0;
+      track.style.transform = `translate3d(${(-progress * distance).toFixed(1)}px, 0, 0)`;
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+  }
+</script>
+
+</body>
+</html>

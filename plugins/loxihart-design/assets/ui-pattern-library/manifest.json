@@ -1,0 +1,802 @@
+[
+  {
+    "pattern_number": 1,
+    "pattern_name": "Parallax Scrolling",
+    "category": 1,
+    "production_code": "patterns/001-parallax-scrolling/A-production-code.md",
+    "design_spec": "patterns/001-parallax-scrolling/B-design-system-specification.md",
+    "user_stories": "patterns/001-parallax-scrolling/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 2,
+    "pattern_name": "Sticky Stack Cards",
+    "category": 1,
+    "production_code": "patterns/002-sticky-stack-cards/A-production-code.md",
+    "design_spec": "patterns/002-sticky-stack-cards/B-design-system-specification.md",
+    "user_stories": "patterns/002-sticky-stack-cards/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 3,
+    "pattern_name": "Horizontal Page Scroll",
+    "category": 1,
+    "production_code": "patterns/003-horizontal-page-scroll/A-production-code.md",
+    "design_spec": "patterns/003-horizontal-page-scroll/B-design-system-specification.md",
+    "user_stories": "patterns/003-horizontal-page-scroll/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 4,
+    "pattern_name": "Z-Axis Camera Tunnel",
+    "category": 1,
+    "production_code": "patterns/004-z-axis-camera-tunnel/A-production-code.md",
+    "design_spec": "patterns/004-z-axis-camera-tunnel/B-design-system-specification.md",
+    "user_stories": "patterns/004-z-axis-camera-tunnel/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 5,
+    "pattern_name": "Scroll-Triggered Progress Bar",
+    "category": 1,
+    "production_code": "patterns/005-scroll-triggered-progress-bar/A-production-code.md",
+    "design_spec": "patterns/005-scroll-triggered-progress-bar/B-design-system-specification.md",
+    "user_stories": "patterns/005-scroll-triggered-progress-bar/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 6,
+    "pattern_name": "Scroll-Spy Navigation",
+    "category": 1,
+    "production_code": "patterns/006-scroll-spy-navigation/A-production-code.md",
+    "design_spec": "patterns/006-scroll-spy-navigation/B-design-system-specification.md",
+    "user_stories": "patterns/006-scroll-spy-navigation/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 7,
+    "pattern_name": "Infinite Scroll Loader",
+    "category": 1,
+    "production_code": "patterns/007-infinite-scroll-loader/A-production-code.md",
+    "design_spec": "patterns/007-infinite-scroll-loader/B-design-system-specification.md",
+    "user_stories": "patterns/007-infinite-scroll-loader/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 8,
+    "pattern_name": "Reveal-on-Scroll Elements",
+    "category": 1,
+    "production_code": "patterns/008-reveal-on-scroll-elements/A-production-code.md",
+    "design_spec": "patterns/008-reveal-on-scroll-elements/B-design-system-specification.md",
+    "user_stories": "patterns/008-reveal-on-scroll-elements/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 9,
+    "pattern_name": "Magnetic Scroll Snapping",
+    "category": 1,
+    "production_code": "patterns/009-magnetic-scroll-snapping/A-production-code.md",
+    "design_spec": "patterns/009-magnetic-scroll-snapping/B-design-system-specification.md",
+    "user_stories": "patterns/009-magnetic-scroll-snapping/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 10,
+    "pattern_name": "Custom Scrollbar",
+    "category": 1,
+    "production_code": "patterns/010-custom-scrollbar/A-production-code.md",
+    "design_spec": "patterns/010-custom-scrollbar/B-design-system-specification.md",
+    "user_stories": "patterns/010-custom-scrollbar/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 11,
+    "pattern_name": "Kinetic Inertial Scrolling",
+    "category": 1,
+    "production_code": "patterns/011-kinetic-inertial-scrolling/A-production-code.md",
+    "design_spec": "patterns/011-kinetic-inertial-scrolling/B-design-system-specification.md",
+    "user_stories": "patterns/011-kinetic-inertial-scrolling/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 12,
+    "pattern_name": "Split-Screen Parallax",
+    "category": 1,
+    "production_code": "patterns/012-split-screen-parallax/A-production-code.md",
+    "design_spec": "patterns/012-split-screen-parallax/B-design-system-specification.md",
+    "user_stories": "patterns/012-split-screen-parallax/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 13,
+    "pattern_name": "Back-to-Top Fast Jump",
+    "category": 1,
+    "production_code": "patterns/013-back-to-top-fast-jump/A-production-code.md",
+    "design_spec": "patterns/013-back-to-top-fast-jump/B-design-system-specification.md",
+    "user_stories": "patterns/013-back-to-top-fast-jump/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 14,
+    "pattern_name": "Pinned Sidebar Content",
+    "category": 1,
+    "production_code": "patterns/014-pinned-sidebar-content/A-production-code.md",
+    "design_spec": "patterns/014-pinned-sidebar-content/B-design-system-specification.md",
+    "user_stories": "patterns/014-pinned-sidebar-content/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 15,
+    "pattern_name": "Zoom-on-Scroll Backgrounds",
+    "category": 1,
+    "production_code": "patterns/015-zoom-on-scroll-backgrounds/A-production-code.md",
+    "design_spec": "patterns/015-zoom-on-scroll-backgrounds/B-design-system-specification.md",
+    "user_stories": "patterns/015-zoom-on-scroll-backgrounds/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 16,
+    "pattern_name": "Asymmetric Layer Grid",
+    "category": 1,
+    "production_code": "patterns/016-asymmetric-layer-grid/A-production-code.md",
+    "design_spec": "patterns/016-asymmetric-layer-grid/B-design-system-specification.md",
+    "user_stories": "patterns/016-asymmetric-layer-grid/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 17,
+    "pattern_name": "Infinite Canvas",
+    "category": 1,
+    "production_code": "patterns/017-infinite-canvas/A-production-code.md",
+    "design_spec": "patterns/017-infinite-canvas/B-design-system-specification.md",
+    "user_stories": "patterns/017-infinite-canvas/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 18,
+    "pattern_name": "Bento Box UI",
+    "category": 1,
+    "production_code": "patterns/018-bento-box-ui/A-production-code.md",
+    "design_spec": "patterns/018-bento-box-ui/B-design-system-specification.md",
+    "user_stories": "patterns/018-bento-box-ui/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 19,
+    "pattern_name": "Sticky Header Shrink",
+    "category": 1,
+    "production_code": "patterns/019-sticky-header-shrink/A-production-code.md",
+    "design_spec": "patterns/019-sticky-header-shrink/B-design-system-specification.md",
+    "user_stories": "patterns/019-sticky-header-shrink/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 20,
+    "pattern_name": "Horizontal Timeline Scroll",
+    "category": 1,
+    "production_code": "patterns/020-horizontal-timeline-scroll/A-production-code.md",
+    "design_spec": "patterns/020-horizontal-timeline-scroll/B-design-system-specification.md",
+    "user_stories": "patterns/020-horizontal-timeline-scroll/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 21,
+    "pattern_name": "Footer Reveal",
+    "category": 1,
+    "production_code": "patterns/021-footer-reveal/A-production-code.md",
+    "design_spec": "patterns/021-footer-reveal/B-design-system-specification.md",
+    "user_stories": "patterns/021-footer-reveal/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 22,
+    "pattern_name": "Masonry Grid Layout",
+    "category": 1,
+    "production_code": "patterns/022-masonry-grid-layout/A-production-code.md",
+    "design_spec": "patterns/022-masonry-grid-layout/B-design-system-specification.md",
+    "user_stories": "patterns/022-masonry-grid-layout/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 23,
+    "pattern_name": "Over-sized Hero Typography",
+    "category": 1,
+    "production_code": "patterns/023-over-sized-hero-typography/A-production-code.md",
+    "design_spec": "patterns/023-over-sized-hero-typography/B-design-system-specification.md",
+    "user_stories": "patterns/023-over-sized-hero-typography/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 24,
+    "pattern_name": "Split View Contrast",
+    "category": 1,
+    "production_code": "patterns/024-split-view-contrast/A-production-code.md",
+    "design_spec": "patterns/024-split-view-contrast/B-design-system-specification.md",
+    "user_stories": "patterns/024-split-view-contrast/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 25,
+    "pattern_name": "Dual-Axis Pan Workspace",
+    "category": 1,
+    "production_code": "patterns/025-dual-axis-pan-workspace/A-production-code.md",
+    "design_spec": "patterns/025-dual-axis-pan-workspace/B-design-system-specification.md",
+    "user_stories": "patterns/025-dual-axis-pan-workspace/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 26,
+    "pattern_name": "Parallax Video Mask",
+    "category": 1,
+    "production_code": "patterns/026-parallax-video-mask/A-production-code.md",
+    "design_spec": "patterns/026-parallax-video-mask/B-design-system-specification.md",
+    "user_stories": "patterns/026-parallax-video-mask/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 27,
+    "pattern_name": "Scroll-Driven Color Shift",
+    "category": 1,
+    "production_code": "patterns/027-scroll-driven-color-shift/A-production-code.md",
+    "design_spec": "patterns/027-scroll-driven-color-shift/B-design-system-specification.md",
+    "user_stories": "patterns/027-scroll-driven-color-shift/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 28,
+    "pattern_name": "Card Peeking Fold",
+    "category": 1,
+    "production_code": "patterns/028-card-peeking-fold/A-production-code.md",
+    "design_spec": "patterns/028-card-peeking-fold/B-design-system-specification.md",
+    "user_stories": "patterns/028-card-peeking-fold/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 29,
+    "pattern_name": "Dynamic Sidebar Pinning",
+    "category": 1,
+    "production_code": "patterns/029-dynamic-sidebar-pinning/A-production-code.md",
+    "design_spec": "patterns/029-dynamic-sidebar-pinning/B-design-system-specification.md",
+    "user_stories": "patterns/029-dynamic-sidebar-pinning/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 30,
+    "pattern_name": "Faux-3D Tilting Rows",
+    "category": 1,
+    "production_code": "patterns/030-faux-three-d-tilting-rows/A-production-code.md",
+    "design_spec": "patterns/030-faux-three-d-tilting-rows/B-design-system-specification.md",
+    "user_stories": "patterns/030-faux-three-d-tilting-rows/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 31,
+    "pattern_name": "Accordion Menus",
+    "category": 2,
+    "production_code": "patterns/031-accordion-menus/A-production-code.md",
+    "design_spec": "patterns/031-accordion-menus/B-design-system-specification.md",
+    "user_stories": "patterns/031-accordion-menus/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 32,
+    "pattern_name": "Multi-Tier Accordion",
+    "category": 2,
+    "production_code": "patterns/032-multi-tier-accordion/A-production-code.md",
+    "design_spec": "patterns/032-multi-tier-accordion/B-design-system-specification.md",
+    "user_stories": "patterns/032-multi-tier-accordion/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 33,
+    "pattern_name": "Slide-Out Sidebar Drawer",
+    "category": 2,
+    "production_code": "patterns/033-slide-out-sidebar-drawer/A-production-code.md",
+    "design_spec": "patterns/033-slide-out-sidebar-drawer/B-design-system-specification.md",
+    "user_stories": "patterns/033-slide-out-sidebar-drawer/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 34,
+    "pattern_name": "Mega Menu Dropdown",
+    "category": 2,
+    "production_code": "patterns/034-mega-menu-dropdown/A-production-code.md",
+    "design_spec": "patterns/034-mega-menu-dropdown/B-design-system-specification.md",
+    "user_stories": "patterns/034-mega-menu-dropdown/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 35,
+    "pattern_name": "Collapsible FAQ Grid",
+    "category": 2,
+    "production_code": "patterns/035-collapsible-faq-grid/A-production-code.md",
+    "design_spec": "patterns/035-collapsible-faq-grid/B-design-system-specification.md",
+    "user_stories": "patterns/035-collapsible-faq-grid/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 36,
+    "pattern_name": "Floating Action Menu",
+    "category": 2,
+    "production_code": "patterns/036-floating-action-menu/A-production-code.md",
+    "design_spec": "patterns/036-floating-action-menu/B-design-system-specification.md",
+    "user_stories": "patterns/036-floating-action-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 37,
+    "pattern_name": "Bottom Sheet Navigation",
+    "category": 2,
+    "production_code": "patterns/037-bottom-sheet-navigation/A-production-code.md",
+    "design_spec": "patterns/037-bottom-sheet-navigation/B-design-system-specification.md",
+    "user_stories": "patterns/037-bottom-sheet-navigation/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 38,
+    "pattern_name": "Hamburger Morph Icon",
+    "category": 2,
+    "production_code": "patterns/038-hamburger-morph-icon/A-production-code.md",
+    "design_spec": "patterns/038-hamburger-morph-icon/B-design-system-specification.md",
+    "user_stories": "patterns/038-hamburger-morph-icon/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 39,
+    "pattern_name": "Contextual Popover Menu",
+    "category": 2,
+    "production_code": "patterns/039-contextual-popover-menu/A-production-code.md",
+    "design_spec": "patterns/039-contextual-popover-menu/B-design-system-specification.md",
+    "user_stories": "patterns/039-contextual-popover-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 40,
+    "pattern_name": "Tree View Menu",
+    "category": 2,
+    "production_code": "patterns/040-tree-view-menu/A-production-code.md",
+    "design_spec": "patterns/040-tree-view-menu/B-design-system-specification.md",
+    "user_stories": "patterns/040-tree-view-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 41,
+    "pattern_name": "Breadcrumb Dropdown",
+    "category": 2,
+    "production_code": "patterns/041-breadcrumb-dropdown/A-production-code.md",
+    "design_spec": "patterns/041-breadcrumb-dropdown/B-design-system-specification.md",
+    "user_stories": "patterns/041-breadcrumb-dropdown/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 42,
+    "pattern_name": "Hover-to-Reveal Summary",
+    "category": 2,
+    "production_code": "patterns/042-hover-to-reveal-summary/A-production-code.md",
+    "design_spec": "patterns/042-hover-to-reveal-summary/B-design-system-specification.md",
+    "user_stories": "patterns/042-hover-to-reveal-summary/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 43,
+    "pattern_name": "Draggable Panel Menu",
+    "category": 2,
+    "production_code": "patterns/043-draggable-panel-menu/A-production-code.md",
+    "design_spec": "patterns/043-draggable-panel-menu/B-design-system-specification.md",
+    "user_stories": "patterns/043-draggable-panel-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 44,
+    "pattern_name": "Radial Ring Menu",
+    "category": 2,
+    "production_code": "patterns/044-radial-ring-menu/A-production-code.md",
+    "design_spec": "patterns/044-radial-ring-menu/B-design-system-specification.md",
+    "user_stories": "patterns/044-radial-ring-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 45,
+    "pattern_name": "Tab-to-Accordion Swap",
+    "category": 2,
+    "production_code": "patterns/045-tab-to-accordion-swap/A-production-code.md",
+    "design_spec": "patterns/045-tab-to-accordion-swap/B-design-system-specification.md",
+    "user_stories": "patterns/045-tab-to-accordion-swap/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 46,
+    "pattern_name": "Sliding Tab Highlight",
+    "category": 2,
+    "production_code": "patterns/046-sliding-tab-highlight/A-production-code.md",
+    "design_spec": "patterns/046-sliding-tab-highlight/B-design-system-specification.md",
+    "user_stories": "patterns/046-sliding-tab-highlight/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 47,
+    "pattern_name": "Cascading Overlay Navigation",
+    "category": 2,
+    "production_code": "patterns/047-cascading-overlay-navigation/A-production-code.md",
+    "design_spec": "patterns/047-cascading-overlay-navigation/B-design-system-specification.md",
+    "user_stories": "patterns/047-cascading-overlay-navigation/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 48,
+    "pattern_name": "Hover Reveal Flyout",
+    "category": 2,
+    "production_code": "patterns/048-hover-reveal-flyout/A-production-code.md",
+    "design_spec": "patterns/048-hover-reveal-flyout/B-design-system-specification.md",
+    "user_stories": "patterns/048-hover-reveal-flyout/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 49,
+    "pattern_name": "Expanding Search Container",
+    "category": 2,
+    "production_code": "patterns/049-expanding-search-container/A-production-code.md",
+    "design_spec": "patterns/049-expanding-search-container/B-design-system-specification.md",
+    "user_stories": "patterns/049-expanding-search-container/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 50,
+    "pattern_name": "Multi-Select Tag Cloud",
+    "category": 2,
+    "production_code": "patterns/050-multi-select-tag-cloud/A-production-code.md",
+    "design_spec": "patterns/050-multi-select-tag-cloud/B-design-system-specification.md",
+    "user_stories": "patterns/050-multi-select-tag-cloud/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 51,
+    "pattern_name": "Segmented Toggle Slider",
+    "category": 2,
+    "production_code": "patterns/051-segmented-toggle-slider/A-production-code.md",
+    "design_spec": "patterns/051-segmented-toggle-slider/B-design-system-specification.md",
+    "user_stories": "patterns/051-segmented-toggle-slider/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 52,
+    "pattern_name": "Accordion Content Crossfade",
+    "category": 2,
+    "production_code": "patterns/052-accordion-content-crossfade/A-production-code.md",
+    "design_spec": "patterns/052-accordion-content-crossfade/B-design-system-specification.md",
+    "user_stories": "patterns/052-accordion-content-crossfade/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 53,
+    "pattern_name": "Contextual Floating Header",
+    "category": 2,
+    "production_code": "patterns/053-contextual-floating-header/A-production-code.md",
+    "design_spec": "patterns/053-contextual-floating-header/B-design-system-specification.md",
+    "user_stories": "patterns/053-contextual-floating-header/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 54,
+    "pattern_name": "Dropdown Arrow Flip",
+    "category": 2,
+    "production_code": "patterns/054-dropdown-arrow-flip/A-production-code.md",
+    "design_spec": "patterns/054-dropdown-arrow-flip/B-design-system-specification.md",
+    "user_stories": "patterns/054-dropdown-arrow-flip/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 55,
+    "pattern_name": "Multi-Stage Stepper Menu",
+    "category": 2,
+    "production_code": "patterns/055-multi-stage-stepper-menu/A-production-code.md",
+    "design_spec": "patterns/055-multi-stage-stepper-menu/B-design-system-specification.md",
+    "user_stories": "patterns/055-multi-stage-stepper-menu/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 56,
+    "pattern_name": "Hover Curtain Dropdown",
+    "category": 2,
+    "production_code": "patterns/056-hover-curtain-dropdown/A-production-code.md",
+    "design_spec": "patterns/056-hover-curtain-dropdown/B-design-system-specification.md",
+    "user_stories": "patterns/056-hover-curtain-dropdown/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 57,
+    "pattern_name": "Card Expand Overlay",
+    "category": 2,
+    "production_code": "patterns/057-card-expand-overlay/A-production-code.md",
+    "design_spec": "patterns/057-card-expand-overlay/B-design-system-specification.md",
+    "user_stories": "patterns/057-card-expand-overlay/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 58,
+    "pattern_name": "Docked Toolbelt Panel",
+    "category": 2,
+    "production_code": "patterns/058-docked-toolbelt-panel/A-production-code.md",
+    "design_spec": "patterns/058-docked-toolbelt-panel/B-design-system-specification.md",
+    "user_stories": "patterns/058-docked-toolbelt-panel/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 59,
+    "pattern_name": "Nested List Indentation",
+    "category": 2,
+    "production_code": "patterns/059-nested-list-indentation/A-production-code.md",
+    "design_spec": "patterns/059-nested-list-indentation/B-design-system-specification.md",
+    "user_stories": "patterns/059-nested-list-indentation/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 60,
+    "pattern_name": "Swipe-to-Dismiss Cards",
+    "category": 2,
+    "production_code": "patterns/060-swipe-to-dismiss-cards/A-production-code.md",
+    "design_spec": "patterns/060-swipe-to-dismiss-cards/B-design-system-specification.md",
+    "user_stories": "patterns/060-swipe-to-dismiss-cards/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 61,
+    "pattern_name": "Ripple Click Response",
+    "category": 3,
+    "production_code": "patterns/061-ripple-click-response/A-production-code.md",
+    "design_spec": "patterns/061-ripple-click-response/B-design-system-specification.md",
+    "user_stories": "patterns/061-ripple-click-response/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 62,
+    "pattern_name": "Magnetic Button Pull",
+    "category": 3,
+    "production_code": "patterns/062-magnetic-button-pull/A-production-code.md",
+    "design_spec": "patterns/062-magnetic-button-pull/B-design-system-specification.md",
+    "user_stories": "patterns/062-magnetic-button-pull/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 63,
+    "pattern_name": "Text Scramble Effect",
+    "category": 3,
+    "production_code": "patterns/063-text-scramble-effect/A-production-code.md",
+    "design_spec": "patterns/063-text-scramble-effect/B-design-system-specification.md",
+    "user_stories": "patterns/063-text-scramble-effect/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 64,
+    "pattern_name": "Heart/Like Pop Explosion",
+    "category": 3,
+    "production_code": "patterns/064-heart-like-pop-explosion/A-production-code.md",
+    "design_spec": "patterns/064-heart-like-pop-explosion/B-design-system-specification.md",
+    "user_stories": "patterns/064-heart-like-pop-explosion/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 65,
+    "pattern_name": "Confetti Click Burst",
+    "category": 3,
+    "production_code": "patterns/065-confetti-click-burst/A-production-code.md",
+    "design_spec": "patterns/065-confetti-click-burst/B-design-system-specification.md",
+    "user_stories": "patterns/065-confetti-click-burst/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 66,
+    "pattern_name": "Button Morph Transform",
+    "category": 3,
+    "production_code": "patterns/066-button-morph-transform/A-production-code.md",
+    "design_spec": "patterns/066-button-morph-transform/B-design-system-specification.md",
+    "user_stories": "patterns/066-button-morph-transform/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 67,
+    "pattern_name": "3D Card Flip",
+    "category": 3,
+    "production_code": "patterns/067-three-d-card-flip/A-production-code.md",
+    "design_spec": "patterns/067-three-d-card-flip/B-design-system-specification.md",
+    "user_stories": "patterns/067-three-d-card-flip/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 68,
+    "pattern_name": "Elastic Spring Bounce",
+    "category": 3,
+    "production_code": "patterns/068-elastic-spring-bounce/A-production-code.md",
+    "design_spec": "patterns/068-elastic-spring-bounce/B-design-system-specification.md",
+    "user_stories": "patterns/068-elastic-spring-bounce/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 69,
+    "pattern_name": "Copy-to-Clipboard Banner",
+    "category": 3,
+    "production_code": "patterns/069-copy-to-clipboard-banner/A-production-code.md",
+    "design_spec": "patterns/069-copy-to-clipboard-banner/B-design-system-specification.md",
+    "user_stories": "patterns/069-copy-to-clipboard-banner/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 70,
+    "pattern_name": "Shimmer Sheen Highlight",
+    "category": 3,
+    "production_code": "patterns/070-shimmer-sheen-highlight/A-production-code.md",
+    "design_spec": "patterns/070-shimmer-sheen-highlight/B-design-system-specification.md",
+    "user_stories": "patterns/070-shimmer-sheen-highlight/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 71,
+    "pattern_name": "Ghost Trail Duplicate",
+    "category": 3,
+    "production_code": "patterns/071-ghost-trail-duplicate/A-production-code.md",
+    "design_spec": "patterns/071-ghost-trail-duplicate/B-design-system-specification.md",
+    "user_stories": "patterns/071-ghost-trail-duplicate/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 72,
+    "pattern_name": "Liquid Blob Fusion",
+    "category": 3,
+    "production_code": "patterns/072-liquid-blob-fusion/A-production-code.md",
+    "design_spec": "patterns/072-liquid-blob-fusion/B-design-system-specification.md",
+    "user_stories": "patterns/072-liquid-blob-fusion/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 73,
+    "pattern_name": "Dark Mode Flashbang Toggle",
+    "category": 3,
+    "production_code": "patterns/073-dark-mode-flashbang-toggle/A-production-code.md",
+    "design_spec": "patterns/073-dark-mode-flashbang-toggle/B-design-system-specification.md",
+    "user_stories": "patterns/073-dark-mode-flashbang-toggle/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 74,
+    "pattern_name": "Drawing Path Tracing",
+    "category": 3,
+    "production_code": "patterns/074-drawing-path-tracing/A-production-code.md",
+    "design_spec": "patterns/074-drawing-path-tracing/B-design-system-specification.md",
+    "user_stories": "patterns/074-drawing-path-tracing/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 75,
+    "pattern_name": "Haptic Vibration Feedback",
+    "category": 3,
+    "production_code": "patterns/075-haptic-vibration-feedback/A-production-code.md",
+    "design_spec": "patterns/075-haptic-vibration-feedback/B-design-system-specification.md",
+    "user_stories": "patterns/075-haptic-vibration-feedback/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 76,
+    "pattern_name": "Hover/Click Zoom Bounds",
+    "category": 3,
+    "production_code": "patterns/076-hover-click-zoom-bounds/A-production-code.md",
+    "design_spec": "patterns/076-hover-click-zoom-bounds/B-design-system-specification.md",
+    "user_stories": "patterns/076-hover-click-zoom-bounds/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 77,
+    "pattern_name": "Tilt Parallax Angle",
+    "category": 3,
+    "production_code": "patterns/077-tilt-parallax-angle/A-production-code.md",
+    "design_spec": "patterns/077-tilt-parallax-angle/B-design-system-specification.md",
+    "user_stories": "patterns/077-tilt-parallax-angle/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 78,
+    "pattern_name": "Underline Growth Track",
+    "category": 3,
+    "production_code": "patterns/078-underline-growth-track/A-production-code.md",
+    "design_spec": "patterns/078-underline-growth-track/B-design-system-specification.md",
+    "user_stories": "patterns/078-underline-growth-track/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 79,
+    "pattern_name": "Staggered Card Entry",
+    "category": 3,
+    "production_code": "patterns/079-staggered-card-entry/A-production-code.md",
+    "design_spec": "patterns/079-staggered-card-entry/B-design-system-specification.md",
+    "user_stories": "patterns/079-staggered-card-entry/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 80,
+    "pattern_name": "Audio UI Sound Click",
+    "category": 3,
+    "production_code": "patterns/080-audio-ui-sound-click/A-production-code.md",
+    "design_spec": "patterns/080-audio-ui-sound-click/B-design-system-specification.md",
+    "user_stories": "patterns/080-audio-ui-sound-click/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 81,
+    "pattern_name": "Pulse Ripple Beacon",
+    "category": 3,
+    "production_code": "patterns/081-pulse-ripple-beacon/A-production-code.md",
+    "design_spec": "patterns/081-pulse-ripple-beacon/B-design-system-specification.md",
+    "user_stories": "patterns/081-pulse-ripple-beacon/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 82,
+    "pattern_name": "Progress Button Spinner",
+    "category": 3,
+    "production_code": "patterns/082-progress-button-spinner/A-production-code.md",
+    "design_spec": "patterns/082-progress-button-spinner/B-design-system-specification.md",
+    "user_stories": "patterns/082-progress-button-spinner/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 83,
+    "pattern_name": "Image Hotspot Pulse",
+    "category": 3,
+    "production_code": "patterns/083-image-hotspot-pulse/A-production-code.md",
+    "design_spec": "patterns/083-image-hotspot-pulse/B-design-system-specification.md",
+    "user_stories": "patterns/083-image-hotspot-pulse/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 84,
+    "pattern_name": "Scratch-Card Reveal",
+    "category": 3,
+    "production_code": "patterns/084-scratch-card-reveal/A-production-code.md",
+    "design_spec": "patterns/084-scratch-card-reveal/B-design-system-specification.md",
+    "user_stories": "patterns/084-scratch-card-reveal/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 85,
+    "pattern_name": "Glow Perimeter Trail",
+    "category": 3,
+    "production_code": "patterns/085-glow-perimeter-trail/A-production-code.md",
+    "design_spec": "patterns/085-glow-perimeter-trail/B-design-system-specification.md",
+    "user_stories": "patterns/085-glow-perimeter-trail/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 86,
+    "pattern_name": "Typing Effect Reset",
+    "category": 3,
+    "production_code": "patterns/086-typing-effect-reset/A-production-code.md",
+    "design_spec": "patterns/086-typing-effect-reset/B-design-system-specification.md",
+    "user_stories": "patterns/086-typing-effect-reset/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 87,
+    "pattern_name": "Rubber-Band Squish",
+    "category": 3,
+    "production_code": "patterns/087-rubber-band-squish/A-production-code.md",
+    "design_spec": "patterns/087-rubber-band-squish/B-design-system-specification.md",
+    "user_stories": "patterns/087-rubber-band-squish/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 88,
+    "pattern_name": "Color Spill Wipe",
+    "category": 3,
+    "production_code": "patterns/088-color-spill-wipe/A-production-code.md",
+    "design_spec": "patterns/088-color-spill-wipe/B-design-system-specification.md",
+    "user_stories": "patterns/088-color-spill-wipe/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 89,
+    "pattern_name": "Download Progress Wave",
+    "category": 3,
+    "production_code": "patterns/089-download-progress-wave/A-production-code.md",
+    "design_spec": "patterns/089-download-progress-wave/B-design-system-specification.md",
+    "user_stories": "patterns/089-download-progress-wave/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 90,
+    "pattern_name": "Skeleton Screen Shimmer",
+    "category": 3,
+    "production_code": "patterns/090-skeleton-screen-shimmer/A-production-code.md",
+    "design_spec": "patterns/090-skeleton-screen-shimmer/B-design-system-specification.md",
+    "user_stories": "patterns/090-skeleton-screen-shimmer/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 91,
+    "pattern_name": "Magnetic Cursor Ring",
+    "category": 3,
+    "production_code": "patterns/091-magnetic-cursor-ring/A-production-code.md",
+    "design_spec": "patterns/091-magnetic-cursor-ring/B-design-system-specification.md",
+    "user_stories": "patterns/091-magnetic-cursor-ring/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 92,
+    "pattern_name": "Password Peek Toggle",
+    "category": 3,
+    "production_code": "patterns/092-password-peek-toggle/A-production-code.md",
+    "design_spec": "patterns/092-password-peek-toggle/B-design-system-specification.md",
+    "user_stories": "patterns/092-password-peek-toggle/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 93,
+    "pattern_name": "Slide-to-Unlock Fader",
+    "category": 3,
+    "production_code": "patterns/093-slide-to-unlock-fader/A-production-code.md",
+    "design_spec": "patterns/093-slide-to-unlock-fader/B-design-system-specification.md",
+    "user_stories": "patterns/093-slide-to-unlock-fader/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 94,
+    "pattern_name": "Image Glitch Flicker",
+    "category": 3,
+    "production_code": "patterns/094-image-glitch-flicker/A-production-code.md",
+    "design_spec": "patterns/094-image-glitch-flicker/B-design-system-specification.md",
+    "user_stories": "patterns/094-image-glitch-flicker/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 95,
+    "pattern_name": "Number Counter Ticker",
+    "category": 3,
+    "production_code": "patterns/095-number-counter-ticker/A-production-code.md",
+    "design_spec": "patterns/095-number-counter-ticker/B-design-system-specification.md",
+    "user_stories": "patterns/095-number-counter-ticker/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 96,
+    "pattern_name": "Card Lift Perspective",
+    "category": 3,
+    "production_code": "patterns/096-card-lift-perspective/A-production-code.md",
+    "design_spec": "patterns/096-card-lift-perspective/B-design-system-specification.md",
+    "user_stories": "patterns/096-card-lift-perspective/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 97,
+    "pattern_name": "Text Highlighting Strike",
+    "category": 3,
+    "production_code": "patterns/097-text-highlighting-strike/A-production-code.md",
+    "design_spec": "patterns/097-text-highlighting-strike/B-design-system-specification.md",
+    "user_stories": "patterns/097-text-highlighting-strike/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 98,
+    "pattern_name": "Staggered Icon Pop",
+    "category": 3,
+    "production_code": "patterns/098-staggered-icon-pop/A-production-code.md",
+    "design_spec": "patterns/098-staggered-icon-pop/B-design-system-specification.md",
+    "user_stories": "patterns/098-staggered-icon-pop/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 99,
+    "pattern_name": "Border Dash Spin",
+    "category": 3,
+    "production_code": "patterns/099-border-dash-spin/A-production-code.md",
+    "design_spec": "patterns/099-border-dash-spin/B-design-system-specification.md",
+    "user_stories": "patterns/099-border-dash-spin/C-agile-user-stories.feature"
+  },
+  {
+    "pattern_number": 100,
+    "pattern_name": "Dual-Tone Inversion",
+    "category": 3,
+    "production_code": "patterns/100-dual-tone-inversion/A-production-code.md",
+    "design_spec": "patterns/100-dual-tone-inversion/B-design-system-specification.md",
+    "user_stories": "patterns/100-dual-tone-inversion/C-agile-user-stories.feature"
+  }
+]

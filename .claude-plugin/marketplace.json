@@ -1,0 +1,48 @@
+{
+  "name": "loxihart-skills",
+  "owner": {
+    "name": "Kyle Rosebrook"
+  },
+  "metadata": {
+    "description": "Loxihart Claude Code skills marketplace",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "loxihart-ops",
+      "source": "./plugins/loxihart-ops",
+      "description": "Loxihart service desk, endpoint imaging, and knowledge-base operations.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "loxihart-ai",
+      "source": "./plugins/loxihart-ai",
+      "description": "Loxihart AI enablement, solution architecture, agent building, and leadership communication.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "loxihart-engineering",
+      "source": "./plugins/loxihart-engineering",
+      "description": "Engineering workflows: debugging, testing, refactoring, scripts, stack operations.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "loxihart-design",
+      "source": "./plugins/loxihart-design",
+      "description": "UI/UX, design systems, frontend execution, and the verified UI pattern library.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "loxihart-business",
+      "source": "./plugins/loxihart-business",
+      "description": "Business operations, marketing, content, and digital product launches.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "tonone",
+      "source": "./vendor/tonone",
+      "description": "Third-party: tonone by tonone-ai (MIT). Vendored unmodified; see vendor/tonone/LICENSE.",
+      "license": "MIT"
+    }
+  ]
+}

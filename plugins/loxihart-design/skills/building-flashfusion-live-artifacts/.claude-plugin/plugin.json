@@ -1,0 +1,19 @@
+{
+  "name": "flashfusion-artifacts",
+  "version": "1.1.0",
+  "description": "Build, patch, and register the FlashFusion Agent Control Center as a Cowork live artifact. Dark glassmorphic dashboard with live Supabase data and per-panel Demo fallback. PERSONAL lane only. v1.1 adds FF-PLAT-CORE-SOT canonical authority and refactors SKILL.md to a navigation layer per Anthropic progressive disclosure.",
+  "author": {
+    "name": "Kyle Rosebrook",
+    "email": "[EMAIL]"
+  },
+  "homepage": "https://flashfusion.co",
+  "license": "MIT",
+  "keywords": [
+    "flashfusion",
+    "cowork",
+    "artifact",
+    "supabase",
+    "dashboard",
+    "personal-lane"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "master_prompts_expected": 3,
+  "master_prompts_found": 3,
+  "pattern_directories_expected": 100,
+  "pattern_directories_found": 100,
+  "primary_artifacts_expected": 300,
+  "primary_artifacts_found": 300,
+  "pilot_validation_found": true,
+  "batch_indexes_expected": 11,
+  "batch_indexes_found": 11,
+  "manifest_json_entries": 100,
+  "manifest_csv_entries": 100,
+  "errors": []
+}

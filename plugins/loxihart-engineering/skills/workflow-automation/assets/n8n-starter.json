@@ -1,0 +1,88 @@
+{
+  "name": "Starter Workflow — Webhook → Process → Notify",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-endpoint",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Transform incoming data\n// Access webhook body via $input.item.json.body\nconst data = $input.item.json.body;\n\nreturn {\n  id: data.id || 'unknown',\n  name: data.name || 'Unknown',\n  email: data.email || '',\n  processed_at: new Date().toISOString(),\n  source: 'webhook'\n};"
+      },
+      "name": "Process Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#notifications",
+        "text": "=New record processed: {{ $json.name }} ({{ $json.email }})",
+        "otherOptions": {}
+      },
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ success: true, id: $json.id }) }}"
+      },
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [690, 400]
+    },
+    {
+      "parameters": {},
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [250, 500]
+    },
+    {
+      "parameters": {
+        "channel": "#ops-alerts",
+        "text": "=Workflow error: {{ $json.execution.error.message }}",
+        "otherOptions": {}
+      },
+      "name": "Error Notify",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [470, 500]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [{ "node": "Process Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Process Data": {
+      "main": [
+        [
+          { "node": "Notify Slack", "type": "main", "index": 0 },
+          { "node": "Respond OK", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [{ "node": "Error Notify", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  }
+}

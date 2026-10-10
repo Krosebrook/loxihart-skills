@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Tooltip</title>
+<!--
+  PATTERN: Tooltip
+  CATEGORY: Overlays & Dialogs
+  PRIORITY: High  |  RISK: High
+
+  WHAT THIS IS: a small text label shown on hover AND focus, wired with
+  aria-describedby.
+
+  ADAPT THIS BY:
+    - Add data-tooltip="text" to any focusable element; wiring is automatic.
+
+  DO NOT STRIP WHEN ADAPTING — tooltips fail WCAG more than almost any
+  other pattern, and these are the reasons:
+    - SC 1.4.13 (Content on Hover or Focus) requires all three of:
+        HOVERABLE  — the pointer can move onto the tooltip without it
+                     vanishing (needed for magnification users)
+        DISMISSIBLE — Escape hides it without moving the pointer
+        PERSISTENT  — it stays until dismissed or no longer valid; no
+                      auto-hide timer
+      All three are implemented here. Removing any one is a conformance
+      failure, not a style choice.
+    - FOCUS as well as hover. A tooltip that only appears on hover does not
+      exist for keyboard users.
+    - aria-describedby, not aria-label. describedby ADDS to the accessible
+      name; aria-label REPLACES it, so a tooltip written as aria-label
+      silently destroys the control's real name.
+    - NEVER put essential information or interactive content in a tooltip.
+      There is no accessible way to reach a link or button inside one. If
+      it needs interaction, it is a popover — see popover.html.
+    - Tooltips do not belong on non-focusable elements. If a plain <span>
+      needs one, make it focusable or rethink the design; otherwise it is
+      unreachable without a mouse.
+-->
+<style>
+  :root { --accent: #2563eb; --border: #cbd5e1; --tip-bg: #0f172a; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0;
+  }
+  .row { display: flex; gap: 1rem; align-items: center; }
+  button, input {
+    font: inherit; border-radius: 8px; min-height: 44px;
+    padding: 0.6rem 1rem; border: 1px solid var(--border); background: #fff;
+  }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .icon-btn { min-width: 44px; display: grid; place-items: center; }
+
+  .tooltip {
+    position: absolute; z-index: 50;
+    background: var(--tip-bg); color: #fff;
+    padding: 0.45rem 0.65rem; border-radius: 6px;
+    font-size: 0.8125rem; line-height: 1.4; max-width: 240px;
+    pointer-events: auto;            /* HOVERABLE — required by SC 1.4.13 */
+    opacity: 0; transition: opacity 120ms ease;
+  }
+  .tooltip[data-visible="true"] { opacity: 1; }
+  .tooltip::after {
+    content: ""; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent; border-top-color: var(--tip-bg);
+  }
+  .hint { font-size: 0.8125rem; color: #475569; margin-top: 1.25rem; max-width: 42ch; text-align: center; }
+  @media (prefers-reduced-motion: reduce) { .tooltip { transition: none; } }
+</style>
+</head>
+<body>
+  <div>
+    <div class="row">
+      <button data-tooltip="Reverts the last change. Cannot be undone after saving.">Undo</button>
+      <button class="icon-btn" data-tooltip="Duplicate this record" aria-label="Duplicate">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" aria-hidden="true">
+          <rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/>
+        </svg>
+      </button>
+      <input type="text" placeholder="Project name" data-tooltip="Between 3 and 40 characters." />
+    </div>
+    <p class="hint">Hover or Tab to any control. The tooltip is hoverable,
+      dismissible with Escape, and never auto-hides.</p>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const targets = /** @type {HTMLElement[]} */ (
+        Array.from(document.querySelectorAll('[data-tooltip]')));
+
+      /** @type {HTMLElement|null} */ let activeTip = null;
+      /** @type {HTMLElement|null} */ let activeTarget = null;
+      let overTip = false, overTarget = false;
+
+      function buildTip(target, index) {
+        const tip = document.createElement('div');
+        tip.className = 'tooltip';
+        tip.id = 'tooltip-' + index;
+        tip.setAttribute('role', 'tooltip');
+        tip.textContent = target.dataset.tooltip;
+        tip.dataset.visible = 'false';
+        document.body.appendChild(tip);
+        // describedby ADDS to the accessible name. aria-label would REPLACE
+        // it and silently destroy the control's real name.
+        target.setAttribute('aria-describedby', tip.id);
+        return tip;
+      }
+
+      function position(tip, target) {
+        const r = target.getBoundingClientRect();
+        tip.style.top = (r.top + window.scrollY - tip.offsetHeight - 10) + 'px';
+        tip.style.left = (r.left + window.scrollX + r.width / 2 - tip.offsetWidth / 2) + 'px';
+      }
+
+      function show(tip, target) {
+        if (activeTip && activeTip !== tip) hide(activeTip);
+        tip.dataset.visible = 'true';
+        position(tip, target);
+        activeTip = tip; activeTarget = target;
+      }
+
+      function hide(tip) {
+        tip.dataset.visible = 'false';
+        if (activeTip === tip) { activeTip = null; activeTarget = null; }
+      }
+
+      /** Only hide once the pointer has left BOTH the target and the tip —
+       *  this is what makes the tooltip hoverable per SC 1.4.13. */
+      function maybeHide(tip) {
+        setTimeout(() => { if (!overTip && !overTarget) hide(tip); }, 80);
+      }
+
+      targets.forEach((target, i) => {
+        const tip = buildTip(target, i);
+
+        target.addEventListener('pointerenter', () => { overTarget = true; show(tip, target); });
+        target.addEventListener('pointerleave', () => { overTarget = false; maybeHide(tip); });
+        // Focus, not just hover — otherwise the tooltip does not exist for
+        // keyboard users.
+        target.addEventListener('focus', () => show(tip, target));
+        target.addEventListener('blur', () => hide(tip));
+
+        tip.addEventListener('pointerenter', () => { overTip = true; });
+        tip.addEventListener('pointerleave', () => { overTip = false; maybeHide(tip); });
+      });
+
+      // DISMISSIBLE without moving the pointer.
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && activeTip) { hide(activeTip); }
+      });
+
+      window.addEventListener('scroll', () => {
+        if (activeTip && activeTarget) position(activeTip, activeTarget);
+      }, { passive: true });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(targets.every((t) => t.hasAttribute('aria-describedby')),
+        '[smoke] tooltips use aria-describedby (adds to the name) not aria-label (replaces it)');
+      console.assert(
+        targets.every((t) => t.matches('button, input, select, textarea, a[href], [tabindex]')),
+        '[smoke] every tooltip target is natively focusable — no mouse-only tooltips');
+      console.assert(
+        Array.from(document.querySelectorAll('.tooltip'))
+          .every((t) => getComputedStyle(t).pointerEvents !== 'none'),
+        '[smoke] tooltips are hoverable (SC 1.4.13) — pointer-events not disabled');
+      console.assert(
+        Array.from(document.querySelectorAll('.tooltip'))
+          .every((t) => !/\<a |\<button/.test(t.innerHTML)),
+        '[smoke] no interactive content inside a tooltip — it would be unreachable');
+    })();
+  </script>
+</body>
+</html>

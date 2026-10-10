@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pattern: Accordion</title>
+<!--
+  PATTERN: Accordion
+  CATEGORY: Composite Widgets (WAI-ARIA APG)
+  PRIORITY: High  |  RISK: Medium
+
+  WHAT THIS IS: a vertically stacked set of headers that each reveal a
+  panel. Follows the WAI-ARIA Authoring Practices accordion pattern.
+
+  ADAPT THIS BY:
+    - Adding/removing .accordion-item blocks; the JS wires whatever it finds.
+    - Set data-allow-multiple on the root to permit several panels open.
+
+  DO NOT STRIP WHEN ADAPTING — this is where accordions usually go wrong:
+    - The header must be a <button> INSIDE a heading element, not a heading
+      with a click handler. The heading provides document structure for
+      screen-reader heading navigation; the button provides operability.
+      Collapsing the two loses one or the other.
+    - aria-expanded lives on the BUTTON, not the panel. aria-controls points
+      button -> panel. Getting these backwards is the single most common
+      accordion defect.
+    - Panels are hidden with the `hidden` attribute, not just CSS height:0.
+      A CSS-only collapse leaves the content in the accessibility tree and
+      in the tab order, so keyboard users tab into invisible controls.
+    - Arrow keys are OPTIONAL in the APG accordion pattern, but if you add
+      them you must not trap Tab — Tab still moves out of the widget.
+      Implemented here: Up/Down move between headers, Home/End jump to
+      first/last, Tab behaves natively.
+-->
+<style>
+  :root {
+    --acc-border: #cbd5e1;
+    --acc-bg: #ffffff;
+    --acc-header-bg: #f1f5f9;
+    --acc-focus: #2563eb;
+    --dur: 200ms;
+  }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: #f8fafc; color: #0f172a;
+    display: grid; place-items: center; min-height: 100vh; margin: 0; padding: 2rem;
+  }
+  .accordion { width: min(520px, 100%); border: 1px solid var(--acc-border); border-radius: 10px; overflow: hidden; }
+  .accordion-item + .accordion-item { border-top: 1px solid var(--acc-border); }
+  .accordion h3 { margin: 0; font-size: 1rem; }
+  .accordion-trigger {
+    width: 100%; min-height: 48px; padding: 0.9rem 1rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    background: var(--acc-header-bg); border: none; cursor: pointer;
+    font: inherit; font-weight: 600; text-align: left; color: inherit;
+  }
+  .accordion-trigger:hover { background: #e2e8f0; }
+  .accordion-trigger:focus-visible { outline: 2px solid var(--acc-focus); outline-offset: -2px; }
+  .accordion-icon { flex: none; transition: transform var(--dur) ease; }
+  .accordion-trigger[aria-expanded="true"] .accordion-icon { transform: rotate(180deg); }
+  .accordion-panel { padding: 1rem; background: var(--acc-bg); font-size: 0.9375rem; line-height: 1.55; }
+  .accordion-panel p { margin: 0; }
+  @media (prefers-reduced-motion: reduce) { .accordion-icon { transition: none; } }
+</style>
+</head>
+<body>
+  <div class="accordion" id="accordion">
+    <div class="accordion-item">
+      <h3>
+        <button class="accordion-trigger" id="acc-t1" aria-expanded="true" aria-controls="acc-p1">
+          Shipping and delivery
+          <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </h3>
+      <div class="accordion-panel" id="acc-p1" role="region" aria-labelledby="acc-t1">
+        <p>Orders dispatch within two business days. Tracking is emailed once the parcel leaves the warehouse.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h3>
+        <button class="accordion-trigger" id="acc-t2" aria-expanded="false" aria-controls="acc-p2">
+          Returns
+          <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </h3>
+      <div class="accordion-panel" id="acc-p2" role="region" aria-labelledby="acc-t2" hidden>
+        <p>Unused items can be returned within 30 days. Refunds are issued to the original payment method.</p>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h3>
+        <button class="accordion-trigger" id="acc-t3" aria-expanded="false" aria-controls="acc-p3">
+          Warranty
+          <svg class="accordion-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </h3>
+      <div class="accordion-panel" id="acc-p3" role="region" aria-labelledby="acc-t3" hidden>
+        <p>Hardware carries a two-year limited warranty covering manufacturing defects.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var console = (function (real) {
+        var noop = function () {};
+        var warn = typeof real.warn === 'function' ? real.warn.bind(real) : noop;
+        return {
+          log: typeof real.log === 'function' ? real.log.bind(real) : noop,
+          warn: warn,
+          error: typeof real.error === 'function' ? real.error.bind(real) : noop,
+          assert: function (condition, message) { if (!condition) warn('[smoke check failed] ' + message); },
+        };
+      })(/** @type {any} */ (window.console || {}));
+
+      const root = /** @type {HTMLElement} */ (document.getElementById('accordion'));
+      const triggers = /** @type {HTMLButtonElement[]} */ (
+        Array.from(root.querySelectorAll('.accordion-trigger')));
+      const allowMultiple = root.hasAttribute('data-allow-multiple');
+
+      function setExpanded(trigger, expanded) {
+        trigger.setAttribute('aria-expanded', String(expanded));
+        const panel = document.getElementById(trigger.getAttribute('aria-controls'));
+        if (!panel) return;
+        // `hidden` (not height:0) so collapsed content leaves the a11y tree
+        // and the tab order entirely.
+        panel.hidden = !expanded;
+      }
+
+      function toggle(trigger) {
+        const willExpand = trigger.getAttribute('aria-expanded') !== 'true';
+        if (willExpand && !allowMultiple) {
+          triggers.forEach((t) => { if (t !== trigger) setExpanded(t, false); });
+        }
+        setExpanded(trigger, willExpand);
+      }
+
+      triggers.forEach((trigger, i) => {
+        trigger.addEventListener('click', () => toggle(trigger));
+
+        trigger.addEventListener('keydown', (e) => {
+          let target = null;
+          if (e.key === 'ArrowDown') target = triggers[(i + 1) % triggers.length];
+          else if (e.key === 'ArrowUp') target = triggers[(i - 1 + triggers.length) % triggers.length];
+          else if (e.key === 'Home') target = triggers[0];
+          else if (e.key === 'End') target = triggers[triggers.length - 1];
+          if (target) {
+            e.preventDefault();   // only for the keys we handle — Tab is untouched
+            target.focus();
+          }
+        });
+      });
+
+      // --- inline smoke test -------------------------------------------
+      console.assert(
+        triggers.every((t) => t.closest('h1,h2,h3,h4,h5,h6')),
+        '[smoke] every trigger is a button nested inside a heading (structure + operability)');
+      console.assert(
+        triggers.every((t) => t.hasAttribute('aria-expanded') && t.hasAttribute('aria-controls')),
+        '[smoke] aria-expanded and aria-controls are on the trigger, not the panel');
+      console.assert(
+        triggers.every((t) => document.getElementById(t.getAttribute('aria-controls'))),
+        '[smoke] every aria-controls resolves to a real panel');
+      console.assert(
+        Array.from(root.querySelectorAll('.accordion-panel'))
+          .every((p) => p.hasAttribute('hidden') || p.getAttribute('aria-labelledby')),
+        '[smoke] panels are labelled and collapsed panels use the hidden attribute');
+    })();
+  </script>
+</body>
+</html>

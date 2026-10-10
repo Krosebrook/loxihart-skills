@@ -1,0 +1,64 @@
+# Edge-Case Matrix
+
+The catalog default is sixty items: twenty state and async cases, twenty accessibility cases, and twenty performance and motion cases. [GENERATED: firm project decision]
+
+- **01** — Unmounted-component state updates
+- **02** — Rapid multi-click/tap events
+- **03** — Network race conditions
+- **04** — Stale-closure state in event handlers
+- **05** — Controlled vs. uncontrolled mode mismatch
+- **06** — Initial hydration mismatch between server and client
+- **07** — Empty, null, or undefined data
+- **08** — Data payload overshoot with huge lists or objects
+- **09** — Async operation cancellation on rapid re-trigger
+- **10** — Partial state resets leaving inconsistent UI
+- **11** — Development-mode double-invoked effects corrupting one-time initialization
+- **12** — Debounce or throttle timers leaking across rapid mount and unmount
+- **13** — Out-of-order async responses overwriting fresher state
+- **14** — Concurrent-rendering interruption of an in-flight update
+- **15** — Derived state desynchronizing from a controlled prop updated in the same tick
+- **16** — Event handler referencing a ref that is not attached yet
+- **17** — Module-level singleton state leaking across component instances
+- **18** — Reentrant toggle calls before the prior transition finishes
+- **19** — Storage read racing hydration and flashing the wrong initial state
+- **20** — Back-forward cache restoring stale state without setup rerun
+- **21** — Keyboard focus traps
+- **22** — Focus restoration on close or unmount
+- **23** — Screen-reader live-region alerts
+- **24** — Visible focus indicator [SOURCED: W3C WCAG 2.2 SC 2.4.7 Focus Visible, Level AA — https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html]
+- **25** — Normal-text contrast ratio of 4.5:1 [SOURCED: W3C WCAG 2.2 SC 1.4.3 Contrast (Minimum), Level AA — https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html]
+- **26** — High-contrast and forced-colors mode
+- **27** — Text resize to 200% [SOURCED: W3C WCAG 2.2 SC 1.4.4 Resize Text, Level AA — https://www.w3.org/WAI/WCAG22/Understanding/resize-text.html]
+- **28** — Target size of 24 by 24 CSS pixels minimum, subject to the criterion exceptions [SOURCED: W3C WCAG 2.2 SC 2.5.8 Target Size (Minimum), Level AA — https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html]
+- **29** — Semantic HTML rather than generic containers
+- **30** — Reduced-motion fallback for every animation
+- **31** — Live-region announcement collisions
+- **32** — Focus order diverging from visual or DOM order
+- **33** — Missing skip mechanism for a large injected interactive region
+- **34** — Forced-colors mode hiding a custom focus ring or SVG icon
+- **35** — Nested interactive elements breaking semantics
+- **36** — Missing or incorrect active-item ARIA state
+- **37** — Drag-only or swipe-only interaction without an equivalent control [SOURCED: W3C WCAG 2.2 SC 2.5.7 Dragging Movements, Level AA — https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html]
+- **38** — Auto-advancing or auto-dismissing content without pause or extension [SOURCED: W3C WCAG 2.2 SC 2.2.2 Pause, Stop, Hide, Level A — https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html]
+- **39** — Right-to-left reading-order mismatch for directional patterns
+- **40** — Pinch zoom disabled or content clipped at high browser zoom
+- **41** — Layout thrashing
+- **42** — Memory leaks from uncleared listeners or timers
+- **43** — Off-screen DOM left mounted and animating
+- **44** — Scroll-handler-induced jank
+- **45** — Frame-rate loss under heavy DOM load
+- **46** — Touch and pointer event handling parity
+- **47** — Non-composited animation properties
+- **48** — GPU memory leaks from unreleased layers
+- **49** — Non-passive scroll listeners blocking the compositor thread
+- **50** — Intersection Observer churn from overly tight thresholds
+- **51** — Animation-frame loops not cancelled on unmount
+- **52** — Paint storms from shadow or filter animation
+- **53** — Cumulative layout shift from late-loading content
+- **54** — Long main-thread tasks blocking input
+- **55** — Web-font loading causing reflow jank
+- **56** — Thermal or battery throttling on low-power devices
+- **57** — Unbounded DOM growth in infinite scroll
+- **58** — Repeated geometry reads forcing synchronous layout
+- **59** — Compositor-layer contention across concurrent animations
+- **60** — Missing will-change cleanup retaining GPU memory

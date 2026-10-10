@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <title>Full-Spectrum Pattern Lab — Parallax Pilot</title>
+    <link rel="stylesheet" href="./styles/app.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top">Full-Spectrum Pattern Lab</a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#pilot">Pilot</a>
+        <a href="#tokens">Tokens</a>
+        <a href="#evidence">Evidence</a>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section
+        id="pilot"
+        data-fsp-pattern="001"
+        aria-labelledby="parallax-title"
+      >
+        <div class="parallax-stage">
+          <div class="parallax-layer parallax-layer--grid" data-parallax-layer data-parallax-depth="0.25" aria-hidden="true"></div>
+          <div class="parallax-layer parallax-layer--orb" data-parallax-layer data-parallax-depth="0.65" aria-hidden="true"></div>
+
+          <div class="parallax-content">
+            <p class="parallax-eyebrow">Pattern 001 · Integrated pilot</p>
+            <h1 class="parallax-title" id="parallax-title">Depth without losing the document.</h1>
+            <p class="parallax-summary">
+              Decorative layers respond to native page scrolling while headings, links, controls, and reading order remain ordinary semantic HTML. Motion can be disabled without removing information or changing navigation.
+            </p>
+            <div class="parallax-actions">
+              <a class="button" href="#evidence">Review test evidence</a>
+              <button class="button button--secondary" type="button" data-parallax-toggle aria-pressed="false">
+                Disable depth motion
+              </button>
+            </div>
+            <p class="parallax-status" data-parallax-status role="status" aria-live="polite" aria-atomic="true"></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="tokens" aria-labelledby="tokens-title">
+        <h2 id="tokens-title">Mapped to a semantic token system.</h2>
+        <p>The pilot consumes product-level surface, text, boundary, action, focus, spacing, radius, and motion tokens. Component aliases isolate the pattern from primitive color values.</p>
+        <div class="card-grid">
+          <article class="card">
+            <h3>Semantic color</h3>
+            <p>Canvas, elevated surfaces, text, borders, actions, and focus indicators are defined independently from the component.</p>
+          </article>
+          <article class="card">
+            <h3>Motion contract</h3>
+            <p>Native scrolling is never intercepted. Scroll work is frame-batched, off-screen work is suspended, and promoted layers are released.</p>
+          </article>
+          <article class="card">
+            <h3>Progressive baseline</h3>
+            <p>Without JavaScript, the content is still readable and operable. Decorative layers remain non-semantic and non-interactive.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section" id="evidence" aria-labelledby="evidence-title">
+        <h2 id="evidence-title">Evidence before catalog import.</h2>
+        <p>The integration package contains executable Chromium checks, accessibility-tree captures, visual screenshots, contrast calculations, and a manual assistive-technology checklist.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      Pattern 001 reference integration. No WCAG conformance certification is implied.
+    </footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

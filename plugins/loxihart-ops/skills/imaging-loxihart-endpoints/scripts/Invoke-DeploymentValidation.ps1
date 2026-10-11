@@ -23,7 +23,7 @@
 
 .PARAMETER ExpectedHostname
     Hostname the device should have, per the naming convention
-    LOX-(NB|DT|TB)-CLT-NNN.
+    abs-nb-lox-NNN (lowercase; case-insensitive on Windows; 14 chars).
 
 .PARAMETER AuthorizedUser
     DOMAIN\username of the principal authorized for RDP in the service ticket.
@@ -58,7 +58,7 @@
     Does not touch the machine. Runs anywhere, including non-domain hosts.
 
 .EXAMPLE
-    .\Invoke-DeploymentValidation.ps1 -ExpectedHostname 'LOX-NB-CLT-045' -AuthorizedUser '[CLIENT]\jdoe' -Ticket 'SD-104882'
+    .\Invoke-DeploymentValidation.ps1 -ExpectedHostname 'abs-nb-lox-045' -AuthorizedUser '[CLIENT]\jdoe' -Ticket 'SD-104882'
 
 .EXAMPLE
     .\Invoke-DeploymentValidation.ps1 -SelfTest
@@ -70,7 +70,7 @@
 [CmdletBinding(DefaultParameterSetName = 'Validate')]
 param(
     [Parameter(Mandatory = $true, ParameterSetName = 'Validate')]
-    [ValidatePattern('^LOX-(NB|DT|TB)-CLT-\d{3}$')]
+    [ValidatePattern('(?i)^abs-nb-lox-\d{3}$')]
     [string] $ExpectedHostname,
 
     [Parameter(ParameterSetName = 'Validate')]
@@ -189,7 +189,7 @@ function Invoke-Check {
 function Test-HostnameConvention {
     [CmdletBinding()]
     param([Parameter(Mandatory)][AllowEmptyString()][string] $Name)
-    return [bool]($Name -match '^LOX-(NB|DT|TB)-CLT-\d{3}$')
+    return [bool]($Name -match '(?i)^abs-nb-lox-\d{3}$')
 }
 
 function Get-OverallStatus {
@@ -300,13 +300,13 @@ function Invoke-SelfTest {
 
     Write-Host 'Self test: pure functions'
 
-    Assert-That 'hostname accepts notebook'  (Test-HostnameConvention 'LOX-NB-CLT-045')
-    Assert-That 'hostname accepts desktop'   (Test-HostnameConvention 'LOX-DT-CLT-001')
-    Assert-That 'hostname accepts tablet'    (Test-HostnameConvention 'LOX-TB-CLT-999')
-    Assert-That 'hostname rejects 2 digits'  (-not (Test-HostnameConvention 'LOX-NB-CLT-45'))
-    Assert-That 'hostname rejects bad type'  (-not (Test-HostnameConvention 'LOX-XX-CLT-045'))
+    Assert-That 'hostname accepts canonical' (Test-HostnameConvention 'abs-nb-lox-045')
+    Assert-That 'hostname accepts uppercase' (Test-HostnameConvention 'ABS-NB-LOX-001')
+    Assert-That 'hostname accepts mixed case'(Test-HostnameConvention 'Abs-Nb-Lox-999')
+    Assert-That 'hostname rejects 2 digits'  (-not (Test-HostnameConvention 'abs-nb-lox-45'))
+    Assert-That 'hostname rejects bad prefix'(-not (Test-HostnameConvention 'lox-nb-abs-045'))
     Assert-That 'hostname rejects empty'     (-not (Test-HostnameConvention ''))
-    Assert-That 'hostname rejects suffix'    (-not (Test-HostnameConvention 'LOX-NB-CLT-045X'))
+    Assert-That 'hostname rejects suffix'    (-not (Test-HostnameConvention 'abs-nb-lox-045X'))
 
     $pass = @(New-CheckResult -Gate 5 -Id 'T1' -Name 'a' -Status 'PASS')
     $warn = @($pass) + @(New-CheckResult -Gate 7 -Id 'T2' -Name 'b' -Status 'MANUAL')
@@ -322,7 +322,7 @@ function Invoke-SelfTest {
     Assert-That 'PropSafe present' (1 -eq (Get-PropSafe ([pscustomobject]@{ A = 1 }) 'A'))
 
     $facts = @{
-        Ticket = 'SD-1'; Hostname = 'LOX-NB-CLT-045'; Serial = 'ABC'; Model = 'M'
+        Ticket = 'SD-1'; Hostname = 'abs-nb-lox-045'; Serial = 'ABC'; Model = 'M'
         Technician = 'tech'; Timestamp = 'now'; AuthorizedUser = ''; IPv4 = '[SUBNET]'
         Overall = 'FAIL'
     }

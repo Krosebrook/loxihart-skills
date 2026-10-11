@@ -91,7 +91,7 @@ nltest /dsgetdc:[CLIENT]
 
 ```powershell
 Add-Computer -DomainName '[CLIENT]' -Credential (Get-Credential) -Restart
-Rename-Computer -NewName 'LOX-NB-CLT-045' -Force
+Rename-Computer -NewName 'abs-nb-lox-045' -Force
 w32tm /resync /force
 ```
 

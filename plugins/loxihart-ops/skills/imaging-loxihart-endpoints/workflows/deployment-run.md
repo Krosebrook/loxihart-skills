@@ -134,9 +134,9 @@ Do not power-cycle a device that appears stalled without first checking against 
 **Do:**
 - Log in with the local admin account from the vault. First login can take 2–5 minutes.
 - If the display is rotated: `Ctrl + Alt + Up Arrow`.
-- Rename per convention: `LOX-NB-CLT-NNN` (notebook), `LOX-DT-CLT-NNN` (desktop), `LOX-TB-CLT-NNN` (tablet).
+- Rename per convention: `abs-nb-lox-NNN` (lowercase; 14 chars, within 15-char NetBIOS limit). Regex: `(?i)^abs-nb-lox-\d{3}$`.
   - GUI: `sysdm.cpl` → Change
-  - PowerShell: `Rename-Computer -NewName 'LOX-NB-CLT-045' -Force`
+  - PowerShell: `Rename-Computer -NewName 'abs-nb-lox-045' -Force`
 - Join the domain `[CLIENT]`:
   - GUI: `sysdm.cpl` → Computer Name → Change → Domain → `[CLIENT]` → credentials `[CLIENT]\Loxihart-Admin`
   - PowerShell: `Add-Computer -DomainName '[CLIENT]' -Credential (Get-Credential) -Restart`
@@ -226,7 +226,7 @@ Do not power-cycle a device that appears stalled without first checking against 
 - Run the validator with the expected values:
   ```powershell
   .\Invoke-DeploymentValidation.ps1 `
-      -ExpectedHostname 'LOX-NB-CLT-045' `
+      -ExpectedHostname 'abs-nb-lox-045' `
       -AuthorizedUser   '[CLIENT]\jdoe' `
       -Ticket           'SD-104882' `
       -OutputPath       'C:\Temp\SD-104882.json'

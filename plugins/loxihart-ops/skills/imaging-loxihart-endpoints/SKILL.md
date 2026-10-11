@@ -8,7 +8,7 @@ description: >
   closure. Activates on: image a computer, imaging a laptop, new computer
   deployment, reimage this device, PXE boot, MDT task sequence, LiteTouch, WinPE,
   storage controller AHCI, NVMe, VMD, Intel RST, join [CLIENT] domain,
-  rename computer LOX-NB-CLT, enable RDP for a user, BitLocker recovery key escrow,
+  rename computer abs-nb-lox, enable RDP for a user, BitLocker recovery key escrow,
   VLAN migration ports 1-24 to 25-48, imaging completion summary, deployment
   checklist, endpoint build, asset tag CMDB. Also fires on "the drive isn't showing
   in WinPE", "PXE timeout", "domain not found", "access denied joining domain", or
@@ -131,7 +131,7 @@ runs/<TICKET>-<SERIAL>.json
   "ticket": "SD-104882",
   "serial": "7XQ4M13",
   "model": "Dell Latitude 5540",
-  "hostname": "LOX-NB-CLT-045",
+  "hostname": "abs-nb-lox-045",
   "authorizedUser": "[CLIENT]\\jdoe",
   "imagingPort": 12,
   "productionPort": 27,
@@ -191,7 +191,7 @@ Before declaring a deployment complete:
 ## CLAIMS
 
 - [SOURCED] Storage controller mode set to RAID/RST/VMD is the most common cause of imaging failure in this environment — *Reference Guide v3.1 §3, "The most common cause of imaging failures is incorrect storage controller settings"*.
-- [SOURCED] The MDT deployment server is `[HOSTNAME]`, and the naming convention is `Loxihart-[NB|DT|TB]-[CLIENT]-NNN` — *v3.1 §2.2.1, §6.2.1*; corroborated by the existing `operating-loxihart-service-desk` environment constants.
+- [SOURCED] The MDT deployment server is `[HOSTNAME]`, and the naming convention is `abs-nb-lox-NNN` — *v3.1 §2.2.1, §6.2.1*; corroborated by the existing `operating-loxihart-service-desk` environment constants.
 - [SOURCED] Imaging runs from Departmental VLAN ports 1–24; production is 25–48 — *v3.1 §2.2.2, §9*.
 - [GENERATED] Gate-based execution with machine-checked exits will catch more incomplete builds than a paper checklist, because §10.1's checklist is self-attested and unverifiable after the technician walks away. This is a design judgment, not a measured result — no before/after defect rate exists for this process.
 - [GENERATED] `Get-CimInstance Win32_Product` is avoided for baseline software detection because enumerating it triggers MSI reconfiguration on every installed package. Registry uninstall-key enumeration is used instead. Well-established Windows behavior; not measured here.

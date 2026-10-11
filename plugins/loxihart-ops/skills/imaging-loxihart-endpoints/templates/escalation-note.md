@@ -18,7 +18,7 @@ Severity:      [Blocked | Degraded | Hard Stop]
 DEVICE
   Model:   [Dell Latitude 5540]
   Serial:  [XXXXXXX]
-  Hostname:[LOX-NB-CLT-XXX or "not yet named"]
+  Hostname:[abs-nb-lox-XXX or "not yet named"]
 
 FAILURE
   Gate:     [N] - [gate name]

@@ -11,7 +11,7 @@ Posted at Gate 9. Every bracketed field must be replaced — a note shipped with
 IMAGING COMPLETION SUMMARY
 ============================================
 Ticket:        [SD-XXXXXX]
-Device Name:   [LOX-NB-CLT-XXX]
+Device Name:   [abs-nb-lox-XXX]
 Serial Number: [XXXXXXX]
 Model:         [Dell Latitude 5540]
 SOP Version:   3.1

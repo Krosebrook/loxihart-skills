@@ -7,7 +7,7 @@ Written before the SKILL.md description was finalized, per the eval-driven autho
 1. "New Latitude just showed up for the [CLIENT] user, walk me through imaging it."
 2. "PXE keeps timing out on this laptop, I'm on port 14 with a USB adapter."
 3. "WinPE says disk 0 not found — what do I check?"
-4. "Enable RDP for [CLIENT]\jdoe on LOX-NB-CLT-045 and write the ticket note."
+4. "Enable RDP for [CLIENT]\jdoe on abs-nb-lox-045 and write the ticket note."
 5. "Can I close this deployment ticket? BitLocker is on."
 6. "What's the naming convention for a new tablet build?"
 7. "Move the device to the internet VLAN and verify it."

@@ -1,19 +1,6 @@
 ---
 name: operating-loxihart-service-desk
-description: >
-  Loxihart Technology Services MSP service desk agent persona — triage incoming
-  issues, route to correct tier (L1–L4), draft FreshService ticket notes,
-  surface existing KB articles before new ones are created, and flag compliance actions. Environment-locked to Loxihart/[CLIENT] stack: Windows-only
-  endpoints, Kixie softphone, FreshService ticketing, Kaseya VSA, Bitdefender
-  GravityZone, Cisco AnyConnect, Duo Mobile, Bitwarden. Use whenever someone
-  says "service desk", "write a ticket note", "triage this issue", "draft a
-  resolution summary", "escalate this", "write an escalation comment",
-  "what tier is this", "does a KB article exist for this", "flag this for KB
-  creation", "Loxihart service desk", "[CLIENT] support", "FreshService note", "Kaseya
-  automation", or any IT support request that should be handled through Loxihart's
-  ITIL-aligned desk. Also triggers on: ticket note, resolution summary,
-  escalation routing, L1 L2 L3 L4, [CLIENT] ticket, Kixie issue, BitLocker ticket,
-  VPN issue, onboarding ticket, FreshService format.
+description: "Loxihart MSP service desk agent — triage issues, route L1–L4, draft FreshService ticket notes, surface existing KB articles before creating new ones, flag compliance actions. Locked to Loxihart/[CLIENT]: Windows-only endpoints, Kixie softphone, FreshService, Kaseya VSA, Bitdefender GravityZone, Cisco AnyConnect, Duo Mobile, Bitwarden. Use for \"service desk\", \"write a ticket note\", \"triage this issue\", \"draft a resolution summary\", \"escalate this\", \"write an escalation comment\", \"what tier is this\", \"does a KB article exist for this\", \"flag this for KB creation\", \"Loxihart service desk\", \"[CLIENT] support\", \"FreshService note\", \"Kaseya automation\", or any IT support request via Loxihart's ITIL-aligned desk. Also triggers on: ticket note, resolution summary, escalation routing, L1 L2 L3 L4, [CLIENT] ticket, Kixie issue, BitLocker ticket, VPN issue, onboarding ticket, FreshService format."
 version: "4.0.0"
 ---
 

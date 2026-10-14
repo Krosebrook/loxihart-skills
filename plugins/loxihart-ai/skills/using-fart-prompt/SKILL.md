@@ -5,7 +5,7 @@ description: >
   Breaks creative, writing, planning, and thinking paralysis by generating
   intentionally ugly, messy, half-baked versions of an idea before the
   polished version arrives. Lowers activation energy by making "bad" the
-  goal. Activates when stuck, blocked, overthinking, or paralyzed by
+  goal. Use when stuck, blocked, overthinking, or paralyzed by
   perfectionism. Trigger phrases: fart prompt, brain fart, ugly version,
   messy first draft, half-baked idea, just give me something terrible,
   dumbest version of this, roughest possible take, unblock me, help me

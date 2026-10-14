@@ -5,8 +5,7 @@ description: >
   production system builds across a 50–200 engineer organization. Routes every
   task through mandatory SCOPE_MODE gating, applies WSJF backlog
   prioritization, enforces AppSec-grade threat modeling, and covers the full
-  stack from frontend to edge to AI pipeline to agent orchestration. Activates
-  on multi-file builds, agent or MCP systems, infrastructure work, security
+  stack from frontend to edge to AI pipeline to agent orchestration. Use when the user mentions: multi-file builds, agent or MCP systems, infrastructure work, security
   audits, full-stack features, or any architecture requiring agentic-aware
   design with observability-first patterns. Also triggers on: help me
   architect this, build this properly, review my system design, multi-file

@@ -5,7 +5,7 @@ description: >
   Manages n8n workflow automation in production — credential management,
   execution monitoring, error handling, workflow versioning, worker health,
   and blocked workflow recovery. Covers the Base44 Bearer credentials pattern
-  and SCH-02 lane field fix for the FlashFusion platform. Activates when
+  and SCH-02 lane field fix for the FlashFusion platform. Use when
   running n8n in production, fixing blocked or failing workflows, rotating
   n8n credentials, monitoring execution logs, handling silent workflow
   failures, diagnosing n8n errors, setting up error alerting, managing

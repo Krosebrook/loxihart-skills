@@ -1,6 +1,6 @@
 ---
 name: refactoring-code
-description: Performs bulk code refactoring operations including renaming variables and functions across files, replacing patterns, and updating API calls. Activates when renaming identifiers, replacing deprecated code patterns, updating method calls, or making consistent changes across multiple locations.
+description: Performs bulk code refactoring operations including renaming variables and functions across files, replacing patterns, and updating API calls. Use when renaming identifiers, replacing deprecated code patterns, updating method calls, or making consistent changes across multiple locations.
 version: "1.0.0"
 ---
 

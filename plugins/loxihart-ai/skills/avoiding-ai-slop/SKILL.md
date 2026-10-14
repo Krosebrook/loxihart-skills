@@ -4,7 +4,7 @@ description: >
   Detects and eliminates AI-slop from text, prose, and image prompts using a
   76-rule structural pattern corpus, a 237-term tiered ban lexicon, and an
   image-slop negative-prompt pack, with a slopcheck.py linter for scan,
-  calibrate, and allowlist workflows. Activates on: de-slop this, deslop,
+  calibrate, and allowlist workflows. Use when the user mentions: de-slop this, deslop,
   anti-slop, AI slop, sounds like AI, reads like ChatGPT, AI tells, humanize
   this, make this sound human, remove AI words, overused AI words, banned
   words check, slop scan, slopcheck, cliché check, AI writing check, delve,

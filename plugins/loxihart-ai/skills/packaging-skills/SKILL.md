@@ -5,7 +5,7 @@ description: >
   Anthropic spec compliance, including structure validation, YAML
   verification, gerund naming enforcement, path reference validation (all
   SKILL.md subdirectory paths must exist in the zip), version sync checks,
-  and exclusion of .DS_Store and .mcpb-cache artifacts. Activates when creating
+  and exclusion of .DS_Store and .mcpb-cache artifacts. Use when creating
   distributable skill packages for Cowork, Claude Desktop, Claude Code, or
   skill marketplaces. Also triggers on: zip this skill, package this up,
   validate my skill, is this spec compliant, skill zip broken, prepare for

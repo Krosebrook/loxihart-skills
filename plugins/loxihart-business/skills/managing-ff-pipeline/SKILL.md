@@ -5,7 +5,7 @@ description: >
   Manages FlashFusion's prospecting, outreach, and deal pipeline across
   HubSpot (CRM), Apollo.io (prospect research and sequencing), and Clay
   (data enrichment). Covers the full pipeline from identifying prospects
-  through closing and handoff to contracts. Activates when the user mentions:
+  through closing and handoff to contracts. Use when the user mentions:
   pipeline, prospect, outreach, follow up, HubSpot, Apollo, Clay, deal stage,
   CRM, sales, FlashFusion clients, lead, contact, sequence, enrichment,
   deal hygiene, pipeline review, who should I reach out to, or any mention

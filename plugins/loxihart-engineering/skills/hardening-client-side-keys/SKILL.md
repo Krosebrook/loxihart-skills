@@ -3,7 +3,7 @@ name: hardening-client-side-keys
 description: >
   Removes provider API keys from browser / client-side tools by putting a fail-closed edge
   proxy (Cloudflare Worker) in front of the LLM or API call, then rewiring the tool to call
-  the proxy instead of the provider. Activates on: API key in the browser, client-side key,
+  the proxy instead of the provider. Use when the user mentions: API key in the browser, client-side key,
   key in the frontend bundle, secret in client code, de-key a tool, harden the client-side-key
   tools, browser calls the Anthropic / OpenAI / Google API directly, anthropic-dangerous-direct-browser-access,
   BYOK hardening, move keys server-side, server-side proxy for an LLM call, Cloudflare Worker proxy,

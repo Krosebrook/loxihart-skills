@@ -6,7 +6,7 @@ description: >
   before shipping: a CLAIMS / COUNTEREXAMPLE / CONTRADICTIONS footer,
   [SOURCED] vs [GENERATED] provenance labeling, and an agreement-streak
   flag at three consecutive consequential agreements.
-  Activates when finishing an audit, writing a recommendation, delivering
+  Use when finishing an audit, writing a recommendation, delivering
   a plan, drafting a decision memo, or producing any high-stakes deliverable.
   Also triggers when explicitly asked to pressure-test, stress-test,
   steelman, play devil's advocate, fight an idea, or check for blind spots.

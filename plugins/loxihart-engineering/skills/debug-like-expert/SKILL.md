@@ -173,8 +173,6 @@ Before proposing any solution:
 - Check official docs for intended behavior vs what you observe
 - Look for known issues, breaking changes, or version-specific quirks
 
-See [references/when-to-research.md](references/when-to-research.md) for detailed guidance on research strategy.
-
 </evidence_gathering>
 
 <root_cause_analysis>
@@ -193,8 +191,6 @@ For each hypothesis:
 - What would prove this false?
 - Design a minimal test
 - Execute and document results
-
-See [references/hypothesis-testing.md](references/hypothesis-testing.md) for scientific method application.
 
 **C. Eliminate or Confirm**
 
@@ -224,8 +220,6 @@ Don't move forward until you can answer:
 - Do the reproduction steps now work?
 - Run relevant tests if they exist
 - Check for regressions in related functionality
-
-See [references/verification-patterns.md](references/verification-patterns.md) for comprehensive verification approaches.
 
 </solution_development>
 
@@ -293,34 +287,34 @@ If you can't answer "yes" to all of these, keep investigating.
 
 <advanced_topics>
 
-For deeper topics, see reference files:
+Deeper topics to apply:
 
-**Debugging mindset**: [references/debugging-mindset.md](references/debugging-mindset.md)
+**Debugging mindset**
 - First principles thinking applied to debugging
 - Cognitive biases that lead to bad fixes
 - The discipline of systematic investigation
 - When to stop and restart with fresh assumptions
 
-**Investigation techniques**: [references/investigation-techniques.md](references/investigation-techniques.md)
+**Investigation techniques**
 - Binary search / divide and conquer
 - Rubber duck debugging
 - Minimal reproduction
 - Working backwards from desired state
 - Adding observability before changing code
 
-**Hypothesis testing**: [references/hypothesis-testing.md](references/hypothesis-testing.md)
+**Hypothesis testing**
 - Forming falsifiable hypotheses
 - Designing experiments that prove/disprove
 - What makes evidence strong vs weak
 - Recovering from wrong hypotheses gracefully
 
-**Verification patterns**: [references/verification-patterns.md](references/verification-patterns.md)
+**Verification patterns**
 - Definition of "verified" (not just "it ran")
 - Testing reproduction steps
 - Regression testing adjacent functionality
 - When to write tests before fixing
 
-**Research strategy**: [references/when-to-research.md](references/when-to-research.md)
+**Research strategy**
 - Signals that you need external knowledge
 - What to search for vs what to reason about
 - Balancing research time vs experimentation

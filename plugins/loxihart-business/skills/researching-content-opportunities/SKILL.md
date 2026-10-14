@@ -4,7 +4,7 @@ version: "1.0.1"
 description: >
   Researches keyword and content opportunities for FlashFusion using Ahrefs and Semrush. Runs quarterly before content planning to identify what to write, what FlashFusion can realistically rank for, and where competitor content gaps exist. Outputs a prioritized list of 10–15 topic targets for the next 90 days — not a sprawling keyword spreadsheet.
 
-  Activate when the user mentions: content planning, keyword research, what should I write about, find content opportunities for FlashFusion, SEO opportunities, topic research, quarterly planning, content calendar, keyword targets, what's ranking, competitor content gaps, content strategy for FlashFusion, Ahrefs research, or Semrush keyword research. Also activate when starting a new content quarter or when the content backlog is empty.
+  Use when the user mentions: content planning, keyword research, what should I write about, find content opportunities for FlashFusion, SEO opportunities, topic research, quarterly planning, content calendar, keyword targets, what's ranking, competitor content gaps, content strategy for FlashFusion, Ahrefs research, or Semrush keyword research. Also activate when starting a new content quarter or when the content backlog is empty.
 ---
 
 # Content Opportunity Researcher

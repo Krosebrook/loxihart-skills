@@ -5,7 +5,7 @@ metadata:
 description: >
   Production engineering pattern library spanning 11 phases — Foundation, Resilience,
   Performance, Data Integrity, Observability, Deployment, Scalability, Edge Cases, Security
-  Deep, Compliance/DR/FinOps, and AI/HITL. Activates when auditing code for production
+  Deep, Compliance/DR/FinOps, and AI/HITL. Use when auditing code for production
   readiness, applying hardening patterns, reviewing system design, pattern audit, apply phase,
   harden this, production-ready, resilience patterns, observability gaps, security review, DR
   plan, FinOps, or AI guardrails. Use alongside engineering-staff-workflows for execution. Not

@@ -5,7 +5,7 @@ metadata:
 description: >
   Builds, patches, and registers the FlashFusion Agent Control Center as a Cowork live
   artifact — void-dark dashboard with semi-transparent blur panels, live Supabase data, and
-  per-panel Demo fallback. Activates on build the FlashFusion artifact, rebuild the control
+  per-panel Demo fallback. Use when the user mentions: build the FlashFusion artifact, rebuild the control
   center, add a panel to the dashboard, the artifact is broken, update FlashFusion dashboard,
   patch the agent dashboard, fix the live connection, update brand tokens, ff artifact, ff
   dashboard, agent control panel, agent control center, demo mode artifact, approval queue

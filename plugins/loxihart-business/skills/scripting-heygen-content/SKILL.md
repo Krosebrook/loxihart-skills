@@ -9,7 +9,7 @@ description: >
   suggestions, pacing notes, and credit estimate. Brand: Kyle Rosebrook
   / Abstrekkt. Voice: direct, first-person, earned authority, no hype.
 
-  Activate when the user says: HeyGen script, write a script for HeyGen,
+  Use when the user says: HeyGen script, write a script for HeyGen,
   generate an avatar script, script this for my avatar, video script,
   produce a HeyGen video, turn this into a HeyGen script, write a video
   for FlashFusion, Abstrekkt video, talking head script, brand video

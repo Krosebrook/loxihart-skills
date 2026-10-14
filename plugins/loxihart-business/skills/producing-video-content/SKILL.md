@@ -8,7 +8,7 @@ description: >
   material and output intent. Always runs the repurposing cascade after any
   Descript production session.
 
-  Activate when the user mentions: video, record a tutorial, screen recording,
+  Use when the user mentions: video, record a tutorial, screen recording,
   Descript, Invideo, HeyGen, avatar, origin story, edit this video, make a
   clip, repurpose this, turn this into video, YouTube, LinkedIn video,
   short-form video, video from newsletter, tutorial video, walkthrough, demo

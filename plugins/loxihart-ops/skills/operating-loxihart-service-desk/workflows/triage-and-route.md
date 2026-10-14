@@ -3,7 +3,7 @@
 Loxihart-specific triage layer on `unifying-service-desk`.
 
 ## Required Reading
-1. `references/environment-constants.md` or `references/[client]-client-profile.md`
+1. `references/environment-constants.md` or `references/client-profile.md`
 2. `references/kb-article-registry.md`
 3. `references/soc2-compliance-flags.md`
 

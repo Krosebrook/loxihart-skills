@@ -8,7 +8,7 @@ description: >
   graph spec, memory spec, tool contracts, billing guardrails, observability
   runbook, rollback recovery, api contracts, typescript interfaces, smoke tests,
   tenant isolation, idempotency, checkpoint recovery, wsjf backlog, sprint backlog.
-  Use this skill to run any phase of the v1.9.9 build pipeline, check WSJF
+  Use when you need to run any phase of the v1.9.9 build pipeline, check WSJF
   priority, or get scaffolding stubs.
 version: 1.0.0
 ---

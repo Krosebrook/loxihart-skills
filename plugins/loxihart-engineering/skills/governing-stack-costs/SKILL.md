@@ -6,7 +6,7 @@ description: >
   production stack — Anthropic API token spend, Supabase compute and
   egress, Vercel function invocations, and n8n executions. Establishes
   per-service budget thresholds, monthly review workflow, and quick-win
-  optimization patterns. Activates when reviewing cloud costs, setting
+  optimization patterns. Use when reviewing cloud costs, setting
   budget alerts, an unexpected bill arrived, trying to reduce API spend,
   figuring out what's costing money, optimizing token usage, or setting
   up cost governance for a production system. Also triggers on: cost

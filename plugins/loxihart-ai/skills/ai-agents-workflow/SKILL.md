@@ -6,7 +6,7 @@ allowed-tools: bash view create_file str_replace web_search
 description: >
   Builds and implements AI agents, automation workflows, and tool integrations — MCP servers
   (2025 async, OAuth, stateless spec), LangChain and CrewAI agents, multi-LLM orchestration,
-  and no-code platforms. Activates on MCP server, build an agent, tool integration, API
+  and no-code platforms. Use when the user mentions: MCP server, build an agent, tool integration, API
   orchestration, multi-LLM routing, OAuth flow, webhook, connect services, deploy a workflow,
   integrate external APIs. Not for conceptual architecture overviews (use orchestrating-ai-
   agents), not for production n8n incident ops (use operating-n8n-production), and not for

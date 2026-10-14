@@ -1,6 +1,6 @@
 ---
 name: executing-branded-frontends
-description: "Executes production HTML and React artifacts from Loxihart or FlashFusion brand token profiles. Runs mandatory 5-question design gate and 4-gate anti-slop audit before every output. Activates on: build a dashboard, make a component, create an artifact, code this UI, HTML artifact, React component, Loxihart UI, FlashFusion component, brand tokens, design gate, anti-slop audit. Does NOT activate for general UI builds without a brand profile — use the public frontend-design skill instead."
+description: "Executes production HTML and React artifacts from Loxihart or FlashFusion brand token profiles. Runs mandatory 5-question design gate and 4-gate anti-slop audit before every output. Use when the user mentions: build a dashboard, make a component, create an artifact, code this UI, HTML artifact, React component, Loxihart UI, FlashFusion component, brand tokens, design gate, anti-slop audit. Does NOT activate for general UI builds without a brand profile — use the public frontend-design skill instead."
 metadata:
   version: "2.1.0"
 allowed-tools: "Read, Write"

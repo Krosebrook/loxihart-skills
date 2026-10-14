@@ -5,7 +5,7 @@ description: >
   Sets up observability for the Vercel + Supabase + n8n + Anthropic stack.
   Live operational path runs through PostHog (MCP connected). Datadog is NOT
   connected — all Datadog steps are static setup references only, clearly
-  labeled, and not executable via MCP. Activates on PostHog instrumentation,
+  labeled, and not executable via MCP. Use when the user mentions: PostHog instrumentation,
   production monitoring, health dashboard, alert setup, stack observability,
   what to monitor, are things working in production. Not for cost tracking or
   budget alerts (use governing-stack-costs) and not for agent behavioral

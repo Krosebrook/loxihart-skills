@@ -4,7 +4,7 @@ version: "1.0.1"
 description: >
   Runs SEO optimization at two stages of FlashFusion content production: before writing (brief + keyword targeting) and before publishing (on-page audit + metadata + schema). Chains searchfit-seo plugin skills at the right moments so SEO happens during content creation, not as an afterthought or separate pass.
 
-  Activate when the user mentions: ready to publish, SEO check this, finishing this piece, optimize this before publishing, write a content brief, I'm about to write a post about X, pre-publish check, meta description, title tag, on-page SEO, add schema, internal links, content brief for, or any content piece transitioning from planning to writing, or writing to publishing.
+  Use when the user mentions: ready to publish, SEO check this, finishing this piece, optimize this before publishing, write a content brief, I'm about to write a post about X, pre-publish check, meta description, title tag, on-page SEO, add schema, internal links, content brief for, or any content piece transitioning from planning to writing, or writing to publishing.
 ---
 
 # Content SEO Publisher

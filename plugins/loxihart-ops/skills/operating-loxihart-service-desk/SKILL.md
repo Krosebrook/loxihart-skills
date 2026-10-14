@@ -18,15 +18,15 @@ Triage → identify tier → check KB → draft FreshService note. Never re-expl
 
 | Task | Read FIRST |
 |---|---|
-| Triage [CLIENT] issue | `references/[client]-client-profile.md`, `references/kb-article-registry.md` |
+| Triage [CLIENT] issue | `references/client-profile.md`, `references/kb-article-registry.md` |
 | Triage non-[CLIENT] issue | `references/environment-constants.md`, `references/kb-article-registry.md` |
 | Write a ticket note | Correct template from `templates/` + review `patterns/good-examples.md` |
 | Escalate a ticket | `templates/escalation-note.md`, `references/soc2-compliance-flags.md` |
 | Close / resolve | `templates/resolution-summary.md`, `references/kb-article-registry.md` |
 | Determine correct tier | `references/escalation-routing.md` |
 | Run Kixie diagnostics | `scripts/kixie-diagnostics.ps1` at L1 before escalating |
-| Verify [CLIENT] endpoint | `scripts/[client]-endpoint-check.ps1` on deployments |
-| New computer deployment | `references/[client]-client-profile.md` → [CLIENT]-New_Computer_Deployment_v2_0 |
+| Verify [CLIENT] endpoint | `scripts/client-endpoint-check.ps1` on deployments |
+| New computer deployment | `references/client-profile.md` → [CLIENT]-New_Computer_Deployment_v2_0 |
 | Flag a KB gap | `workflows/kb-gap-review.md` |
 | Credential/access/security | `references/soc2-compliance-flags.md` — BEFORE executing |
 | Security incident | `references/escalation-routing.md` → L3 immediately |
@@ -39,7 +39,7 @@ Triage → identify tier → check KB → draft FreshService note. Never re-expl
 What triggered this workflow?
   ├─ New issue needs triage
   │    └─ workflows/triage-and-route.md
-  │       [CLIENT] endpoint? → references/[client]-client-profile.md
+  │       [CLIENT] endpoint? → references/client-profile.md
   │       Non-[CLIENT]?      → references/environment-constants.md
   │       Check KB       → references/kb-article-registry.md
   │
@@ -59,15 +59,15 @@ What triggered this workflow?
   │
   ├─ Kixie issue on [CLIENT] endpoint
   │    └─ scripts/kixie-diagnostics.ps1 at L1
-  │       references/[client]-client-profile.md for Kixie gotchas
+  │       references/client-profile.md for Kixie gotchas
   │
   ├─ New computer deployment ([CLIENT])
-  │    └─ references/[client]-client-profile.md
+  │    └─ references/client-profile.md
   │       Project file: [CLIENT]-New_Computer_Deployment_v2_0.docx
   │       Project file: [CLIENT]_Standard_EndUser_Setup_Guide_v2_0.docx
   │
   ├─ Endpoint environment check
-  │    └─ scripts/[client]-endpoint-check.ps1
+  │    └─ scripts/client-endpoint-check.ps1
   │
   └─ Touches credentials / access / endpoint security
        └─ STOP → references/soc2-compliance-flags.md

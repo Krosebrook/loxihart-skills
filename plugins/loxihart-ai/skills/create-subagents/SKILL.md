@@ -162,13 +162,6 @@ A well-configured subagent has:
 <references>
 **API & configuration**: [references/subagent-api.md](references/subagent-api.md) — file structure/precedence, full field parameter lists, configuration tables, XML tag intelligence rules, invocation, and management.
 
-**Usage & config depth**: [references/subagents.md](references/subagents.md) — file format, model orchestration, tool security, prompt caching, examples.
-**Writing prompts**: [references/writing-subagent-prompts.md](references/writing-subagent-prompts.md) — XML structure, description routing, extended thinking, constraints.
-**Evaluation & testing**: [references/evaluation-and-testing.md](references/evaluation-and-testing.md)
-**Error handling & recovery**: [references/error-handling-and-recovery.md](references/error-handling-and-recovery.md)
-**Context management**: [references/context-management.md](references/context-management.md)
-**Orchestration patterns**: [references/orchestration-patterns.md](references/orchestration-patterns.md)
-**Debugging agents**: [references/debugging-agents.md](references/debugging-agents.md)
 </references>
 
 ---

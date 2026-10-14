@@ -4,7 +4,7 @@ version: "1.0.0"
 description: >
   Manages the full contract lifecycle for FlashFusion client engagements — from proposal to signed document to archive. Selects the right template (NDA, SOW, change order, or MSA), populates it with targeted questions, applies AI-specific clauses, and walks through the DocuSeal send workflow.
 
-  Activate when the user mentions: contract, proposal, SOW, statement of work, NDA, non-disclosure, change order, scope creep, DocuSeal, send for signature, engagement letter, client agreement, retainer agreement, "client wants to proceed", "ready to close", "new client", "need a contract for", "out of scope", "client asking for more", "client signed", "how do I invoice", "deliverable definition", or any mention of formalizing a client engagement.
+  Use when the user mentions: contract, proposal, SOW, statement of work, NDA, non-disclosure, change order, scope creep, DocuSeal, send for signature, engagement letter, client agreement, retainer agreement, "client wants to proceed", "ready to close", "new client", "need a contract for", "out of scope", "client asking for more", "client signed", "how do I invoice", "deliverable definition", or any mention of formalizing a client engagement.
 ---
 
 # FF Contract Manager

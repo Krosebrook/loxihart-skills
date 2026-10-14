@@ -4,7 +4,7 @@ version: "1.0.1"
 description: >
   Designs, deploys, and analyzes surveys for four recurring FlashFusion and Loxihart use cases: AI adoption measurement (Loxihart), post-engagement client feedback (FlashFusion), workshop and training feedback (both), and audience/content research (FlashFusion newsletter). Pulls pre-built question templates for each use case, guides SurveyMonkey setup and distribution, and produces a one-page analysis summary from responses.
 
-  Activate when the user mentions: survey, survey design, SurveyMonkey, measure AI adoption, adoption metrics, client feedback survey, post-workshop survey, post-engagement feedback, newsletter audience research, reader survey, NPS, measure impact of AI enablement, feedback form, research my audience, what do readers want, or any request to gather structured feedback from stakeholders, clients, or an audience.
+  Use when the user mentions: survey, survey design, SurveyMonkey, measure AI adoption, adoption metrics, client feedback survey, post-workshop survey, post-engagement feedback, newsletter audience research, reader survey, NPS, measure impact of AI enablement, feedback form, research my audience, what do readers want, or any request to gather structured feedback from stakeholders, clients, or an audience.
 ---
 
 # Research Survey Designer

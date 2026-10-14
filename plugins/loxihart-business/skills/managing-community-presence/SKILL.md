@@ -8,7 +8,7 @@ description: >
   it and flags its absence explicitly. Surfaces who is engaging with
   FlashFusion content, identifies high-intent community members, and guides
   community-building decisions for the newsletter audience and LinkedIn
-  following. Activates when the user mentions: community, audience engagement,
+  following. Use when the user mentions: community, audience engagement,
   who's engaging with my content, community building, newsletter audience,
   community intelligence, GTM community, who should I reach out to from my
   audience, Common Room (will surface NOT_CONNECTED status), LinkedIn

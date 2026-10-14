@@ -75,7 +75,7 @@ Active users: X of Y | #ai-wins posts: N | Est. hours saved: N
 ---
 
 ## Key Queries
-See [REFERENCE-queries.md](REFERENCE-queries.md) for:
+Query patterns to cover (no bundled reference file; write against the live schema):
 - PostHog HogQL: weekly active users, top skills by invocation, funnel
 - Supabase: ai_usage_logs RLS-safe query pattern
 - n8n: execution performance API call

@@ -1,0 +1,57 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: claude plugin validate --strict
+        run: |
+          set -e
+          claude plugin validate --strict .
+          for p in plugins/*/; do
+            echo "::group::$p"
+            claude plugin validate --strict "$p"
+            echo "::endgroup::"
+          done
+
+      - name: Frontmatter and link check
+        run: |
+          python3 .github/scripts/check_repo.py frontmatter
+          python3 .github/scripts/check_repo.py links
+
+      - name: Denylist (hashed) - tree
+        run: python3 .github/scripts/check_repo.py denylist
+
+      - name: Denylist (hashed) - history
+        run: python3 .github/scripts/check_repo.py denylist --history
+
+      - name: gitleaks
+        env:
+          GITLEAKS_VERSION: 8.21.2
+        run: |
+          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar xz gitleaks
+          ./gitleaks git --redact --no-banner -v .

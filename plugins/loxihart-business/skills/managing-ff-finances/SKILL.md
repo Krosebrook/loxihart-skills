@@ -5,7 +5,7 @@ metadata:
 description: >
   Manages FlashFusion's business finances as a sole-proprietor consulting operation — invoice
   lifecycle, revenue tracking, P&L basics, and cash flow visibility. Separate from managing-
-  personal-finances (credit, subscriptions, personal cash). Activates on FlashFusion invoice,
+  personal-finances (credit, subscriptions, personal cash). Use when the user mentions: FlashFusion invoice,
   client payment, revenue tracking, P&L, profit and loss, business expenses, quarterly
   finances, cash flow, outstanding invoices, deductibles, how much have I made, what do I owe,
   how much is outstanding. Not for engagement pricing strategy and not for personal finances

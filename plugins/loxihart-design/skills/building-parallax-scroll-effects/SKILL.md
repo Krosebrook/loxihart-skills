@@ -5,7 +5,7 @@ description: >
   scroll-triggered reveals, horizontal scroll-jacking, pointer/mouse parallax,
   scale-on-scroll, velocity-aware marquees, and native CSS scroll-driven
   animation (animation-timeline) — with performance and accessibility handled
-  from the first line of code, not bolted on after. Activates when the user
+  from the first line of code, not bolted on after. Use when the user
   asks for parallax scrolling, scroll animations, scroll-triggered effects,
   depth on scroll, sticky sections, pinned sections, horizontal scroll
   sections, scroll-jacking, mouse or pointer parallax, animate on scroll,

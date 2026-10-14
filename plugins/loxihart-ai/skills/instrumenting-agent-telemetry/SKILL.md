@@ -8,7 +8,7 @@ description: >
   behavioral drift before it reaches users. Datadog is NOT connected — all
   Datadog steps including statsd custom metrics and monitor creation are
   static reference guides only, clearly labeled, and not executable via MCP.
-  Activates when setting up monitoring for an AI agent, wiring an agent to
+  Use when setting up monitoring for an AI agent, wiring an agent to
   PostHog, figuring out what to log in agent interactions, detecting when an
   agent is getting worse, building dashboards for agent health, or setting
   alert thresholds for agent failure rates. Also triggers on: agent monitoring,

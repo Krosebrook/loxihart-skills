@@ -128,4 +128,6 @@ Claude Code marketplace of Loxihart skills, grouped by domain.
 
 ## Placeholders
 
-Client names, people, hostnames, subnets, emails, and compliance specifics were replaced with `[CLIENT]`, `[PERSON]`, `[HOSTNAME]`, `[SUBNET]`, `[EMAIL]`, `[COMPLIANCE FRAMEWORK]`. Fill them in locally; never commit real values. Some INT-branded .docx templates/logos were removed — see REBRAND_LOG.md.
+Client names, people, hostnames, subnets, emails, and compliance specifics were replaced with `[CLIENT]`, `[PERSON]`, `[HOSTNAME]`, `[SUBNET]`, `[EMAIL]`, `[COMPLIANCE FRAMEWORK]`. Fill them in locally; never commit real values. Some client-branded binary templates and logos were removed and are not bundled.
+
+The ops skills (`operating-loxihart-service-desk`, `imaging-loxihart-endpoints`, and related) are effectively **templates**: configure the placeholders for your environment before use. `Invoke-DeploymentValidation.ps1` refuses to run until `[CLIENT]`, `[SUBNET]` and `[HOSTNAME]` are set.

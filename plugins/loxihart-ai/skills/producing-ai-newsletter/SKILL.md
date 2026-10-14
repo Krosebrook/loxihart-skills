@@ -5,7 +5,7 @@ description: >
   engine (research, draft, edit, format, deliver) and switchable brand profiles.
   Ships with Loxihart configuration (3-tier audience, Teams and SharePoint delivery,
   continuity tracking) and FlashFusion configuration (single-tier creator-tech audience,
-  Substack and email delivery). Activates when the user mentions newsletter, weekly
+  Substack and email delivery). Use when the user mentions newsletter, weekly
   briefing, The Prompt, AI brief, edition drafting, research brief, newsletter research,
   tier content, continuity log, FlashFusion newsletter, or any reference to newsletter
   production. Also triggers on research week, draft week, draft edition, continuity

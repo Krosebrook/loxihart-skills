@@ -29,6 +29,6 @@ Locked constraints for Loxihart Technology Services. Read before triage or note 
 
 | Client | Code | Environment Profile |
 |---|---|---|
-| [CLIENT] (Multimedia Sales & Marketing) | [CLIENT] | Full profile: `references/[client]-client-profile.md` |
+| [CLIENT] | [CLIENT] | Full profile: `references/client-profile.md` |
 | RAIOAM | RAI | Partial — webcam setup doc in project, no full profile yet |
 | Guardian | GRD | Not documented in this project |

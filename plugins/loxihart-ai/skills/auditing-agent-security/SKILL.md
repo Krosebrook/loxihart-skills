@@ -5,7 +5,7 @@ metadata:
 description: >
   Applies the Agent Security framework to autonomous AI systems and ghost-team architectures —
   permission and blast-radius mapping, prompt-injection and context-poisoning review, MCP
-  bridge security, and quarterly cleanses. Activates on agent security audit, permission stack
+  bridge security, and quarterly cleanses. Use when the user mentions: agent security audit, permission stack
   review, agent hygiene, context window poisoning, prompt injection defense, MCP security,
   ghost team security, agent-to-agent trust, blast radius test, permission escalation risk.
   Not for application or codebase vulnerability review and not for building the agent itself

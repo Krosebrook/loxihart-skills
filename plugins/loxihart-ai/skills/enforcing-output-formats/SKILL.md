@@ -2,7 +2,7 @@
 name: enforcing-output-formats
 description: >
   Enforces industry-standard formatting conventions for every output type,
-  even when not explicitly requested. Activates on any request to produce
+  even when not explicitly requested. Use for any request to produce
   a song, lyric sheet, script, screenplay, email, letter, memo, legal document,
   resume, recipe, chord chart, lead sheet, tablature, lesson plan, press release,
   invoice, brief, pitch deck outline, interview transcript, meeting minutes,

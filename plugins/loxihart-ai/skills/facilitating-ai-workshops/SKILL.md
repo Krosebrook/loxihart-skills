@@ -3,7 +3,7 @@ name: facilitating-ai-workshops
 description: >
   Facilitates AI enablement workshops and consulting exercises that move
   stakeholders from abstract AI concepts to measurable business outcomes.
-  Activates when running an AI workshop, facilitating AI adoption sessions,
+  Use when running an AI workshop, facilitating AI adoption sessions,
   running consulting exercises, helping teams identify AI use cases, mapping
   AI to business KPIs, running a friction audit, building an AI risk matrix,
   outcome-first AI planning, AI readiness workshop, value stream mapping for

@@ -6,7 +6,7 @@ description: >
   role at Loxihart — monthly progress updates, initiative proposals, adoption
   milestone announcements, and domain unlock requests. Tailored to three
   named stakeholders: [PERSON] (direct manager), [PERSON], and [PERSON]
-  Miles. Activates when preparing a status update for [PERSON], drafting a
+  Miles. Use when preparing a status update for [PERSON], drafting a
   proposal for leadership, presenting AI adoption survey results, announcing an
   AI win, requesting a domain unlock, writing an initiative brief, summarizing
   AI program progress, communicating a blocker, or documenting SME activity.

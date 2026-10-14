@@ -6,7 +6,7 @@ metadata:
 description: >
   Writes production-ready shell and automation scripts (Bash .sh and PowerShell .ps1) with a
   mandatory adversarial audit gate, MSP-grade error handling, input validation, idempotency,
-  structured logging, and a paired README. Activates on write a script, automate this with a
+  structured logging, and a paired README. Use when the user mentions: write a script, automate this with a
   script, deployment script, .sh file, .ps1 file, PowerShell script, Bash script, endpoint
   script, idempotent script, MSP script, client deployment script. Not for application logic
   in TypeScript or Python (that is a build) and not for throwaway interactive one-liners the

@@ -6,7 +6,7 @@ description: >
   Manages the lifecycle of API keys, tokens, and credentials across a multi-service production
   stack — inventory, rotation schedules, audit procedures, and emergency revocation for Vercel
   env vars, Supabase service keys, the n8n credential store, Anthropic API keys, and MCP
-  server tokens. Activates on rotate credentials, API key rotation, credential audit, service
+  server tokens. Use when the user mentions: rotate credentials, API key rotation, credential audit, service
   key expired, key compromised, secrets management, credential sprawl, or preparing a security
   review. Not for writing application auth or login flows (use kyle-vibe-coding) and not for
   storing secrets in code.

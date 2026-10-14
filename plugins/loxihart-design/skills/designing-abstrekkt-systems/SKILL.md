@@ -3,7 +3,7 @@ name: designing-abstrekkt-systems
 description: >
   Compiles and applies the Abstrekkt brand design system — token-driven,
   accessibility-first, state-machine-correct UI architecture for Abstrekkt
-  and FlashFusion products. Activates when building UI, designing components,
+  and FlashFusion products. Use when building UI, designing components,
   generating design tokens, applying Abstrekkt visual identity, implementing
   Fraunces display typography, brass color palette (#c8a86a), or producing
   frontend architecture for any Abstrekkt sub-brand. Also triggers on:

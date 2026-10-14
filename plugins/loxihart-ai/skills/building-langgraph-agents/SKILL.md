@@ -7,7 +7,7 @@ description: >
   loops, error recovery, and built-in HITL checkpoints. Covers when
   to choose LangGraph over LangChain or CrewAI, core concepts (StateGraph,
   TypedDict state, nodes, edges, conditional edges, reducers, checkpointers),
-  and implementation patterns for production agent workflows. Activates
+  and implementation patterns for production agent workflows. Use
   when building agents with complex branching logic, designing agents
   that need to loop until a condition is met, implementing state machines
   for agent workflows, adding error recovery to agent loops, building

@@ -4,7 +4,7 @@ version: "1.1.1"
 description: >
   Guides informal AI coaching conversations with Loxihart colleagues — from
   first questions to skeptic conversations to helping power users go deeper.
-  Activates when a colleague asks about AI tools, when someone is skeptical
+  Use when a colleague asks about AI tools, when someone is skeptical
   about AI at work, when a teammate needs help getting started with Claude,
   when someone is stuck on a specific AI task, when a peer asks if AI is
   appropriate for their work tasks, when someone expresses concern about AI

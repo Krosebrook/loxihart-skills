@@ -1,6 +1,6 @@
 ---
 name: create-meta-prompts
-description: "Creates optimized prompts for Claude-to-Claude pipelines with research, planning, and execution stages. Activates when building prompts that produce outputs for other prompts to consume, or running multi-stage workflows (research → plan → implement). Triggers on: meta-prompt, prompt chain, Claude pipeline, multi-stage workflow, Do/Plan/Research/Refine prompt, prompt orchestration, chained prompts, prompt dependency, sequential prompts. Does NOT activate for single one-shot prompts — use the relevant task skill directly instead."
+description: "Creates optimized prompts for Claude-to-Claude pipelines with research, planning, and execution stages. Use when building prompts that produce outputs for other prompts to consume, or running multi-stage workflows (research → plan → implement). Triggers on: meta-prompt, prompt chain, Claude pipeline, multi-stage workflow, Do/Plan/Research/Refine prompt, prompt orchestration, chained prompts, prompt dependency, sequential prompts. Does NOT activate for single one-shot prompts — use the relevant task skill directly instead."
 metadata:
   version: "1.0.0"
 allowed-tools: "Read, Write, Bash"

@@ -8,7 +8,7 @@ description: >
   eval structure (task/trial/transcript/outcome), grader selection (code-based,
   model-based, human), capability vs. regression suites, task set construction,
   LLM-as-judge calibration, pass@k vs pass^k reporting, and CI integration.
-  Activates when the user mentions: agent eval, evaluate this agent, does my
+  Use when the user mentions: agent eval, evaluate this agent, does my
   agent work reliably, regression test, agent quality, build an eval suite,
   test my agent, LLM judge, grader, benchmark my agent, agent accuracy, or
   any request to measure whether an agent is producing correct or reliable

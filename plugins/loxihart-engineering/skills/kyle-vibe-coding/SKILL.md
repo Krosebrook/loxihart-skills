@@ -6,7 +6,7 @@ description: >
   Rapidly prototype and build complete web apps on Kyle's production stack — React 19, Vite,
   TypeScript, Tailwind, Supabase (auth, RLS, Postgres), Cloudflare Workers/Pages, Resend,
   Stripe, PostHog. Enforces security-first defaults, the no-placeholder rule, and a mandatory
-  6-persona audit loop before any deploy or hand-off. Activates on vibe code, prototype, spin
+  6-persona audit loop before any deploy or hand-off. Use when the user mentions: vibe code, prototype, spin
   up, new app, scaffold, demo, internal tool, MVP, greenfield, build this idea. Not for
   credential rotation or audits (use managing-credential-lifecycle) and not for production
   incident response or pure infra ops.
@@ -58,7 +58,6 @@ npm install @tanstack/react-query zustand react-hook-form zod @hookform/resolver
 npm install tailwindcss postcss autoprefixer posthog-js && npx tailwindcss init -p
 npm install -D vitest @testing-library/react @testing-library/jest-dom @playwright/test
 ```
-See [REFERENCE-templates.md](REFERENCE-templates.md) for core file templates (supabase.ts, RLS policies, auth entry point, architecture patterns).
 
 ---
 
@@ -117,10 +116,6 @@ Risk decisions: [P1/P2] → Accept / Defer / Fix now?
 
 ---
 
-## Reference Files
-- [REFERENCE-templates.md](REFERENCE-templates.md) — Core file templates, RLS patterns, architecture layouts, PostHog setup, .env.example
-
----
 
 ## CLAIMS / COUNTEREXAMPLE / CONTRADICTIONS
 - [GENERATED] Stack patterns — verify react.dev, supabase.com/docs before use; both evolve

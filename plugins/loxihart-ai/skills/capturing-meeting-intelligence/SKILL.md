@@ -6,7 +6,7 @@ description: >
   Mem (knowledge storage) into a unified meeting intelligence workflow for
   Loxihart and FlashFusion. Routes each meeting to the right capture tool, runs a
   post-meeting processing protocol within 24 hours, and stores distilled
-  context where it can be retrieved. Activates when the user mentions: meeting
+  context where it can be retrieved. Use when the user mentions: meeting
   notes, capture this meeting, Otter, Granola, Mem, PKM, after a call, after
   a workshop, what did we decide, what was discussed, meeting recap, log this
   conversation, store this context, note from today, or any request to capture

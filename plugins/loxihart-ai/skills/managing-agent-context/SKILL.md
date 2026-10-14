@@ -5,7 +5,7 @@ description: >
   Manages context windows in long-running AI agent loops — deciding when
   to summarize vs. truncate, implementing rolling window patterns,
   preserving critical context while shedding stale state, and budgeting
-  tokens across multi-turn agent interactions. Activates when an agent
+  tokens across multi-turn agent interactions. Use when an agent
   is running out of context, building autonomous loops that run many
   turns, experiencing context window errors, trying to keep agents
   focused across long sessions, managing token costs in multi-turn

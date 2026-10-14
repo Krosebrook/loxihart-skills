@@ -7,7 +7,7 @@ description: >
   interface, handling timeouts and non-responses, and building escalation
   paths from automated to human. Covers implementation patterns for n8n
   wait nodes, Claude API stop sequences, and Base44 approval queue panels.
-  Activates when designing agents that need human oversight, building
+  Use when designing agents that need human oversight, building
   approval workflows, adding checkpoints to autonomous processes, deciding
   what actions require human sign-off, structuring escalation from AI to
   human, or building trustworthy agents for client delivery. Also triggers

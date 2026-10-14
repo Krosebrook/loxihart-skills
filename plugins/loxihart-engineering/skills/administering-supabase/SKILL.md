@@ -4,7 +4,7 @@ version: "1.0.1"
 description: >
   Manages Supabase database operations for FlashFusion's production stack —
   schema design, Row Level Security policies, migrations, Edge Functions, and
-  debugging. Active project: flashnframe-app (etctmappdhpjuwptdbeb). Activates
+  debugging. Active project: flashnframe-app (etctmappdhpjuwptdbeb). Use
   when the user mentions: Supabase, RLS, row level security, migration, schema,
   database, table, Edge Function, auth, policies, Postgres, supabase query,
   database admin, add a column, create a table, why is my query blocked, or

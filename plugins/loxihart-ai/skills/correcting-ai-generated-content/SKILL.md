@@ -5,7 +5,7 @@ description: >
   files for factual gaps, missing production constraints, outdated information,
   and unverified claims. Runs web search to fill each gap. Rebuilds a corrected
   version in the target brand voice with [SOURCED]/[GENERATED] tagging
-  throughout. Activate when user says: "this has gaps", "audit this NLM doc",
+  throughout. Use when user says: "this has gaps", "audit this NLM doc",
   "there's missing info", "surface the gaps", "fact-check this", "rebuild with
   real sources", "correct this article", "AI content needs verification",
   "update with current info", "notebooklm export needs work", "the AI got this

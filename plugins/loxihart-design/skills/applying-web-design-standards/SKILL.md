@@ -1,6 +1,6 @@
 ---
 name: applying-web-design-standards
-description: "Applies web design standards covering typography systems, color theory, grid layouts, design tokens, component library architecture, responsive CSS, and performance optimization. Activates on: type scale, font pairing, color palette, HSL color, 8-point grid, design tokens, component API, Storybook, Style Dictionary, atomic design, responsive layout, mobile-first, Core Web Vitals, CSS Grid, Flexbox, container queries, pre-launch audit. Does NOT activate for Kyle-specific branded builds — use executing-branded-frontends or managing-design-briefs instead."
+description: "Applies web design standards covering typography systems, color theory, grid layouts, design tokens, component library architecture, responsive CSS, and performance optimization. Use when the user mentions: type scale, font pairing, color palette, HSL color, 8-point grid, design tokens, component API, Storybook, Style Dictionary, atomic design, responsive layout, mobile-first, Core Web Vitals, CSS Grid, Flexbox, container queries, pre-launch audit. Does NOT activate for Kyle-specific branded builds — use executing-branded-frontends or managing-design-briefs instead."
 metadata:
   version: "1.0.0"
 allowed-tools: "Read, Write, Bash, Glob"

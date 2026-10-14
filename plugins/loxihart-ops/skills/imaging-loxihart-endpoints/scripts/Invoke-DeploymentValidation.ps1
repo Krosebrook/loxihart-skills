@@ -111,6 +111,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$script:LogFile = $null
 
 # ----------------------------------------------------------------------------
 # Helpers
@@ -283,6 +284,15 @@ function New-CompletionNote {
     return $sb.ToString()
 }
 
+function Get-UnsetPlaceholder {
+    <# Returns the names of parameters whose value still contains a [PLACEHOLDER] token. #>
+    [CmdletBinding()]
+    param([Parameter(Mandatory)][hashtable] $Values)
+    foreach ($key in ($Values.Keys | Sort-Object)) {
+        if ([string]$Values[$key] -match '\[[A-Z][A-Z _]*\]') { $key }
+    }
+}
+
 # ----------------------------------------------------------------------------
 # Self test
 # ----------------------------------------------------------------------------
@@ -336,7 +346,13 @@ function Invoke-SelfTest {
     $facts2.Overall = 'PASS'
     $note2 = New-CompletionNote -Facts $facts2 -Results $pass
     Assert-That 'clean note closes'    ($note2 -match 'READY FOR CLOSURE: Yes')
-    Assert-That 'clean note names user'($note2 -match '[CLIENT]\\jdoe')
+    Assert-That 'clean note names user'($note2 -match [regex]::Escape('[CLIENT]\jdoe'))
+    Assert-That 'note rejects other user'(-not ('[CLIENT]\jsmith' -match [regex]::Escape('[CLIENT]\jdoe')))
+
+    $unset = @(Get-UnsetPlaceholder -Values @{ ExpectedDomain = '[CLIENT]'; ProductionSubnetPrefix = '[SUBNET]'; DomainControllerFqdn = '[HOSTNAME]' })
+    Assert-That 'guard flags all placeholders' ($unset.Count -eq 3)
+    $set = @(Get-UnsetPlaceholder -Values @{ ExpectedDomain = 'corp'; ProductionSubnetPrefix = '192.168.'; DomainControllerFqdn = 'dc01.corp.example' })
+    Assert-That 'guard passes configured values' ($set.Count -eq 0)
 
     $errResult = Invoke-Check -Gate 9 -Id 'T4' -Name 'thrower' -Body { throw 'boom' }
     Assert-That 'Invoke-Check traps'   ($errResult.Status -eq 'FAIL' -and $errResult.Detail -eq 'boom')
@@ -353,6 +369,17 @@ function Invoke-SelfTest {
 
 if ($PSCmdlet.ParameterSetName -eq 'SelfTest') {
     exit (Invoke-SelfTest)
+}
+
+# Fail fast: refuse to run while client-specific placeholders are still unset.
+$unsetPlaceholders = @(Get-UnsetPlaceholder -Values @{
+    ExpectedDomain         = $ExpectedDomain
+    ProductionSubnetPrefix = $ProductionSubnetPrefix
+    DomainControllerFqdn   = $DomainControllerFqdn
+})
+if ($unsetPlaceholders.Count -gt 0) {
+    Write-Error -ErrorAction Continue ('Refusing to run: placeholder values are still unset for {0}. Pass real values (for example -ExpectedDomain <domain> -ProductionSubnetPrefix ''192.168.'' -DomainControllerFqdn <dc fqdn>) or set the defaults for this client before use.' -f ($unsetPlaceholders -join ', '))
+    exit 2
 }
 
 $script:LogFile = $null

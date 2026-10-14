@@ -6,7 +6,7 @@ description: >
   order fulfillment, basic analytics, and storefront health. Note: the Wix
   store is no longer active; FlashFusion's primary platform is now two Base44
   apps. This skill covers Shopify as an active or future e-commerce surface.
-  Activates when the user mentions: Shopify, storefront, product listing,
+  Use when the user mentions: Shopify, storefront, product listing,
   order, fulfillment, inventory, discount, e-commerce, digital products,
   sell online, or any mention of Shopify operations for FlashFusion.
 ---

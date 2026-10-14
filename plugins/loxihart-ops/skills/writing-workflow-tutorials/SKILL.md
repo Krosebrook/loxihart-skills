@@ -4,7 +4,7 @@ description: >
   Writes step-by-step workflow tutorials for FlashFusion: automation walkthroughs,
   AI tool setup guides, and reproducible workflows for newsletter creators.
   Covers tutorial structure, tool-specific patterns, and complexity calibration.
-  Activates when writing a workflow tutorial, creating a how-to guide, building
+  Use when writing a workflow tutorial, creating a how-to guide, building
   a step-by-step walkthrough for FlashFusion readers, or producing the Workflow
   of the Week section.
 when_to_use: >

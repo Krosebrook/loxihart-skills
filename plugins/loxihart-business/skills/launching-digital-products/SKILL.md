@@ -4,7 +4,7 @@ description: >
   Orchestrates multi-storefront digital product launches across Gumroad, Etsy,
   Shopify, TikTok Shop, Amazon KDP, and other marketplaces. Generates
   platform-specific listing data, paste-ready guides, distribution assets,
-  and launch checklists from a single product brief. Activates when launching
+  and launch checklists from a single product brief. Use when launching
   a digital product, listing on multiple storefronts, creating marketplace
   listings, preparing product launch assets, multi-platform product distribution,
   digital download listing, e-commerce product launch, storefront listing

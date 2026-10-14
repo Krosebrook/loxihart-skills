@@ -6,7 +6,7 @@ description: >
   Claude Code skills. Covers skill structure, YAML frontmatter, trigger phrase
   density, gerund naming, progressive disclosure patterns, evaluation-driven
   authorship, the 500-line rule, enforcement levels, hook mechanisms, and
-  session tracking. Activates when creating new skills, modifying
+  session tracking. Use when creating new skills, modifying
   skill-rules.json, understanding trigger patterns, working with hooks,
   debugging skill activation, or implementing progressive disclosure. Also
   triggers on: how do I write a skill, SKILL.md not working, skill not firing,

@@ -5,7 +5,7 @@ metadata:
 description: >
   Architecture and design guidance for AI agents, automation workflows, and tool
   orchestrations — topology selection, trust and permission boundaries, failure-mode and
-  rollback design across the AI/automation ecosystem. Activates on agent architecture, how
+  rollback design across the AI/automation ecosystem. Use when the user mentions: agent architecture, how
   should I structure this agent system, multi-agent design, tool access design, agent security
   architecture, design an automation. Not for hands-on implementation or writing the code (use
   ai-agents-workflow) and not for no-code platform wiring (use workflow-automation).

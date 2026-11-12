@@ -1,0 +1,101 @@
+name: sync-tonone
+
+on:
+  schedule:
+    # Weekly Monday 15:00 UTC (9:00 AM America/Chicago in CST, 10:00 AM in CDT).
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Upstream ref (tag, branch, or SHA). Empty = latest release."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-tonone
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Sync vendored tonone
+        id: sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPSTREAM_REF: ${{ inputs.ref }}
+        run: |
+          REF_ARGS=()
+          if [ -n "${UPSTREAM_REF}" ]; then
+            REF_ARGS=(--ref "${UPSTREAM_REF}")
+          fi
+          python3 .github/scripts/patch_tonone.py sync "${REF_ARGS[@]}"
+
+      - name: Open pull request if the snapshot changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SYNC_REF: ${{ steps.sync.outputs.ref }}
+          SYNC_SHA: ${{ steps.sync.outputs.sha }}
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain -- vendor/tonone)" ]; then
+            echo "No changes to vendor/tonone"
+            exit 0
+          fi
+
+          REF="${SYNC_REF:-upstream}"
+          SHA="${SYNC_SHA:-}"
+          SHORT="${SHA:0:7}"
+          SAFE_REF=$(printf '%s' "$REF" | tr -c 'A-Za-z0-9._-' '-' | sed 's/--*/-/g; s/-$//')
+          BRANCH="chore/sync-tonone-${SAFE_REF}"
+          if [ -n "$SHORT" ]; then
+            BRANCH="${BRANCH}-${SHORT}"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add --all -- vendor/tonone
+          git status --short -- vendor/tonone
+          if [ -n "$SHA" ]; then
+            MSG="Sync vendored tonone to ${REF} (${SHA})"
+          else
+            MSG="Sync vendored tonone to ${REF}"
+          fi
+          git commit -m "$MSG" -m "Fetched tonone-ai/tonone@${REF} into vendor/tonone, preserved LOXIHART-PATCHES.md and the upstream LICENSE, and re-applied the catalog and manifest patches with .github/scripts/patch_tonone.py."
+          git push -u origin "$BRANCH"
+
+          BODY="Automated re-sync of the vendored [tonone-ai/tonone](https://github.com/tonone-ai/tonone) snapshot.
+
+          - **Ref:** \`${REF}\`
+          - **SHA:** \`${SHA:-unknown}\`
+          - Patches in \`vendor/tonone/LOXIHART-PATCHES.md\` were re-applied by \`.github/scripts/patch_tonone.py\`.
+          - Upstream \`LICENSE\` was kept. \`LOXIHART-PATCHES.md\` was preserved.
+
+          This pull request is not merged automatically. Please review and merge if the snapshot looks right."
+          # The lines above are indented by the YAML block; strip common indent for a clean PR body.
+          BODY=$(printf '%s\n' "$BODY" | sed 's/^          //')
+
+          if gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q '[0-9]'; then
+            echo "Updated existing pull request for ${BRANCH}"
+            gh pr view "$BRANCH" --json url --jq .url
+          else
+            gh pr create --title "$MSG" --body "$BODY" --base main --head "$BRANCH"
+          fi

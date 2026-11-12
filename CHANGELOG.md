@@ -4,6 +4,9 @@ All notable changes to this marketplace are documented here. Versions follow [Se
 
 ## [Unreleased]
 
+### Added
+- Idempotent vendored-tonone patch and sync scripts (`.github/scripts/patch_tonone.py`): `apply` / `--check` rewrite GitHub tree sources, drop catalog entries whose paths are not in the snapshot, sync versions to `plugin.json`, and strip the unknown top-level `type` field, and move a plugin-root `CLAUDE.md` to `docs/` so `--strict` still passes on newer upstream snapshots. `sync --ref` fetches upstream into `vendor/tonone`, preserves `LOXIHART-PATCHES.md` and the upstream LICENSE, then applies those patches. CI runs `--check`. A weekly (and manual) workflow opens a PR when upstream has a new release; it does not auto-merge. See `vendor/tonone/LOXIHART-PATCHES.md`.
+
 ### Changed
 - `LICENSE` is now a standard MIT text so GitHub can detect it as MIT. The note that it applies to everything outside `vendor/` (which carries its own license) moved to the README License section. README now describes the marketplace as 5 plugins plus vendored tonone.
 

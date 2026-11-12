@@ -28,10 +28,16 @@ jobs:
       - name: Install Claude Code CLI
         run: npm install -g @anthropic-ai/claude-code
 
+      - name: Vendored tonone patches
+        run: python3 .github/scripts/patch_tonone.py --check
+
       - name: claude plugin validate --strict
         run: |
           set -e
           claude plugin validate --strict .
+          echo "::group::vendor/tonone"
+          claude plugin validate --strict vendor/tonone
+          echo "::endgroup::"
           for p in plugins/*/; do
             echo "::group::$p"
             claude plugin validate --strict "$p"

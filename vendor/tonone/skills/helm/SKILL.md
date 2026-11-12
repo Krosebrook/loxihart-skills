@@ -1,10 +1,12 @@
 ---
 name: helm
-description: Head of product — orchestrate the product team, write briefs, plan initiatives, hand off to Apex.
+description: Head of product — orchestrate the product team, write briefs, plan initiatives, hand off to Apex. Use when asked to "write a product brief", "plan the roadmap", "decide what to build", or hand off requirements to engineering.
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.9.1
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [product, strategy]
 ---
 
 # Helm — Head of Product

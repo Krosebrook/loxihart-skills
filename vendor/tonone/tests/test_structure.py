@@ -1,0 +1,331 @@
+"""
+Structure tests for the tonone repo.
+
+Risk map:
+- Agent definitions missing → HIGH impact (broken install, silent gaps at public release)
+- plugin.json schema violations → HIGH impact (plugin registry won't parse)
+- setup.sh missing → MEDIUM impact (agent unusable without manual workaround)
+- Skill SKILL.md missing/thin → HIGH impact (skill won't load in Claude)
+- marketplace.json out of sync → MEDIUM impact (wrong install count in registry)
+
+These are integration-level structure tests — they exercise the real filesystem,
+not mocked paths, so they catch renames, deletions, and partial scaffolds.
+"""
+
+import json
+from pathlib import Path
+
+REPO = Path(__file__).parent.parent
+AGENTS = sorted(
+    [
+        d.name
+        for d in (REPO / "team").iterdir()
+        if d.is_dir() and (d / ".claude-plugin" / "plugin.json").exists()
+    ]
+)
+
+
+# ---------------------------------------------------------------------------
+# Agent structure
+# ---------------------------------------------------------------------------
+
+
+def test_all_agents_have_plugin_json():
+    """Every agent must have a .claude-plugin/plugin.json for the plugin registry."""
+    for agent in AGENTS:
+        p = REPO / "team" / agent / ".claude-plugin" / "plugin.json"
+        assert p.exists(), f"{agent}: missing .claude-plugin/plugin.json"
+
+
+def test_all_agents_have_agent_definition():
+    """Every agent must have a canonical definition in agents/<agent>.md."""
+    for agent in AGENTS:
+        p = REPO / "agents" / f"{agent}.md"
+        assert p.exists(), f"{agent}: missing agents/{agent}.md"
+
+
+def test_all_agents_have_setup_script():
+    """Every agent must have a scripts/setup.sh for local environment setup."""
+    for agent in AGENTS:
+        p = REPO / "team" / agent / "scripts" / "setup.sh"
+        assert p.exists(), f"{agent}: missing scripts/setup.sh"
+
+
+def test_plugin_json_required_fields():
+    """plugin.json must contain name, version, and description — registry parses these."""
+    for agent in AGENTS:
+        p = REPO / "team" / agent / ".claude-plugin" / "plugin.json"
+        if not p.exists():
+            continue
+        data = json.loads(p.read_text())
+        for field in ["name", "version", "description"]:
+            assert field in data, f"{agent}/plugin.json: missing '{field}'"
+
+
+def test_plugin_json_skills_and_agents_are_not_stale_arrays():
+    """
+    plugin.json must not carry 'skills' or 'agents' as an array of {name, path}
+    objects — that shape belongs to the per-skill-plugin generator removed in
+    1.13.0 and fails install-time schema validation outright (confirmed via
+    `claude plugin install`, not just `claude plugin validate`). The other 89
+    agents omit both keys and rely on auto-discovery; that's the only shape
+    that installs. 11 agents (budget, deploy, embed, evals, form, guard,
+    prompt, proof, rank, token, trace) shipped with the stale array shape in
+    1.13.0 and could not be installed standalone — exactly the granularity
+    apex-profile depends on.
+    """
+    for agent in AGENTS:
+        p = REPO / "team" / agent / ".claude-plugin" / "plugin.json"
+        data = json.loads(p.read_text())
+        for key in ("skills", "agents"):
+            value = data.get(key)
+            assert not isinstance(value, list), (
+                f"{agent}/plugin.json: '{key}' is a stale array of "
+                f"{{name, path}} objects — this fails `claude plugin install "
+                f"{agent}@tonone-ai`. Remove the key; auto-discovery covers it."
+            )
+
+
+def test_agent_definitions_not_empty():
+    """Agent definitions must be substantive (>= 50 lines) — not placeholder stubs."""
+    for agent_file in sorted((REPO / "agents").glob("*.md")):
+        lines = len(agent_file.read_text().splitlines())
+        assert (
+            lines >= 50
+        ), f"agents/{agent_file.name}: only {lines} lines (suspiciously thin)"
+
+
+# ---------------------------------------------------------------------------
+# Skills
+# ---------------------------------------------------------------------------
+
+
+def test_all_skills_have_skill_md():
+    """Every skill directory must contain a SKILL.md — without it the skill won't load."""
+    skills_dir = REPO / "skills"
+    for skill_dir in sorted(skills_dir.iterdir()):
+        if skill_dir.is_dir():
+            skill_file = skill_dir / "SKILL.md"
+            assert skill_file.exists(), f"skills/{skill_dir.name}: missing SKILL.md"
+
+
+def test_skills_have_minimum_content():
+    """SKILL.md files must have at least 10 lines — catches empty scaffolded stubs."""
+    skills_dir = REPO / "skills"
+    for skill_dir in sorted(skills_dir.iterdir()):
+        skill_file = skill_dir / "SKILL.md"
+        if skill_file.exists():
+            lines = len(skill_file.read_text().splitlines())
+            assert (
+                lines >= 10
+            ), f"skills/{skill_dir.name}/SKILL.md: only {lines} lines (suspiciously thin)"
+
+
+# ---------------------------------------------------------------------------
+# Marketplace manifest
+# ---------------------------------------------------------------------------
+
+
+def test_marketplace_json_lists_all_agents():
+    """
+    Every agent in team/ must have a matching entry in marketplace.json plugins.
+    Adding an agent to team/ without registering it means it won't appear in
+    the registry for install by name.
+    """
+    manifest_path = REPO / ".claude-plugin" / "marketplace.json"
+    if not manifest_path.exists():
+        return
+    manifest = json.loads(manifest_path.read_text())
+    listed_names = {p["name"] for p in manifest.get("plugins", [])}
+    missing = [a for a in AGENTS if a not in listed_names]
+    assert (
+        not missing
+    ), f"Agents in team/ missing from marketplace.json plugins: {missing}"
+
+
+# ---------------------------------------------------------------------------
+# Internal consistency
+# ---------------------------------------------------------------------------
+
+
+def test_team_agents_match_agents_directory():
+    """
+    Every agent in team/ must have a matching file in agents/, and vice versa.
+    This catches the case where an agent is added to one location but not the other.
+    """
+    team_agents = set(AGENTS)
+    agents_dir_names = {f.stem for f in (REPO / "agents").glob("*.md")}
+    only_in_team = team_agents - agents_dir_names
+    only_in_agents_dir = agents_dir_names - team_agents
+    assert not only_in_team, f"In team/ but missing agents/*.md: {sorted(only_in_team)}"
+    assert (
+        not only_in_agents_dir
+    ), f"In agents/ but missing team/ dir: {sorted(only_in_agents_dir)}"
+
+
+def _team_skills():
+    """Map skill name -> canonical team/<agent>/skills/<name>/SKILL.md.
+
+    Walks the tree instead of deriving the agent from the skill-name prefix:
+    the prefix split is wrong for any skill whose name isn't <agent>-<verb>
+    (tonone-onboard, the per-agent hub skills), which silently skipped those
+    from the comparison.
+    """
+    skills = {}
+    for agent in sorted((REPO / "team").iterdir()):
+        skills_dir = agent / "skills"
+        if not skills_dir.is_dir():
+            continue  # e.g. team/shared holds no skills
+        for d in sorted(skills_dir.iterdir()):
+            if d.is_dir() and (d / "SKILL.md").exists():
+                skills[d.name] = d / "SKILL.md"
+    return skills
+
+
+def test_root_skills_mirror_is_complete():
+    """
+    Every team/<agent>/skills/<name> must have a root skills/<name> mirror.
+
+    The bundle plugin ("tonone", source "./" in marketplace.json) discovers its
+    skills from root skills/ and only from there, so a skill missing from the
+    mirror is invisible to everyone who installs the bundle — the owning agent
+    installs, its skills don't. This is exactly how 257 skills across 73 agents
+    went missing while every per-agent plugin kept working.
+
+    Fix drift with: python scripts/sync-skills.py
+    """
+    missing = sorted(
+        name
+        for name in _team_skills()
+        if not (REPO / "skills" / name / "SKILL.md").exists()
+    )
+    assert not missing, (
+        f"{len(missing)} team skill(s) missing from the root skills/ mirror — "
+        f"they will not ship in the bundle plugin. "
+        f"Run: python scripts/sync-skills.py\n  " + "\n  ".join(missing)
+    )
+
+
+def test_root_skills_match_team_skills():
+    """
+    Every root skills/<name>/SKILL.md must be identical to its canonical copy in
+    team/<agent>/skills/<name>/SKILL.md.  Drift means the root copy is missing
+    features that the team copy gained (or vice versa).
+    """
+    team = _team_skills()
+    drifted = []
+    for name, team_file in sorted(team.items()):
+        root_file = REPO / "skills" / name / "SKILL.md"
+        if not root_file.exists():
+            continue  # completeness is test_root_skills_mirror_is_complete's job
+        if root_file.read_text() != team_file.read_text():
+            drifted.append(name)
+    assert not drifted, (
+        f"{len(drifted)} root skill(s) drifted from team/ canonical copy — "
+        f"run: python scripts/sync-skills.py\n  " + "\n  ".join(drifted)
+    )
+
+
+def test_skill_output_kit_contract():
+    """
+    Every skill SKILL.md must contain the output-kit contract line.
+    Without it, the skill's output is not guaranteed to follow the team standard
+    (40-line CLI max, box-drawing skeleton, severity indicators, compressed prose).
+    """
+    contract = "Follow the output format defined in docs/output-kit.md"
+    missing = []
+    for agent in AGENTS:
+        skills_dir = REPO / "team" / agent / "skills"
+        if not skills_dir.exists():
+            continue
+        for skill_dir in sorted(skills_dir.iterdir()):
+            if not skill_dir.is_dir():
+                continue
+            skill_file = skill_dir / "SKILL.md"
+            if not skill_file.exists():
+                continue
+            if contract not in skill_file.read_text():
+                missing.append(skill_dir.name)
+    assert (
+        not missing
+    ), f"{len(missing)} skill(s) missing output-kit contract line: " + ", ".join(
+        missing
+    )
+
+
+def test_plugin_json_name_matches_agent_directory():
+    """
+    plugin.json 'name' must match the agent directory name (bare, no prefix).
+    Mismatches break the registry lookup by name.
+    """
+    for agent in AGENTS:
+        p = REPO / "team" / agent / ".claude-plugin" / "plugin.json"
+        if not p.exists():
+            continue
+        data = json.loads(p.read_text())
+        if "name" not in data:
+            continue
+        expected = agent
+        assert (
+            data["name"] == expected
+        ), f"{agent}/plugin.json: 'name' is '{data['name']}', expected '{expected}'"
+
+
+def test_agent_definitions_mirror_team_copies():
+    """
+    agents/<name>.md and team/<name>/agents/<name>.md must be byte-identical.
+
+    Both copies ship — the bundle plugin reads agents/, the per-agent plugin
+    reads team/<name>/agents/ — so drift means two installs of the same agent
+    behave differently. Found in September 2026: Form's anti-pattern list had
+    been edited only in agents/, Draft's skills table only in team/.
+    """
+    drifted = []
+    for agent_file in sorted((REPO / "agents").glob("*.md")):
+        team_copy = REPO / "team" / agent_file.stem / "agents" / agent_file.name
+        if not team_copy.exists():
+            continue
+        if agent_file.read_text() != team_copy.read_text():
+            drifted.append(agent_file.stem)
+    assert not drifted, (
+        f"agent definitions drifted between agents/ and team/*/agents/: {drifted}. "
+        f"Reconcile by hand — whichever copy is newer wins — then copy it to the other."
+    )
+
+
+def test_root_hooks_declared_once():
+    """Root plugin hooks live only in hooks/hooks.json.
+
+    Claude Code loads hooks/hooks.json AND an inline "hooks" key in
+    plugin.json together, so any hook listed in both runs twice.
+    """
+    root_manifest = json.loads((REPO / ".claude-plugin" / "plugin.json").read_text())
+    assert "hooks" not in root_manifest, (
+        "declare root hooks in hooks/hooks.json only; an inline 'hooks' key in "
+        ".claude-plugin/plugin.json makes shared hooks run twice"
+    )
+
+
+def test_no_symlinks_and_bundles_in_sync():
+    """Bundles hold real copies, not symlinks, and match the root sources.
+
+    The Anthropic plugin directory rejects repositories with symlinks.
+    """
+    import subprocess
+
+    staged = subprocess.run(
+        ["git", "ls-files", "-s"], cwd=REPO, capture_output=True, text=True
+    ).stdout
+    links = [
+        line.split("\t", 1)[1]
+        for line in staged.splitlines()
+        if line.startswith("120000")
+    ]
+    assert not links, f"symlinks tracked: {links[:5]}"
+    check = subprocess.run(
+        ["python3", "scripts/sync-bundles.py", "--check"],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+    )
+    assert check.returncode == 0, check.stdout

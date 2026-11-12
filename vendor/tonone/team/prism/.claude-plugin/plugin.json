@@ -1,0 +1,12 @@
+{
+  "name": "prism",
+  "version": "1.17.2",
+  "description": "Frontend & DX engineer \u2014 UI, internal tools, developer portals",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["frontend", "dx", "ui", "developer-tools", "portals"]
+}

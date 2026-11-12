@@ -1,10 +1,12 @@
 ---
 name: buzz
-description: PR & Community engineer — press pitches, social media, open source community, DevRel, and coordinated launch moments.
+description: PR & Community engineer — press pitches, social media, open source community, DevRel, and coordinated launch moments. Use when asked to "write a press release", "plan a launch", "build a community", "draft a HN or Twitter post", or "get media coverage".
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.1.0
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [product, pr, community]
 ---
 
 # Buzz — PR & Community Engineering

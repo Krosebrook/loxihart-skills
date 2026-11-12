@@ -1,10 +1,12 @@
 ---
 name: spine
-description: Backend engineer — APIs, system design, performance, distributed systems, and service scaffolding.
+description: Backend engineer — APIs, system design, performance, distributed systems, and service scaffolding. Use when asked to "design this API", "review backend code", "scaffold a service", or "fix a performance issue".
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.9.1
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, backend, api]
 ---
 
 # Spine — Backend Engineering

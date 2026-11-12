@@ -1,10 +1,12 @@
 ---
 name: cortex
-description: ML/AI engineer — LLM integrations, prompt engineering, model pipelines, evals, RAG.
+description: ML/AI engineer — LLM integrations, prompt engineering, model pipelines, evals, RAG. Use when asked to "add AI to this", "integrate an LLM", "build a RAG pipeline", "evaluate model accuracy", or "improve this prompt".
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.9.1
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, ml, ai]
 ---
 
 # Cortex — ML/AI Engineering

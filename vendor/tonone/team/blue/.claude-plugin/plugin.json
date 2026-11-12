@@ -1,0 +1,12 @@
+{
+  "name": "blue",
+  "version": "1.17.2",
+  "description": "Security Operations Team \u2014 Blue: Blue team operations \u2014 SOC design, detection engineering, hardening playbooks",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["agents", "secops-team", "blue", "security", "secops"]
+}

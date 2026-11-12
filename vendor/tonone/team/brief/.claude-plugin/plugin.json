@@ -1,0 +1,12 @@
+{
+  "name": "brief",
+  "version": "1.17.2",
+  "description": "Contract & policy drafting \u2014 NDAs, MSAs, employment agreements, SLAs, vendor contracts",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["contracts", "legal", "policy", "nda", "msa"]
+}

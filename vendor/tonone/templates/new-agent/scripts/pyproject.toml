@@ -1,0 +1,10 @@
+[project]
+name = "AGENT_MODULE"
+version = "0.1.0"
+description = "AGENT_DESCRIPTION"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["../tests"]
+pythonpath = ["."]

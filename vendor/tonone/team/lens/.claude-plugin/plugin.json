@@ -1,0 +1,19 @@
+{
+  "name": "lens",
+  "version": "1.17.2",
+  "description": "Data analytics & BI engineer \u2014 dashboards, metrics design, reporting, data storytelling",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": [
+    "analytics",
+    "bi",
+    "dashboards",
+    "metrics",
+    "visualization",
+    "reporting"
+  ]
+}

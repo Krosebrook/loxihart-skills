@@ -1,0 +1,12 @@
+{
+  "name": "AGENT_SLUG",
+  "version": "0.1.0",
+  "description": "AGENT_DESCRIPTION",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": []
+}

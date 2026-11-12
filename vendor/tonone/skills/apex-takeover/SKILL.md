@@ -5,6 +5,8 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, T
 version: 0.6.4
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, orchestration, takeover]
 ---
 
 # Apex Takeover
@@ -38,6 +40,8 @@ Follow the output format defined in docs/output-kit.md — 40-line CLI max, box-
    Skip specialists whose domain doesn't apply. Deliver Phase 2 findings before proceeding.
 
 3. **Phase 3 — Takeover Report.** Synthesize all findings, then route through `atlas-report`:
+
+   **Evidence gate:** every risk and every "don't touch" claim must trace to something read in this session — a file, a log, a config, a command's output — not to an assumption inherited from a specialist's summary. If a specialist's finding can't be traced to evidence, re-verify it before it goes in the report or drop it.
 
    Gather these sections for the report:
    - **System map**: Architecture diagram (text-based), tech stack summary, key dependencies

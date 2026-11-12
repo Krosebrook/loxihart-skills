@@ -6,6 +6,8 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, T
 version: 0.6.4
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [product, strategy, brief]
 ---
 
 # Helm Brief
@@ -27,6 +29,8 @@ If input is a solution ("we need a dashboard"), ask exactly one question to find
 If input is already a problem or user complaint, go straight to Step 2.
 
 **Not running a discovery workshop.** One exchange to clarify, then draft.
+
+**Write the understanding back before the brief goes anywhere.** Two or three lines: the outcome you think they want, who it is for, what success looks like, with what they said kept separate from what you assumed. Invite the correction and fold it in. Knowing the category of thing being asked for does not tell you why they want it, and a brief built on the wrong why is wrong in every field at once. This costs one exchange; discovering it at handoff costs the build.
 
 ### Step 2: Draft the Brief
 
@@ -60,7 +64,7 @@ scope:
    ✗ "A better CI/CD setup page"]
 
 out_of_scope:
-  [Explicit list. At least 2 items. Think hard about what you're NOT solving.
+  [Explicit list. At least 2 items. Name what you are deliberately NOT solving.
    ✓ "Multi-team workflows and org-level settings"
    ✓ "Custom pipeline logic beyond the preset templates"
    ✓ "Mobile experience"]

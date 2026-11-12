@@ -1,0 +1,12 @@
+{
+  "name": "mock",
+  "version": "1.17.2",
+  "description": "Developer Experience Team \u2014 Mock: API mocking \u2014 mock server design, contract testing, API simulation for development",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["agents", "devx-team", "mock", "developer-experience", "devx"]
+}

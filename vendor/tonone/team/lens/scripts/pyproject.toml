@@ -1,0 +1,14 @@
+[project]
+name = "lens"
+version = "1.17.2"
+description = "Data analytics & BI engineer — dashboards, metrics design, reporting, data storytelling"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = ["uiux"]
+
+[tool.uv.sources]
+uiux = { path = "../../../lib/uiux", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["../tests"]
+pythonpath = ["."]

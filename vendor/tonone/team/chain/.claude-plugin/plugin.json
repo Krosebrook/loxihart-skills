@@ -1,0 +1,12 @@
+{
+  "name": "chain",
+  "version": "1.17.2",
+  "description": "Security Operations Team \u2014 Chain: Supply chain security \u2014 SBOM generation, dependency scanning, third-party risk, license compliance",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["agents", "secops-team", "chain", "security", "secops"]
+}

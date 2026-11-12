@@ -1,0 +1,12 @@
+{
+  "name": "draft",
+  "version": "1.17.2",
+  "description": "UX designer \u2014 user flows, information architecture, wireframes, and interaction design",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["ux", "design", "user-flows", "wireframes", "product-team"]
+}

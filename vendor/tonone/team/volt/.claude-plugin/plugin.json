@@ -1,0 +1,19 @@
+{
+  "name": "volt",
+  "version": "1.17.2",
+  "description": "Embedded & IoT engineer \u2014 firmware, microcontrollers, edge computing, device protocols",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": [
+    "embedded",
+    "iot",
+    "firmware",
+    "microcontrollers",
+    "edge",
+    "protocols"
+  ]
+}

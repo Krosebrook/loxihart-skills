@@ -1,10 +1,12 @@
 ---
 name: volt
-description: Embedded and IoT engineer — firmware, microcontrollers, OTA updates, device protocols.
+description: Embedded and IoT engineer — firmware, microcontrollers, OTA updates, device protocols. Use when asked to "write firmware", "design OTA updates", "pick a microcontroller", or "implement a device protocol".
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.9.1
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, embedded, iot]
 ---
 
 # Volt — Embedded & IoT Engineering

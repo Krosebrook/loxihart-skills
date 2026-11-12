@@ -5,6 +5,8 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, T
 version: 0.6.4
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, mobile, app]
 ---
 
 # Mobile App Architecture Design
@@ -208,10 +210,11 @@ _(Repeat for each key screen — typically 4–8 screens for an MVP)_
 **Permission request timing:** [After user completes first key action — not on launch]
 
 **Notification types:**
-| Type | Trigger | Deep link target |
-|------|---------|-----------------|
-| [Type 1] | [server event] | `[route]` |
-| [Type 2] | [server event] | `[route]` |
+
+| Type     | Trigger        | Deep link target |
+| -------- | -------------- | ---------------- |
+| [Type 1] | [server event] | `[route]`        |
+| [Type 2] | [server event] | `[route]`        |
 
 **Foreground handling:** [Show in-app banner / silent update / badge only]
 

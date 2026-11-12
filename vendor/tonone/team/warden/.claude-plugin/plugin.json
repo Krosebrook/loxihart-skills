@@ -1,0 +1,12 @@
+{
+  "name": "warden",
+  "version": "1.17.2",
+  "description": "Security engineer \u2014 IAM, secrets, compliance, threat modeling",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["security", "iam", "secrets", "compliance", "threat-modeling"]
+}

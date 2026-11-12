@@ -2,13 +2,10 @@
   "synced_from": {
     "repo": "tonone-ai/tonone",
     "path": ".",
-    "branch": "main"
+    "ref": "v1.17.2",
+    "sha": "f0987b5a310bf49e434ae92869d866cd8c2ed4b4"
   },
-  "last_sync": "2026-06-17T16:28:26.321Z",
-  "author": {
-    "name": "thisisfatih",
-    "github": "thisisfatih"
-  },
+  "last_sync": "2026-11-12T17:35:59.084Z",
   "license": "MIT",
-  "files_synced": 485
+  "files_synced": 2286
 }

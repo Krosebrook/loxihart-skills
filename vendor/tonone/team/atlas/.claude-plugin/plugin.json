@@ -1,0 +1,23 @@
+{
+  "name": "atlas",
+  "version": "1.17.2",
+  "description": "Knowledge engineer \u2014 architecture docs, ADRs, API specs, system diagrams, onboarding, output formatting, browser reports, changelogs, release presentations",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "architecture",
+    "adrs",
+    "api-specs",
+    "diagrams",
+    "knowledge",
+    "reports",
+    "changelogs",
+    "presentations",
+    "output-formatting"
+  ]
+}

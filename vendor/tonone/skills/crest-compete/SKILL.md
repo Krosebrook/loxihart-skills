@@ -5,6 +5,8 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, T
 version: 0.6.4
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [product, strategy, compete]
 ---
 
 # Competitive Analysis
@@ -148,6 +150,8 @@ Translate the analysis into concrete actions:
 ### Step 8: Deliver
 
 Output: competitive set → landscape grid → positioning map → white space statement → positioning call → strategic implications.
+
+Mark every competitor claim you could not confirm (pricing, feature, positioning) and say where you looked — marketing pages, docs, changelog, reviews. Unconfirmed claims do not drive the positioning call.
 
 One page. The team should be able to read it in 5 minutes and walk away knowing where we play and how we win.
 

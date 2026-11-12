@@ -1,10 +1,12 @@
 ---
 name: lens
-description: Analytics and BI engineer — dashboards, metrics design, reporting pipelines, and data storytelling.
+description: Analytics and BI engineer — dashboards, metrics design, reporting pipelines, and data storytelling. Use when asked to "build a dashboard", "design a metric", "write a report", or "audit our analytics".
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, TodoWrite, AskUserQuestion
 version: 0.9.1
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, analytics, bi]
 ---
 
 # Lens — Data Analytics & BI

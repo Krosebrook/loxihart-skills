@@ -5,6 +5,8 @@ allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, WebSearch, Task, T
 version: 0.6.4
 author: tonone-ai <hello@tonone.ai>
 license: MIT
+compatibility: Designed for Claude Code
+tags: [engineering, qa, testing, e2e]
 ---
 
 # E2E Test Suite
@@ -52,6 +54,8 @@ Scan before asking:
 - Auth mechanism: session cookies, JWT in localStorage, OAuth
 
 If no E2E tool is configured, install and configure Playwright. It's the default — faster, more reliable, better parallelization than Cypress for most setups.
+
+If a live URL is available and `/proof-explore` has produced a flow transcript (`<report-dir>/flow-transcript.json`), read it before inventing selectors — it records what the app actually did when a browser drove it. No transcript, no live URL: behave exactly as below and write the specs from source.
 
 ### Step 1: Journey Map
 

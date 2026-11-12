@@ -1,0 +1,621 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+## [1.17.2] - 2026-09-26
+
+### Changed
+
+- **PR attribution is opt-in.** `hooks/tonone-pr-attribution.js` used to append a tonone credit to the description of every PR created with `gh pr create`, in any repository, without saying so. It now does nothing unless `TONONE_PR_ATTRIBUTION=1` is set.
+- **Team bundles hold real files instead of symlinks.** `bundle/*/agents` and `bundle/*/skills` were 358 symlinks into the root; the Anthropic plugin directory rejects repositories with symlinks. `scripts/sync-bundles.py` refreshes the copies from the root (`--check` reports drift), and `tests/test_structure.py` fails on any tracked symlink or out-of-date bundle.
+
+### Added
+
+- **`tonone-core` plugin** (`bundle/tonone-core`). Apex plus the 14 engineering specialists and their 80 skills, with the `docs/output-kit.md` and `team/prism/reference/` files those skills cite. 104 files and no hooks, so it fits the Anthropic plugin directory's 512-file limit, which the full plugin (2,000+ files) cannot. Kept current by `scripts/sync-bundles.py`, which now also mirrors bundle `docs/` and `team/` files. Install with `claude plugin install tonone-core@tonone-ai`.
+- **README "Privacy and data" section** listing every network call tonone can make, when, and what is sent. By default the only one is the daily update check.
+
+## [1.17.1] - 2026-09-26
+
+### Fixed
+
+- **Shared hooks ran twice per event.** Root hooks were declared in both `hooks/hooks.json` and an inline `hooks` key in `.claude-plugin/plugin.json`, and Claude Code loads both. The status-line installer, update check, desktop notifications (Stop and Notification) and agent tracker each fired twice, so update notices and notifications doubled. All root hooks now live in `hooks/hooks.json` only; `tests/test_structure.py` fails if the inline key comes back.
+
+## [1.17.0] - 2026-09-26
+
+### Added
+
+- **One-time star ask** (`hooks/tonone-star-ask.js`). Most installs come through the plugin marketplace and never see the repo page, so on the fifth fresh session the hook shows a single message asking for a GitHub star, then never again. Counts only `startup` sessions by `session_id`, so resumes and duplicate hook declarations do not advance it. Off with `TONONE_NO_STAR_ASK=1`; skipped under `CI`. Tests in `tests/test_star_ask.js`.
+- **`/ink-links`** — link prospecting: pick a linkable asset, qualify prospects (unlinked mentions, competitor linkers, resource pages, broken links), source every contact path, draft outreach. Never invents contacts; flags paid placements.
+- **`/ink-local`** — local SEO audit: Business Profile against the top local competitors, local-pack and Maps visibility, location-page signals. Matches by `place_id`, warns about cost before grid checks, never recommends review gating or keyword-stuffed names.
+
+### Changed
+
+- **Ink SEO skills are evidence-first** (patterns from [every-app/open-seo](https://github.com/every-app/open-seo) v0.1.9, MIT; see `docs/upstream.md`).
+  - `/ink-seo` rewritten as an audit: state a data tier (SEO data MCP, Search Console, or web-only), shortlist five to ten candidates, recommend one to three, list the rest under "What else we checked" with reasons, review the strongest rejected candidate before writing, size benefits honestly.
+  - `/ink-cluster` clusters by SERP overlap instead of word similarity, maps each cluster to an existing or proposed page, and reports cannibalization only with evidence.
+  - `/ink-cluster`, `/ink-seo`, `/ink-brief` no longer ask for estimated search volume: a metric comes from a tool or is written `unknown`.
+  - SEO skills share a small research log in `.tonone/seo/` so recent results are reused.
+  - `ink` agent gains two hard rules: never invent SEO metrics, recommend one to three changes.
+
+### Fixed
+
+- **Marketplace listing undersold the plugin.** `.claude-plugin/marketplace.json` still described tonone as 23 agents and 2 teams; plugin browsers and indexes show that text. Now 100 agents and 10 teams, with the product (12) and full-team (27) bundle counts corrected.
+- **README version badge** was hardcoded to 1.10.3; it now reads the latest GitHub release. Skill-list heading corrected from 421 to 429.
+
+## [1.16.1] - 2026-09-24
+
+### Changed
+
+- **Opus 5.5 prompting guidance absorbed** (from Anthropic's "Getting the most out of Opus 5.5" post, 2026-09-22).
+  - `apex` agent gains a **Long Runs** section: stopping rules, a `TASKS.md` checklist for M+ work, evidence checks on fanned-out subagents, and summaries that lead with what is blocked on the user.
+  - `/apex-review` findings now carry `file:line` and a concrete failure scenario; a finding with no scenario is not blocking. The CLI receipt lists merge-blocking issues first.
+  - `/prompt-design` and the `prompt` agent: state a completion criterion, drop "think step by step" for models with built-in thinking, never ask a model to echo its internal reasoning, and list specific styles to avoid in design prompts.
+  - `/cite-research`, `/cite-compare`, `/crest-compete` mark unconfirmed claims and say where they looked.
+  - `/helm-brief` drops a "think hard" instruction.
+  - `CLAUDE.md` gains a short **Working in this repo** section with stop rules and the edit-source-then-sync rule.
+
+## [1.16.0] - 2026-09-23
+
+### Added
+
+- **`lib/jev-ultrafast/` + `/proof-explore` — browser-driven frontend exploration.** The §3.1 go in `docs/jev-browser-eval.md`, built against a third candidate: [jev-ultrafast](https://github.com/browser-use/jev-ultrafast) (MIT, Browser Use), pinned at `1231850`. `cli.py preflight` answers whether the live path is available from the environment alone — no network, no import, no prompt — and `cli.py explore` runs one flow and returns a transcript of executed actions, URLs and confidences. Standard library only; tonone gains no dependency, and `runner.py` is the single file that imports the driver, inside the driver's own environment. The new skill plans flows, runs them, reads the transcript, and hands off to `/proof-e2e`, which gained one sentence in Step 0 and behaves exactly as before when no transcript exists.
+- **Deny-default targets for that bridge.** jev-ultrafast attaches to the user's existing Chrome profile through Browser Harness, so exploration is confined to `localhost`, `*.localhost`, `file://` and hosts named in `TONONE_JEV_ULTRAFAST_HOSTS`. Production is a refusal, not a warning. The agent never types a credential, no irreversible action runs without a confirmation in the same run, and the transcript carries no page text, screenshots or DOM. Behind `TONONE_JEV_ULTRAFAST=1` plus a checkout the user names; unset, the skill announces the fallback and drives gstack `/browse`, then reads source.
+- **`docs/jev-ultrafast.md`** — the integration decision: what changed against the jev-browser evaluation (real sessions instead of a cookieless Chromium, a thinner status vocabulary, no published package), what shipped, and what stays no-go.
+- **`tests/test_jev_ultrafast.py`** — 15 offline tests covering the never-throws contract, the host allowlist including suffix-match lookalikes, the `JEV_API_KEY`/`TYPESAFE_API_KEY` bridging trap, and the runner's behaviour with no driver installed.
+
+### Changed
+
+- **`docs/repomap.md`, `README.md`, `CLAUDE.md`** — skill count 426 → 427.
+
+## [1.15.0] - 2026-09-20
+
+### Added
+
+- **`lib/jev/` — typed decision layer.** A dependency-free CommonJS client exposing `noul` (yes/no), `choice` (1-of-N), `score` (ordered scale) and a batch form that carries many named questions in one request. Provider resolution is env-only and opt-in: `JEV_API_KEY`/`TYPESAFE_API_KEY` to TypeSafe, `OPENROUTER_API_KEY` to OpenRouter, neither to a local TF-IDF scorer. Nothing in the public API throws — missing credentials, dead endpoints, timeouts, HTTP errors, malformed bodies and empty option lists all degrade to the local path. The API adapters are tested against a local HTTP server only; no real provider has been contacted.
+- **`hooks/tonone-skill-gate.js` — SessionStart skill-manifest gate.** A full install loads 426 skill descriptions, **23,078 tokens, into every session before the user types anything**. The gate scores the 10 teams first, then skills within surviving teams, and merges `skillOverrides` into `.claude/settings.local.json`. Measured on the key-free scorer: **23,078 → 1,859 tokens on this repo (−92%)**, 2,040 on a frontend fixture, 1,755 on an infra fixture, all in roughly 120 ms with no network. It never writes `off` — hiding a skill from Claude is reversible by typing `/skill-name`, hiding it from the user is not — and it records its own provenance so `--reset` retracts exactly what it added. Companion skill `/apex-gate`.
+- **`team/warden/hooks/warden-guard.js` — PreToolUse security advisory.** 21 risk patterns (command injection, `eval`, XSS sinks, hardcoded secrets behind an entropy gate, SQL concatenation, path traversal, unsafe deserialization, destructive shell). Warns and always exits 0; no permission decision is ever emitted. Rules are data in `rules.json`. Warden previously shipped no hook at all.
+- **`lib/compact/` — verbatim transcript selection** plus `/token-compact`. Drops or truncates stale tool calls and results; everything kept stays byte-for-byte, and user and assistant text is never touched.
+- **`/spine-simplify`** — a behavior-preserving clarity pass. The repo had no simplification skill across 426.
+- **`/pave-lsp`** — detects a project's languages and wires the published TypeScript, Pyright, Go and Rust LSP plugins plus Serena, rather than implementing semantic analysis.
+- **Onboarding roster recommender** — `lib/signals/project-shape.js` plus a rewritten `/tonone-onboard` banner proposing four or five agents instead of all 100, feeding `apex-profile` rather than competing with it.
+- **`docs/memory-audit.md`** — elephant versus the Remember plugin, measured against this repo's own history. Verdict: keep elephant, because its file is committed and shared where Remember's sidecar is per-developer; fix the recall window, which the critical tier has outgrown.
+- **`docs/jev-browser-eval.md`** — jev-browser and playjev assessed against every browser-driven surface. One go, one conditional go, no-go on the rest. Specs only, no integration code.
+
+### Changed
+
+- **Typed decisions wired into `apex-route`, `apex-plan`, `helm-plan` and `helm-arbiter`** as gated assists — a `choice` over the agent index, a `score` over the six depth tiers that proposes but never auto-selects, and a `noul` that is one input to the arbitration rather than the decider. Each is discarded unless a hosted model answered above a confidence floor, so every skill runs unchanged on the key-free path. On that path the `apex-route` assist measures roughly 0.005 confidence over one-line hat descriptions and is rejected on every request by design; it only pays out with a key.
+- **`ELEPHANT.md`** — four `[!!]` entries demoted to routine. Each asserted a bug fixed in April or June, one naming a file deleted three months earlier, and they had been priming every session in this repo for five months.
+- **`docs/repomap.md`, `README.md`** — skill count 422 → 426, root mirror 450 → 454 dirs.
+
+### Fixed
+
+- **The PreCompact surface does not exist as assumed.** Claude Code 2.1.278 exposes a PreCompact hook that can read the transcript and block compaction, but cannot modify what gets compacted: `hookSpecificOutput` has no PreCompact member, and compaction reads in-memory messages rather than the transcript file. Recorded in `docs/adr/0001-no-precompact-transcript-rewrite.md`; the on-demand path ships instead of a hook that would silently do nothing.
+
+## [1.14.0] - 2026-09-20
+
+Upstream sweep: read the current release of every plugin tonone borrows from and absorbed what applies. Ledger in `docs/upstream.md`, pins in `docs/upstream.json`, drift detection in `scripts/check-upstream.py`.
+
+### Added
+
+- **`docs/upstream.md` + `docs/upstream.json` + `scripts/check-upstream.py`** — the six upstreams tonone borrows from were tracked nowhere, so "are we behind?" was unanswerable without a manual sweep. The ledger records what was taken from which release and what was deliberately left; the script compares each pin against GitHub's latest release and exits 1 on drift. Wired into the Health Stack in `CLAUDE.md`.
+- **`/apex-diagnose`** — session postmortem from local transcripts: why a run repeated work, ignored the plan, took too long, or cost more than expected. Every finding cites `path:line`; no theory without transcript evidence. From superpowers' `diagnosing-superpowers`, reusing `apex-stats`' transcript parsing.
+- **`motion` domain in `lib/uiux`** — 17 GSAP presets with trigger, duration, easing, snippet, framework notes, and performance notes, tiered by intensity. Granted to Form and Prism; reachable from any agent via `python -m uiux search --domain motion`.
+- **`uiux stacks` and `uiux stack` CLI verbs** — the 1,260 stack-specific guideline rows were only reachable through a Python import, which put them out of reach of the prompt-only design agents.
+- **`lib/uiux/NOTICE.md`** — the vendored CSV corpus is MIT-licensed data from ui-ux-pro-max and had been shipping without the upstream copyright notice MIT requires. Also documents the refresh procedure.
+- **`tests/test_structure.py::test_agent_definitions_mirror_team_copies`** — guards the `agents/` ↔ `team/*/agents/` mirror the way the skills mirror is already guarded.
+
+### Changed
+
+- **`lib/uiux` corpus refreshed to ui-ux-pro-max v2.15.0** — color palettes 161 → 192, UX guidelines 99 → 119, product types 161 → 192, UI reasoning rules 161 → 192, styles 84 → 88, Google Fonts 1,923 → 1,934, stack guideline sets 16 files/841 rows → 22 files/1,260 rows (javafx, wpf, winui, avalonia, uno, uwp added). Every stack row now carries the upstream freshness contract (`Applies To`, `Status`, `Verified At`), surfaced in search output and guarded by a test. `shadcn-ui` was renamed `shadcn` upstream; `STACK_ALIASES` keeps the old key working.
+- **Plan rigor in `apex-plan`** — plans at M depth and above carry a Review Focus (the input classes the brief implies but no task tests, each handed to the specialist who owns that code), the user reviews the saved plan before any specialist starts, and the execution path is a stated choice with a price: dispatched versus inline.
+- **Review rigor in `apex-review`** — the diff base is `git merge-base origin/main HEAD`, not a bare branch name; where a spec is silent, a reasonable user's expectation is the requirement; and the reviewer lists what it declined to judge instead of dropping it silently.
+- **Whole-suite green** — all 10 agents carrying `test-driven-development` now have the iron rule that green means the project's own test command, with every failure reported by name including ones the agent did not cause.
+- **`helm-brief` writes the understanding back** — outcome, audience, and success criteria reflected for correction, with what the user said kept separate from what was assumed, before the brief is drafted.
+- **`form-brief` splits references** — Keep / Change / Do-not-copy with evidence labeled `observed`, `provided`, or `inferred`, plus an `implementation-handoff.md` artifact so the next builder executes the direction instead of re-deriving it. From open-design's reference-design-contract.
+- **Form's craft floor** — 14 named bans added (eyebrow labels, gradient text, glass as decoration, side-stripe borders, hard offset shadows, the ghost card, glyph icons, system display faces, nested card grids, geometric occlusion masks, theme by category) plus the rule for the surfaces nobody themes: selection, caret, scrollbars, focus rings, underline offset, tabular numerals. From impeccable skill-v4.3.1.
+- **Refinement preserves, redesign replaces** — a key rule for Form and Draft, with its corollary that a missing design file is not proof of a greenfield.
+- **`draft-proto` verifies in bounded passes** — build fully, one batched inspection round across viewports, fix in one batch, at most one confirm round, stop. Open-ended self-QA spends the user's budget doing worse what a critique pass does better.
+- **`docs/output-kit.md` compression rules corrected** against caveman v2.7.0's own measurements: invented abbreviations and prose arrows save zero tokens, compression never grows the output, and negations, numbers, units, and correct verb forms are never compressed away.
+- **`docs/agent-guide.md`** — lists superpowers' four newer process skills and carries a table of the v6.4.1 discipline changes with the eval failure that motivated each one.
+
+### Fixed
+
+- **`agents/form.md` and `team/form/agents/form.md` had drifted apart**, as had Draft's two copies — Form's anti-pattern list was edited only in the root copy, Draft's skills table only in the team copy. Both ship, so the same agent behaved differently depending on which plugin installed it. Reconciled and now covered by a test.
+
+## [1.13.0] - 2026-08-07
+
+### Removed
+
+- **371 per-skill entries dropped from `.claude-plugin/marketplace.json`** — the registry is now 111 entries (root bundle + 10 team bundles + 100 agents) instead of 482. Skills were never installable in a useful way: they shipped inside their agent's plugin and, since 1.12.0, inside the root bundle as well, so every per-skill entry only added noise to the install pick list. The entries had also drifted into two source roots for no functional reason — 165 pointed at `./skills/<name>`, 206 at `./team/<agent>/skills/<name>`, depending on when they were added.
+- **192 generated `skills/*/.claude-plugin/plugin.json` files** — dead weight once nothing in the registry pointed at them. Root skill directories now hold `SKILL.md` and reference files only, which removes the 192-of-449 asymmetry that made the mirror's state hard to reason about.
+- **`scripts/gen-skill-plugins.py`** — its whole job was minting the per-skill plugins and registry entries this release removes. Left in place it would silently recreate them on the next run.
+
+### Fixed
+
+- **`bump-version.py` reflowed every agent manifest it touched** — `update_plugin_json` did a `json.load`/`json.dumps` round-trip, so bumping the version rewrote the inline `keywords` array to one entry per line in all 100 `team/<agent>/.claude-plugin/plugin.json` files. That shape is also not what prettier emits, so the pre-commit formatter reverted it on whichever copy happened to be staged — the same staged-file-only mechanism that desyncs the root/team skill mirrors. Now uses the surgical text substitution `update_marketplace_json` already used, and a bump is a one-line diff per file.
+
+### Changed
+
+- `docs/architecture.md` — documents the 111-entry registry shape and states that skills are not installable at skill granularity. Also corrects the install-flow example, which still said 23 agents and used the pre-rename `forge-infra` plugin name.
+- `docs/skill-guide.md` and `scripts/sync-skills.py` — dropped the guidance about root skill dirs carrying a generated `plugin.json`; a skill directory is now `SKILL.md` plus reference files, nothing else.
+
+## [1.12.0] - 2026-08-07
+
+### Fixed
+
+- **Bundle plugin shipped 192 of 421 skills** — `claude plugin install tonone@tonone-ai` installed all 100 agents but carried skills for only 27 of them, because the bundle discovers skills from root `skills/` and only from there. Root mirror is now 449 dirs (421 mirrored + 28 root-only hub skills).
+- **7 teams had never been compliance-checked** — `tests/test_skill_compliance.py` reads root `skills/`, so the 257 unmirrored skills escaped every contract test. Syncing them surfaced 233 skills missing the `atlas-report` overflow clause and 209 descriptions with fewer than 2 quoted trigger phrases, both fixed at the `team/` source.
+
+### Added
+
+- `scripts/sync-skills.py` (with `--check`) — mirrors `SKILL.md` only, hard errors on duplicate skill names or lowercase `skill.md`.
+- `tests/test_structure.py::test_root_skills_mirror_is_complete` — fails the build if the mirror regresses.
+
+## [1.11.1] - 2026-08-07
+
+### Added
+
+- Two-pass confidence-scoring gate on `apex-review` and `spine-review` — candidate findings are rated 0-100 against a false-positive checklist and anything under 80 is discarded before it reaches the output; high-stakes reviews can dispatch a separate Task agent to re-score independently.
+- Silent-failure red-flag checklist folded into `spine-review`'s error-handling step (empty catches, swallowed exceptions, silent fallbacks, unlogged retries).
+- Explicit STOP-gates: a 2-strike architecture gate in `proof-audit`'s fix step, and evidence-gates in `proof-audit` and `apex-takeover` requiring fresh in-session verification before any "fixed" or "don't touch" claim.
+- Two AI-slop attractor-basin call-outs and a numbered-marker anti-pattern added to Form's anti-pattern list.
+
+### Changed
+
+- Rewrote 26 of 28 root hub skill descriptions (`atlas`, `buzz`, `cortex`, ... `warden`) to include an explicit "Use when asked to..." trigger clause — they were pure role summaries with no routing trigger language, the opposite of what a skill description should optimize for.
+
+## [1.11.0] - 2026-07-29
+
+### Added
+
+- **XS/XL/XXL depth tiers for `apex-plan`** — the S/M/L scoping menu is now six tiers (XS through XXL), from a single-specialist no-review spike up to full-team parallel dispatch with an adversarial review pass for major builds/migrations.
+- **Depth-tier selection for `helm-plan`** — new Step 0 mirrors the same XS-XXL tiers on the product side (Helm alone at XS/S, up to the full Product team in parallel at XXL), so product scoping asks "how deep" the same way engineering scoping does.
+
+### Changed
+
+- Reviewed the other 8 teams (Operations, Legal, Design, Data Science, Security Operations, Developer Experience, Infrastructure Specialist, AI Operations) for an equivalent lead/orchestrator role — none exists today (flat peer rosters, no designated lead), so depth-tier scoping stays Apex + Helm only for now.
+
+## [1.10.3] - 2026-07-27
+
+### Changed
+
+- Regenerated README — was badly stale (31 agents, 214 skills, 3 teams), now reflects the actual roster (100 agents, 421 skills, 10 teams: Engineering, Product, Operations, Legal, Design, Data Science, Security Operations, Developer Experience, Infrastructure Specialist, AI Operations). Full skill list, team tables, and usage examples all regenerated from `docs/agent-index.json` and `docs/skill-index.json`.
+
+### Fixed
+
+- 34 skill descriptions that rendered as a literal `|` in `docs/skill-index.json` — the generator didn't parse multi-line YAML block-scalar (`description: |`) frontmatter. Real descriptions pulled directly from each `SKILL.md` for the README regeneration; the underlying index generator bug is still open.
+
+## [1.10.2] - 2026-07-26
+
+### Added
+
+- **Marketplace metadata on every skill** — all 613 `SKILL.md` files (team/ source + root mirror) now carry `compatibility` and `tags` frontmatter fields, closing the gap on third-party marketplace grading rubrics (see #107). Tags are drawn from a per-agent domain table plus the skill's own name, so identical skills always get identical tags.
+- `scripts/gen-skill-metadata.py` — the generator behind the backfill above. Idempotent (safe to re-run for any new skill added later), atomic writes (temp file + rename, so a crash mid-run can't truncate a file), and fails loudly instead of guessing if a new agent is added without a tag mapping.
+
+### Fixed
+
+- Stale README version badge (was pinned at 1.2.0, 9 releases behind).
+- `tonone-onboard` — the one cross-agent skill with no owning agent — got a degenerate single-word tag from the new generator; now has a proper fallback tag set.
+
+## [1.10.1] - 2026-07-26
+
+### Fixed
+
+- **AI Operations Team skills** — 27 skills (Deploy, Evals, Trace, Guard, Budget, Token, Prompt, Embed, Rank) shipped with no YAML frontmatter and no real step-by-step content; they were not registering as usable slash commands. All 27 now have proper frontmatter and full instructions.
+- **Evals agent skill naming** — the Evals agent's skills were named `eval-*`, colliding with the unrelated Eval agent (Data Science team). Renamed to `evals-*`; two of them had been accidentally duplicated from the Eval agent's content and are now corrected to cover LLM evaluation instead of A/B testing.
+- **16 skills named `skill.md` instead of `SKILL.md`** (Form, Draft, Relay) — invisible to any case-sensitive filesystem despite working on case-insensitive local checkouts. Renamed to the correct case.
+
+### Added
+
+- `docs/repomap.md` — orientation map for the repo (100 agents, 421 skills) plus a known-drift log.
+- `docs/skill-index.json` and `scripts/gen-skill-index.py` — generated machine-readable skill index, companion to the existing `docs/agent-index.json`.
+
+## [1.2.1] - 2026-05-09
+
+### Changed
+
+- Markdown formatting polish across all 4 Operations Team agents (Brace, Folk, Keel, Mint) and their 32 skills — table column alignment, consistent blank-line spacing.
+- Trunk toolchain bumps: Python runtime 3.13.3 to 3.14.4, checkov 3.2.526 to 3.2.527.
+
+## [1.2.0] - 2026-05-08
+
+### Added
+
+- **Operations Team** — 4 new agents completing the company-running stack for 1-founder + tonone teams at $100M ARR scale:
+  - **Mint** (Finance): P&L modeling, runway calculation (3-scenario: base/bull/bear), unit economics (LTV/CAC/payback), board financial packages, fundraising data rooms, monthly close reporting. Skills: `mint-recon`, `mint-model`, `mint-budget`, `mint-runway`, `mint-unit`, `mint-board`, `mint-raise`, `mint-report`.
+  - **Folk** (People): org design with span-of-control analysis, JD writing with comp band gates, compensation frameworks, 30/60/90-day onboarding playbooks, performance review systems, and human-to-agent migration playbooks with automation scoring and offboarding plan. Skills: `folk-recon`, `folk-org`, `folk-hire`, `folk-comp`, `folk-onboard`, `folk-perf`, `folk-migrate`, `folk-culture`.
+  - **Keel** (Operations): process/SOP design with RACI, vendor scorecard and RED/YELLOW/GREEN contract review, compliance gap analysis (SOC2/GDPR/HIPAA), OKR cascade design, meeting cadence with person-hour cost calculation, operational efficiency audit. Skills: `keel-recon`, `keel-process`, `keel-vendor`, `keel-legal`, `keel-comply`, `keel-okr`, `keel-cadence`, `keel-audit`.
+  - **Brace** (Support): ticket triage and routing, knowledge base coverage audit, SLA framework (Tier 1/2/3 with breach escalation), escalation paths to engineering, support metrics dashboard (FRT/TTR/CSAT/deflection rate), and response template playbook. Skills: `brace-recon`, `brace-triage`, `brace-kb`, `brace-sla`, `brace-escalate`, `brace-onboard`, `brace-metrics`, `brace-playbook`.
+- **Python analyzers** — all 4 ops agents ship real analyzer modules: `mint_agent/financial_scanner.py`, `folk_agent/org_scanner.py`, `keel_agent/ops_scanner.py`, `brace_agent/support_scanner.py`. 190 tests total, 244/244 CI passing.
+- **Bundle** — new `bundle/operations-team` installable plugin (Mint + Folk + Keel + Brace).
+- **Marketplace** — all 4 agents registered in `.claude-plugin/marketplace.json` under `operations` category (175 total plugins).
+- **Full-team bundle** updated: 27 to 31 agents, 145 to 177 skills.
+
+## [1.1.0] - 2026-05-06
+
+### Added
+
+- **Revenue team expanded** — Deal and Keep each gain 3 new skills: `deal-qualify` (MEDDPICC worksheet), `deal-proposal` (B2B proposal generator), `deal-outreach` (cold outbound sequence builder); `keep-qbr` (QBR template), `keep-churn` (churn risk and intervention), `keep-segment` (customer segmentation model). Revenue-team bundle gains Surge as third agent (6 skills: surge-activation, surge-experiment, surge-landing, surge-plg, surge-recon, surge-retention).
+- **Marketing team expanded** — Ink and Buzz each gain 3 new skills: `ink-brief` (content brief generator), `ink-cluster` (topic cluster architecture), `ink-distribute` (distribution plan per piece); `buzz-devrel` (developer relations playbook), `buzz-outreach` (media/podcast pitch personalizer), `buzz-hn` (HN post crafter with anti-shadowban rules). Marketing-team bundle gains Pitch as third agent (6 skills: pitch-copy, pitch-landing, pitch-launch, pitch-message, pitch-position, pitch-recon).
+- **Python analyzers** — all 4 revenue/marketing agents now have real analyzer modules: `deal_agent/pipeline_scanner.py` (CRM artifact detection, playbook coverage), `keep_agent/health_scorer.py` (onboarding coverage, churn signals), `ink_agent/topic_cluster.py` (content coverage, SEO signals), `buzz_agent/outreach_tracker.py` (press assets, community health). 134 tests, all passing.
+- **Hooks** — `post_install` hooks wired to all 4 agents (deal, keep, ink, buzz), matching engineering-team pattern.
+- **Bundle manifests** — revenue-team and marketing-team bundles gain `.claude-plugin/plugin.json`, making them installable as standalone plugins.
+
+## [1.0.0] - 2026-05-06
+
+### Added
+
+- **Apex depth layer** — `health_aggregator.py` runs Warden, Forge, Cortex, and Spine scans in parallel via `ThreadPoolExecutor` and merges findings into a unified `AgentReport`. `dependency_graph.py` AST-walks all Python scripts in `team/*/scripts/`, detects circular imports (DFS), and flags unused internal modules. Entry point: `apex_scan.py` writes `.reports/apex-<ts>.json` and exits 2 on CRITICAL/HIGH findings.
+- **Spine depth layer** — `n_plus_one_detector.py` statically detects ORM query patterns inside loops, raw SQL in loops, and string-formatted SQL across Python files. `endpoint_profiler.py` times HTTP endpoints with configurable warmup runs and reports p50/p95/p99 latency, flagging endpoints above 200 ms (MEDIUM), 500 ms (HIGH), or 1 s (CRITICAL). Entry point: `perf_scan.py`.
+- **Cortex depth layer** — `llm_usage_scanner.py` detects missing error handling on LLM calls, unbounded cost patterns, hardcoded model names, and synchronous calls inside async functions. `prompt_evaluator.py` scores prompt files for injection risk, output format contracts, and token efficiency. Entry point: `eval_scan.py`.
+- **Forge depth layer** — `infracost_analyzer.py` wraps the Infracost CLI to produce per-resource cost diffs. `cloud_cost_fetcher.py` queries AWS Cost Explorer (14-day window, grouped by service) and flags services with >$50 monthly spend or >20% week-over-week growth. Entry point: `cost_scan.py`.
+- **`/contribute` skill** — community contribution workflow for Pave: forks the repo, scaffolds a branch, runs compliance checks, and guides contributors through the PR process.
+- **`/form-brief`** — new Form skill that extracts a structured design brief (audience, goal, constraints, inspiration) before any visual work begins. Reduces brief-less design rewrites.
+- **`/form-critique` and `/draft-wireframe` upgrades** — both skills absorb design principles from the open-design project (information architecture, motion poetry, minimalism schools), adding competitive audit steps and shipability gates.
+
+### Fixed
+
+- **CI test matrix** — agent test jobs were wired to non-existent venv paths; matrix now activates each agent's virtual environment correctly before running pytest. The `no-op` test placeholder was replaced with a real smoke test.
+- **Trunk python runtime** — `python@3.14.4` in `.trunk/trunk.yaml` referenced a non-existent version (Python 3.14 is still pre-release). Downgraded to `3.13.3` to prevent trunk from failing to provision the Python runtime for bandit, ruff, isort, and black.
+
+### Changed
+
+- **CI version gate** — new `check-versions` job runs `scripts/bump-version.py --check` on every PR. Version drift across 194 manifest files can no longer merge undetected.
+
+## [0.9.9] — 2026-05-05 (patch 2)
+
+### Changed
+
+- **Version enforcement:** `scripts/bump-version.py` gains `--check` mode (exits 1 if any manifest deviates from root). New CI job `check-versions` runs this on every PR so version drift can never merge again.
+- **Version sync:** All 194 plugin.json and pyproject.toml files synced to 0.9.9. Prior drift: most agents at 0.9.7, warden at 0.9.8, new agents (buzz/deal/ink/keep) at 0.1.0.
+- **Shared library relocated:** `team/shared/` moved to `lib/shared/` — it was a Python library, not an agent. Fixes phantom "shared" agent detection in CI structure tests.
+- **New agent scaffolding:** buzz, deal, ink, keep gain `scripts/setup.sh` and `scripts/pyproject.toml` (required for CI structure gate).
+- **Skill renamed:** `skills/contribute` → `skills/pave-contribute`. Fixes agent-prefix naming rule; now routes to Pave correctly.
+- **forge-cost synced:** Root `skills/forge-cost/SKILL.md` was 2 versions behind team canonical — updated to include real infracost + AWS Cost Explorer scanner steps.
+- **Output-kit compliance:** Added required output-kit and atlas-report contract lines to 10 skills: buzz-community, buzz-launch, buzz-pitch, buzz-social, form-brief, ink-calendar, ink-case, ink-post, ink-seo, warden-scan, and all deal/keep skills.
+- **warden-scan:** Root `skills/warden-scan/` copy created (existed in team/ only).
+- **README badge:** Updated version badge from 0.9.7 to 0.9.9.
+
+All 54 CI structure and compliance tests now pass.
+
+## [0.9.9] — 2026-05-05
+
+### Added
+
+- **Deal** — Revenue & Sales agent: MEDDPICC deal qualification, 3-stage sales model ($0→$1M→$10M→$100M), pipeline design, playbook authoring, pricing strategy, and enterprise closing. Includes extreme growth playbook from Stripe (Collison Installation), Retool (funded-company outbound), Rippling (human cold-calling). 5 skills: `/deal-recon`, `/deal-pipeline`, `/deal-playbook`, `/deal-pricing`, `/deal-close`.
+- **Keep** — Customer Success agent: NRR engine model, health scoring, onboarding flow design, expansion playbooks, churn prevention. Includes growth tactics from Superhuman (concierge onboarding), Notion (template retention moat), PostHog (product-usage health signals). 5 skills: `/keep-recon`, `/keep-health`, `/keep-onboard`, `/keep-expand`, `/keep-playbook`.
+- **Ink** — Content Marketing agent: topic cluster architecture, stage-aware SEO, blog drafting, content calendar, case studies. Includes playbook from Stripe (docs-as-marketing), PostHog (open handbook SEO), Linear (changelog-as-marketing). 5 skills: `/ink-recon`, `/ink-post`, `/ink-seo`, `/ink-calendar`, `/ink-case`.
+- **Buzz** — PR & Community agent: PESO media model, community flywheel design, press pitch writing, social drafting, DevRel, launch coordination. Includes playbook from Figma (network graph mapping), Webflow (community-in-existing-communities), PostHog (HN honest founder story). 5 skills: `/buzz-recon`, `/buzz-pitch`, `/buzz-social`, `/buzz-community`, `/buzz-launch`.
+- All 4 agents embed **0-to-$100M stage-aware framing** (Stage 1: $0-$1M / Stage 2: $1M-$10M / Stage 3: $10M-$100M). Each agent diagnoses the current stage before producing output.
+- Product team grows from 8 to 12 agents. Total: **27 agents, 186 skills**.
+
+## [0.9.8] — 2026-05-05
+
+### Added
+
+- **warden-scan:** New `/warden-scan` skill — runs Semgrep SAST and pip-audit dependency scanning against any target path and writes a structured JSON report to `.reports/`.
+- **shared report schema:** `team/shared/report_schema.py` introduces `Finding`, `AgentReport`, `Summary`, and `ReportMetadata` dataclasses as the unified output contract for all depth agents.
+- **Semgrep integration:** `semgrep_scanner.py` wraps the Semgrep CLI with structured JSON output and handles first-run initialization timeouts and missing installs gracefully.
+- **pip-audit integration:** `pip_auditor.py` scans `requirements*.txt` files (or falls back to the active environment) for known CVEs.
+- **22 tests:** Full coverage for report schema, scanner, auditor, and CLI entry point including all error paths.
+- **`.semgrepignore`:** Empty root-level file replaces semgrep's built-in default ignore patterns so all project files are eligible for scanning.
+- **`.reports/` gitignored:** Scan report output directory excluded from version control.
+
+## [0.9.7] — 2026-04-28
+
+### Improved
+
+- **relay-ship:** PR footer is now a rich attributed block — shows Tonone branding, agents used, session duration, and estimated cost. Previously collapsed to a bare link.
+
+## [0.9.6] — 2026-04-28
+
+### Changed
+
+- Elephant memory seeded from full git history via `/elephant takeover` — all 91+ commits now indexed for cross-session recall.
+- README version badge corrected from `0.9.1` to `0.9.5`.
+
+## [0.9.5] — 2026-04-28
+
+### Changed
+
+- **`relay-ship` PR footer** — replaced bare `🤖 Relay — tonone Engineering Team` with a friendly multi-line attribution that names the agents involved, session duration, and approximate token cost. Relay fills in the placeholders at PR-creation time from session context.
+
+## [0.9.4] — 2026-04-26
+
+### Fixed
+
+- **`tonone-session-tracker.js` and `tonone-pr-attribution.js` never ran** — both hooks existed but were not declared in `.claude-plugin/plugin.json`. Every Skill invocation went untracked and every PR shipped without agent attribution since the hooks were added.
+- **`tonone-worktree-session.js` missing** — tests expected this SessionStart hook since commit `24498a2` but it was never created. The hook now prunes stale git worktrees at session start and emits `WORKTREE_READY` status so Claude knows whether it is resuming an existing worktree or starting fresh on main.
+- **`tonone-worktree-session.js` not registered** — hook was implemented but absent from the `SessionStart` array in `plugin.json`, making the prune and status features dead code.
+- **`tonone-git-gate.js` passed wrong argument to `EnterWorktree`** — the blocked-on-main recovery message passed `${branchName}` (slug only) but `EnterWorktree` requires the full worktree path. Now passes `${worktreePath}`.
+- **`tonone-git-gate.js` TOCTOU** — two separate `execSync` calls for `--git-dir` and `--git-common-dir` could race if git state changed between calls. Merged into a single atomic invocation.
+- **`tonone-git-gate.js` + `tonone-worktree-session.js` array bounds** — `git rev-parse --git-dir --git-common-dir` output was split by newline without a length check. If git returned fewer than 2 lines, `parts[1]` was `undefined`, incorrectly treating main as a worktree.
+- **`tonone-pr-attribution.js` URL extraction silent failure** — `toolOutput.output || toolOutput` fell through to the object itself when `.output` was falsy, causing `String(object)` to produce `[object Object]` and silently failing to extract the GitHub PR URL on every PR.
+- **`bump-version.py` corrupted active worktrees** — `Path.glob("**/.claude-plugin/plugin.json")` recursed into `.claude/worktrees/`, writing version changes into every active worktree and dirtying them. Now excludes `.claude/worktrees/` alongside templates and venvs.
+
+### Tests
+
+- 3 regression tests for `getPrUrl()` — covers object `.output` field, plain string, and no-URL fallback.
+- Worktree exclusion test for `bump-version.py` `find_files()`.
+- Source assertion that `EnterWorktree` receives `${worktreePath}` not `${branchName}`.
+
+## [0.9.3] — 2026-04-26
+
+### Added
+
+- **`/draft-proto`** — hi-fi interactive HTML prototype skill for Draft. Takes wireframes to the next level: single-file React+Babel HTML, device-framed (iOS), real images from Wikimedia/Unsplash, state-driven navigation, Playwright-verified before delivery. Fills the gap between `/draft-wireframe` (lo-fi) and `/prism-ui` (production code).
+- **`/form-direction`** — design direction advisor for Form. Generates 3 differentiated visual directions from 5 design schools (Information Architecture, Motion Poetry, Minimalism, Experimental Avant-garde, Eastern Philosophy), each with a parallel HTML demo. Richer than `/form-style`: produces actual visual demos for selection, not just text recommendations.
+- **`/form-animate`** — motion design skill for Form. HTML animation to Playwright render to MP4/GIF export with BGM. Includes brand asset protocol, anti-AI-slop guardrails (no CSS silhouettes, no blue-purple gradient defaults), and narrative structure (hook, build, resolve, hold).
+- **`/form-critique`** — 5-dimension expert design critique for Form. Scores coherence, visual hierarchy, execution craft, functionality, and innovation 0-10 with ASCII radar chart and Keep/Fix/Quick Wins punch list. Distinct from `/form-audit` (technical QA): evaluates design as a craft object.
+- **`form-palette` and `form-style`** registered in Form plugin.json (previously existed but untracked).
+
+### Changed
+
+- Draft agent definition updated with `## Draft Skills` routing table referencing `/draft-wireframe` vs `/draft-proto` decision logic.
+- Form agent definition updated with `## Form Skills` routing table for all 6 specialized workflows.
+
+## [0.9.2] — 2026-04-26
+
+### Added
+
+- **23 agent entry-point skills** — each agent now has a root `/apex`, `/helm`, `/forge`, etc. skill that accepts any task description and routes internally to the right sub-skill. Users no longer need to know which sub-skill to call; they hand the task to the agent and the agent decides. Brings total skill count to 161.
+
+## [0.9.1] — 2026-04-26
+
+### Fixed
+
+- Fix `tonone-onboard` skill compliance — quoted YAML description (colon broke parse), added Step 2/3 workflow headers, exempted from prefix/output-kit/atlas-report checks via new `SPECIAL_SKILLS` set
+
+### Changed
+
+- README reframed around founder vision — "Founder + Tonone = whole company" thesis, roadmap table with sales/CS/finance/ops phases, skill count corrected to 138
+- Add `launch/` folder — HN post and X thread drafts for public launch prep
+
+## [0.9.0] — 2026-04-17
+
+### Removed
+
+- **Elephant memory bundled in tonone** — `hooks/elephant-recall.js`, `hooks/elephant-writer.js`, and the `skills/atlas-elephant/` skill are gone. Elephant is now a standalone plugin at [tonone-ai/elephant](https://github.com/tonone-ai/elephant); install it separately if you want persistent memory. This drops 4 hook entries from `.claude-plugin/plugin.json` (1× `SessionStart`, 3× `PostToolUse` on `Agent`/`Bash`/`Skill`).
+
+### Changed
+
+- **Onboarding tour** — `skills/tonone-onboard/` no longer advertises bundled elephant memory. Description, expert-path command list, mental-model section, and newcomer-path next-steps updated to reflect tonone's current scope (agents + skills + worktree sessions).
+
+## [0.8.1] — 2026-04-13
+
+### Changed
+
+- **Lazy worktree creation** — sessions now start clean on `main` with no upfront worktree. The first `Edit`, `Write`, or `NotebookEdit` on main triggers a `PreToolUse` gate (`tonone-worktree-gate.js`) that blocks and asks Claude to create a properly-named branch. By the time the gate fires, Claude knows the task — so the slug is meaningful and no rename step is ever needed.
+
+### Removed
+
+- **Session-start auto-worktree** — `tonone-worktree-session.js` and its `session-YYYYMMDD-HHMMSS` branch naming removed. No more stale worktree branches accumulating per session.
+
+## [0.7.1] — 2026-04-12
+
+### Fixed
+
+- **atlas-elephant skill** — renamed from `skills/elephant` to `skills/atlas-elephant` to satisfy 7 skill compliance checks: kebab-case naming, valid agent prefix (`atlas`), description trigger phrases, output-kit reference, atlas-report overflow clause, identity line, and structured workflow steps.
+
+## [0.7.0] — 2026-04-12
+
+### Added
+
+- **Eager worktree sessions** — `hooks/tonone-worktree-session.js` fires on `SessionStart` and auto-creates a worktree immediately, before any edits. Replaces the deferred gate approach. `plugin.json` wired; old `tonone-worktree-create.js` and `tonone-worktree-gate.js` deleted.
+- **Human-readable branch names** — `.claude/branch-slug` maps session IDs to short slugs (e.g. `feat/auth-fixes`) so worktree branches are readable at a glance instead of UUID-based.
+- **PR attribution** — `hooks/tonone-pr-attribution.js` appends a "Built by Tonone team" credits block to every PR body, listing the agents involved. Boosts K-factor via team credit visibility. Registered in `plugin.json`.
+- **Elephant memory** — persistent caveman-compressed memory system: `hooks/tonone-elephant-writer.js` auto-captures agent completions, commits, and skill runs; `hooks/tonone-elephant-recall.js` surfaces a startup summary. `/elephant` skill adds `save`, `show`, and `compact` commands.
+- **Elephant takeover** — `/elephant takeover` cold-starts the memory system from git history, bootstrapping recall for repos with no prior elephant data.
+- **Statusline session goal** — Line 4 of the 3-line statusline redesign now shows the session goal. Shoutouts added.
+
+### Fixed
+
+- **Statusline** — `resets_at` now parsed as Unix seconds (not milliseconds), fixing incorrect pace projection display.
+- **Worktree session hook** — removed unused `fs` import.
+
+## [0.6.9] — 2026-04-12
+
+### Added
+
+- **Update checker** — `hooks/tonone-update-check.js` runs at `SessionStart`, fetches the latest version from GitHub at most once per 24 h, and notifies via OS notification + stderr line when a newer version is available. Result is cached in `~/.config/tonone/update-cache.json`.
+
+## [0.6.8] — 2026-04-12
+
+### Added
+
+- **Notification system** — `hooks/tonone-notify.js` fires a macOS notification (via `osascript`) when Claude finishes a turn (`Stop` hook) or needs your attention (`Notification` hook). Sound plays via `afplay` and is on by default. Configure in `~/.config/tonone/config.json` under the `notify` key (`sound: bool`, `soundFile: string`).
+
+## [0.6.7] — 2026-04-12
+
+### Added
+
+- **Agent eval suite** — 25 new tests across `test_agent_compliance.py` (11 tests) and `test_skill_compliance.py` (14 tests) validating frontmatter schema, model selection, communication protocol, identity lines, severity indicators, emoji, naming conventions, output-kit contract, atlas-report overflow clause, and structured workflow steps
+- **Drift tracking** — known severity and emoji violations tracked in explicit sets with companion tests that fail when drift is fixed but not removed from the allowlist
+- **CI gate** — agent and skill compliance tests wired into the validate-structure job
+
+### Fixed
+
+- **12 skills missing output-kit contract** — added the standard output-kit reference line to draft-landing, draft-patterns, form-exam, form-palette, form-style, lens-chart, pitch-landing, prism-chart, prism-stack, proof-design, surge-landing, touch-ui (root + team copies)
+
+## [0.6.6] — 2026-04-12
+
+### Added
+
+- **Communication Protocol** — rolled out to all 21 agents (apex, atlas, cortex, crest, draft, forge, form, helm, lens, lumen, pave, pitch, prism, proof, relay, spine, surge, touch, vigil, volt, warden) and agent template; upgrades output-kit Language Rules to a full Communication Protocol
+- **Agent template** — new agents now include communication protocol by default
+
+### Fixed
+
+- **plugin.json hooks** — inlined hooks directly in root plugin manifest to fix install validation failure
+
+### Changed
+
+- **Agent docs** — compressed prose across all 21 updated agent definitions
+- **Agent plugin versions** — bumped from 0.1.0 → 0.1.1 for all agents with communication protocol changes
+
+## [0.6.5] — 2026-04-07
+
+### Changed
+
+- **README** — tagline sharpened to "One session. Two commands. Full team. Zero meetings."
+
+### Fixed
+
+- **test_structure.py** — updated naming assertion to match bare plugin name convention (no `tonone-` prefix) introduced in v0.6.4
+
+## [0.6.4] — 2026-04-06
+
+### Fixed
+
+- **bundle manifests** — removed invalid `"agents"` and `"skills"` string fields from all three bundle plugin.json files; Claude Code auto-discovers these directories and the string format caused a validation error on install
+- **README** — Quick Start now shows both CLI (`claude plugin`) and in-session (`/plugin`) installation pathways; code fences labelled with language identifiers
+
+## [0.6.3] — 2026-04-06
+
+### Fixed
+
+- **plugin.json** — all four plugin manifests (root + 3 bundles) now declare `"agents"` and `"skills"` paths so agents like `/apex`, `/forge`, etc. are discoverable after installation
+
+## [0.6.2] — 2026-04-06
+
+### Added
+
+- **AGENTS.md** — Codex CLI compatibility layer: team roster, directory guide, and instructions for using agents and skills without the Claude Code plugin system
+- **README** — Codex CLI quick start section (clone, `codex`, invoke agents by reading markdown directly)
+- **docs/architecture.md** — platform support table documenting Claude Code (primary) vs Codex CLI (secondary)
+
+## [0.6.1] — 2026-04-06
+
+### Changed
+
+- **README** — updated tagline from "Engineering second to none" to "Engineering + product, second to none"; added full Product team table (8 agents); expanded skill list from 77 to all 125; updated intro copy to reflect both teams
+- **ROADMAP** — bumped version to v0.6.0, skills count to 125; replaced "Complete Product Team" section (already shipped) with stability and community goals for v1.0
+- **docs/architecture.md** — corrected agent and skill counts from 15/77 to 23/125
+- **docs/agent-guide.md, docs/skill-guide.md** — updated identity line examples from "Engineering Team" to "Tonone team"
+- **docs/naming-guide.md** — removed "(Sprint 1–3)" label from Product Team section
+- **templates/new-agent** — updated agent and skill templates to use "Tonone team" instead of "Engineering Team TEAM_LABEL team"
+
+## [0.6.0] — 2026-04-06
+
+### Changed
+
+- **All 23 agents upgraded with industry best practices** — every agent definition rebuilt with a founder mindset, execution-first workflows, and domain-specific professional standards. Agents now GET SHIT DONE instead of advising.
+- **44 skills rewritten** across all agents — each skill now includes operating principles, competitive audits, minimum viable output gates, and explicit "done enough" criteria. No more consulting theater.
+- **Form** — operating principle "positioning before pixels"; resource allocation (60-70% UI, 20-30% web, 10% other); MVB checklist; explicit skip/never-skip lists
+- **form-brand** — 3-question positioning gate; competitive audit; shipability gate with 6-item checklist
+- **form-logo** — ONE THING anchor; brief extraction gate; ship decision (recommendation, not options)
+- **Echo** — Mom Test built into echo-interview; Four Forces + switch threshold in echo-jobs
+- **Draft** — pattern audit before wireframes; done-enough gate in draft-wireframe; IA-before-jobs in draft-ia
+- **Helm** — Infer/Ask/Decide protocol with labeled assumptions in helm-brief; 6-field handoff schema
+- **Crest** — strategic anchor before roadmap; mandatory positioning call in crest-compete
+- **Pitch** — Dunford positioning framework in pitch-position; writes actual copy in pitch-launch
+- **Lumen** — North Star validity test in lumen-metrics; Step 0 "when NOT to test" in lumen-abtest
+- **Surge** — single-diagnosis verdict in surge-retention; readiness check gate in surge-plg
+- **Spine** — Stripe-quality API spec in spine-api; decision log required in spine-design
+- **Flux** — normalization decision by stage in flux-schema; CONCURRENTLY caveat + SQL templates in flux-migrate
+- **Prism** — real TypeScript + Tailwind in prism-component; spec-driven implementation in prism-ui
+- **Cortex** — decision tree (prompt→RAG→tool→agent→fine-tune) in cortex-integrate; complete prompt package in cortex-prompt
+- **Atlas** — real Mermaid C4 diagrams in atlas-map; minimum 2 alternatives + 1 acknowledged downside in atlas-adr
+- **Proof** — risk map + "what NOT to test" in proof-strategy; Playwright config + auth fixture in proof-e2e
+- **Relay** — ready-to-commit YAML + SHA-pinned actions in relay-pipeline; strategy decision table in relay-deploy
+- **Forge** — stage fork (managed vs Terraform) in forge-infra; per-opportunity change blocks in forge-cost
+- **Warden** — crown jewels first + accepted risks required in warden-threat; exact header values in warden-harden
+- **Vigil** — OTel auto-instrumentation in vigil-instrument; "What NOT to alert on" step in vigil-alert
+- **Pave** — friction audit first in pave-golden; size-based decision tree in pave-catalog
+- **Apex** — reversible/irreversible lens in apex-plan; ship/no-ship verdict with file+line in apex-review
+- **Lens** — decision + "so what?" audit in lens-dashboard; MISSING DATA section in lens-metrics
+- **Touch** — platform decision in spec for touch-feature; full architecture + EAS Update OTA in touch-app
+- **Volt** — HAL interfaces + RTOS decision in volt-firmware; A/B partitions + failure mode table in volt-ota
+
+## [0.5.0] — 2026-04-06
+
+### Added
+
+- **Skill balancing initiative** — all 23 agents now meet the minimum 5-skill production threshold (up from 10 under-skilled agents)
+- **Form agent** — expanded from 2 to 10 skills: form-audit, form-component, form-deck, form-email, form-mobile, form-social, form-tokens, form-web, plus rebuilt form-logo with a professional phase-gate workflow (research → strategy → 3 visual directions → refinement → delivery)
+- **Wave 1 — Recon skills (8)**: apex-recon, crest-recon, draft-recon, echo-recon, helm-recon, lumen-recon, pitch-recon, surge-recon — systematic project-state reconnaissance before any agent action
+- **Wave 2 — Bounded procedures (6)**: warden-threat (STRIDE threat modeling), volt-power (power budget analysis), helm-arbiter (scope arbitration), crest-okr (OKR design), lumen-abtest (A/B test design), lumen-instrument (analytics instrumentation)
+- **Wave 3 — Analysis frameworks (8)**: crest-compete (competitive analysis), crest-narrative (strategic memos), echo-segment (user personas), echo-jobs (Jobs-to-Be-Done), echo-feedback (feedback synthesis), lumen-metrics (metrics framework), surge-experiment (growth experiments), surge-retention (retention playbooks)
+- **Wave 4 — Creative output (7)**: draft-wireframe (text/Mermaid wireframes), draft-ia (information architecture), draft-review (usability audits), pitch-message (messaging frameworks), pitch-launch (GTM planning), pitch-copy (landing page copy), surge-plg (product-led growth strategy)
+- **relay-ship skill** — Relay agent can now run full ship workflows
+- **Root `skills/` directory** — 125 installable skills synced for use as individual Claude Code plugins; includes 19 previously-built skills that were never exposed (helm-brief, helm-handoff, helm-plan, crest-roadmap, draft-flow, echo-interview, lumen-funnel, pitch-position, surge-activation, and all 10 Form skills)
+
+### Changed
+
+- Form agent plugin manifest updated to register all 10 skills
+- Relay agent plugin manifest updated with relay-ship skill
+
+## [0.4.1] — 2026-04-03
+
+### Fixed
+
+- **Browser-first reporting** — all substantial agent reports (takeover, plan, review) now open as HTML in the browser automatically; no analysis is dumped to CLI
+- **`atlas-report`** — opens browser immediately without prompting for confirmation
+- **`apex-takeover`** — Phase 3 CLI output reduced to a 6-line receipt; all findings route to HTML report
+- **`apex-plan`** — report path updated to `.agent-logs/reports/`; CLI receipt format tightened
+- **`apex-review`** — CLI verdict only (READY TO SHIP / DO NOT SHIP + risk counts); full findings in HTML
+- **`output-kit`** — added Browser-First Reporting section as canonical team rule; report storage path standardized to `.agent-logs/reports/`
+
+## [0.4.0] — 2026-03-29
+
+### Added
+
+- **Output Kit** — shared CLI design system for all agents (`docs/output-kit.md`)
+- **`atlas-report`** — render agent findings as styled HTML reports in the browser
+- **`atlas-changelog`** — three-layer changelog management (per-repo, cross-repo, per-agent)
+- **`atlas-present`** — release presentations as HTML pages + Obsidian Canvas
+- **Changelog hook** — automatic changelog entries when agents complete work
+- **Workspace model** — documentation for multi-repo workspace layout
+
+### Changed
+
+- All agent skills now reference the output kit for consistent CLI formatting
+- Atlas agent scope expanded to include output architecture
+- Atlas plugin version bumped to 0.2.0
+
+## [0.3.0] - 2026-03-29
+
+### Added
+
+- **Proof** agent — QA & testing engineer (test strategy, E2E suites, API testing, test audits, testing recon)
+- **Pave** agent — platform engineer (golden path templates, dev environments, service catalogs, DX audits, platform recon)
+- 10 new skills: proof-strategy, proof-e2e, proof-api, proof-audit, proof-recon, pave-golden, pave-env, pave-catalog, pave-audit, pave-recon
+- Contributor documentation: architecture overview, skill authoring guide, agent authoring guide
+- CONTRIBUTING.md, CHANGELOG.md, GitHub issue/PR templates
+- Real SECURITY.md replacing placeholder
+
+### Changed
+
+- Team roster: 1 lead + 14 specialists (was 12), 74 skills (was 64)
+- TODOS.md rewritten as full project roadmap
+
+## [0.2.0] - 2026-03-28
+
+### Changed
+
+- Flattened all 64 skills to root plugin for single-install discoverability
+- Bundled all 13 agents in root plugin — one install gets everything
+- Refined tagline to "Simple by default. Scalable by design."
+- Added "Why This Exists" philosophy section to README
+
+### Removed
+
+- Legacy pip CLI — plugin system is the sole install path
+- Legacy Cloud Run agent from Forge (infrastructure generalist now)
+
+## [0.1.0] - 2026-03-16
+
+### Added
+
+- Initial release with 13 agents and 64 skills
+- Plugin-based architecture with marketplace registration
+- Agent template for scaffolding new team members
+- Naming guide for consistent agent identity
+- Apex lead agent with orchestration and S/M/L scoping
+- 12 specialist agents: Forge, Relay, Spine, Flux, Warden, Vigil, Prism, Cortex, Touch, Volt, Atlas, Lens
+
+---
+
+> Changelog maintained automatically by [🐘 elephant](https://github.com/tonone-ai/elephant) — keep your changelog up to date without the manual work.

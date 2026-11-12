@@ -1,0 +1,11 @@
+[project]
+name = "volt"
+version = "1.17.2"
+description = "Embedded & IoT engineer — firmware, microcontrollers, edge computing, device protocols"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["../tests"]
+pythonpath = ["."]

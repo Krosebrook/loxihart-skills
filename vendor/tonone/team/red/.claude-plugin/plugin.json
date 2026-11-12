@@ -1,0 +1,12 @@
+{
+  "name": "red",
+  "version": "1.17.2",
+  "description": "Security Operations Team \u2014 Red: Red team operations \u2014 penetration testing, attack simulation, vulnerability exploitation",
+  "author": {
+    "name": "tonone-ai",
+    "url": "https://tonone.ai"
+  },
+  "repository": "https://github.com/tonone-ai/tonone",
+  "license": "MIT",
+  "keywords": ["agents", "secops-team", "red", "security", "secops"]
+}

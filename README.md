@@ -1,6 +1,6 @@
 # loxihart-skills
 
-Claude Code marketplace of Loxihart skills, grouped by domain.
+Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus vendored tonone.
 
 ```
 /plugin marketplace add Krosebrook/loxihart-skills
@@ -131,3 +131,7 @@ Claude Code marketplace of Loxihart skills, grouped by domain.
 Client names, people, hostnames, subnets, emails, and compliance specifics were replaced with `[CLIENT]`, `[PERSON]`, `[HOSTNAME]`, `[SUBNET]`, `[EMAIL]`, `[COMPLIANCE FRAMEWORK]`. Fill them in locally; never commit real values. Some client-branded binary templates and logos were removed and are not bundled.
 
 The ops skills (`operating-loxihart-service-desk`, `imaging-loxihart-endpoints`, and related) are effectively **templates**: configure the placeholders for your environment before use. `Invoke-DeploymentValidation.ps1` refuses to run until `[CLIENT]`, `[SUBNET]` and `[HOSTNAME]` are set.
+
+## License
+
+This repository is released under the MIT License. See [LICENSE](LICENSE). That license applies to everything outside `vendor/`, which carries its own license. `vendor/tonone` is third-party MIT-licensed software; see [NOTICE.md](NOTICE.md) and `vendor/tonone/LICENSE`.

@@ -2,6 +2,11 @@
 
 All notable changes to this marketplace are documented here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- `LICENSE` is now a standard MIT text so GitHub can detect it as MIT. The note that it applies to everything outside `vendor/` (which carries its own license) moved to the README License section. README now describes the marketplace as 5 plugins plus vendored tonone.
+
 ## [1.0.0] - 2026-10-14
 
 ### Added

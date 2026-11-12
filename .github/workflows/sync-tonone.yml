@@ -93,9 +93,15 @@ jobs:
           # The lines above are indented by the YAML block; strip common indent for a clean PR body.
           BODY=$(printf '%s\n' "$BODY" | sed 's/^          //')
 
+          COMPARE="https://github.com/${GITHUB_REPOSITORY}/pull/new/${BRANCH}"
           if gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q '[0-9]'; then
             echo "Updated existing pull request for ${BRANCH}"
             gh pr view "$BRANCH" --json url --jq .url
+          elif gh pr create --title "$MSG" --body "$BODY" --base main --head "$BRANCH"; then
+            :
           else
-            gh pr create --title "$MSG" --body "$BODY" --base main --head "$BRANCH"
+            echo "::error::Failed to create the pull request. Enable Settings > Actions > General > 'Allow GitHub Actions to create and approve pull requests', or open ${COMPARE}"
+            echo "Branch pushed: ${BRANCH}"
+            echo "Open a PR at: ${COMPARE}"
+            exit 1
           fi

@@ -14,7 +14,7 @@ Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus ve
 | loxihart-design | 18 | UI/UX, design systems, frontend execution, and the verified UI pattern library. |
 | loxihart-engineering | 22 | Engineering workflows: debugging, testing, refactoring, scripts, stack operations. |
 | loxihart-ops | 7 | Loxihart service desk, endpoint imaging, and knowledge-base operations. |
-| tonone (vendor, MIT, third-party) | 189 skills + 100 agents | Unmodified; see NOTICE.md |
+| tonone (vendor, MIT, third-party) | 189 skills + 100 agents | Vendored snapshot; catalog trimmed to locally present plugins. See [NOTICE.md](NOTICE.md) and [vendor/tonone/LOXIHART-PATCHES.md](vendor/tonone/LOXIHART-PATCHES.md) |
 
 ## Skills
 

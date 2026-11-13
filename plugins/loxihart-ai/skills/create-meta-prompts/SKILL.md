@@ -14,6 +14,19 @@ folder in `.prompts/` with clear provenance and chain detection.
 
 ---
 
+## Canonical Discover → Forge → Execute Standard
+
+**Mandatory for complex engineering meta-prompts and multi-stage prompt packs:** read [references/DEEP_PROMPT_FORGE.md](references/DEEP_PROMPT_FORGE.md) before producing the chain. The standard defines three adversarial expert personas, source-backed discovery, outcome-first architecture, stable IDs, archive requirements, and release evidence gates.
+
+- **Discover:** this skill's Intake and Chain detection steps; inspect source authority, extract goals, and distinguish verified facts from assumptions.
+- **Forge:** Generate, Save, and Present steps; produce self-contained, dependent prompts and archive records. Every generated execution prompt must reference existing `G-####`, `O-####`, `R-####`, `ADR-####`, and `V-####` records, have a stable `P-####` ID, and link `E-####` evidence when available. Reject orphaned IDs and unexplained claims of test completion.
+- **Execute:** Run and Summarize steps **only with explicit implementation authorization**. The default for prompt-generation requests is `DISCOVER_FORGE_ONLY`; do not make external changes, deploy, or merge merely because a prompt pack was generated.
+- **Archive:** keep this skill's existing `.prompts/{number}-{topic}-{purpose}/`, `completed/`, and `SUMMARY.md` conventions. Add the goal, discovery, decision, requirement, risk, and verification ledgers defined by the standard when the task warrants them. Never silently renumber or overwrite locked decisions.
+
+**Compatibility rule:** the 7-step workflow below stays intact; these three phases describe its governance gates, not a second or replacement execution engine.
+
+---
+
 ## Workflow (7 Steps)
 
 1. **Intake** — Determine purpose (Do/Plan/Research/Refine), gather requirements

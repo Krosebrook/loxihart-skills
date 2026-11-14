@@ -1,4 +1,7 @@
-# loxihart-skills
+# Loxihart Toolchest · Skill Foundry
+
+> **Loxihart Suite:** `Loxihart Toolchest` (`loxihart-toolchest`) · **Architectural Role:** Skill Foundry · **Lexicon:** *Toolchest*
+> **Purpose:** Claude Code plugin marketplace housing 98 Loxihart ops, engineering, design, and business skills.
 
 Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus vendored tonone.
 

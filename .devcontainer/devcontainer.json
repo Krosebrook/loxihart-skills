@@ -1,0 +1,19 @@
+{
+  "name": "Loxihart Toolchest (Skill Foundry)",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && python3 .github/scripts/check_repo.py frontmatter && python3 .github/scripts/check_repo.py links",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.vscode-pull-request-github",
+        "yzhang.markdown-all-in-one"
+      ]
+    }
+  }
+}

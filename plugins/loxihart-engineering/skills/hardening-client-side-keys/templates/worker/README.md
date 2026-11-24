@@ -50,7 +50,12 @@ npm run typecheck  # strict TS, includes the Worker
 npm run deploy
 ```
 
-**Upgrading a Worker deployed from the older template:** the bearer secret is now `LOX_PROXY_TOKEN` (it was `FF_PROXY_TOKEN`) and the Worker name is now `lox-llm-proxy` (it was `ff-llm-proxy`). Before the new code takes traffic, run `npx wrangler secret put LOX_PROXY_TOKEN` with the same token value your server-to-server callers already send, or every bearer call returns 401. Then either keep `name = "ff-llm-proxy"` in `wrangler.toml` so the deploy updates the existing Worker and its URL, or deploy `lox-llm-proxy` as a new Worker, re-run every `wrangler secret put` for it, and repoint each caller's `PROXY_BASE` before retiring the old one.
+**Upgrading a Worker deployed from the older template:** the bearer secret is now `LOX_PROXY_TOKEN` (it was `FF_PROXY_TOKEN`) and the Worker name is now `lox-llm-proxy` (it was `ff-llm-proxy`). Do these steps in order, before the new code takes traffic. Skip them and every bearer call fails: with no `LOX_PROXY_TOKEN` set (and no Turnstile secret) the Worker answers 503 "proxy auth not configured", and with a different value it answers 401.
+
+1. Pick the Worker. To update the existing Worker and keep its URL, set `name = "ff-llm-proxy"` in `wrangler.toml` first, because `wrangler secret put` writes to whichever Worker that name points at. To move to a new `lox-llm-proxy` Worker instead, leave the new name and plan to re-run every `wrangler secret put` for it.
+2. Run `npx wrangler secret put LOX_PROXY_TOKEN` with the same token value your server-to-server callers already send.
+3. Rename `FF_PROXY_TOKEN` to `LOX_PROXY_TOKEN` in any existing local `.dev.vars` file, or `wrangler dev` fails bearer calls the same way locally.
+4. Deploy. If you created a new Worker, repoint each caller's `PROXY_BASE` to it before retiring the old one.
 
 ## API
 

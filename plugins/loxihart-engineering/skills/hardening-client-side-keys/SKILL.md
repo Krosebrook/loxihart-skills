@@ -61,7 +61,7 @@ Model the boundaries before writing code: **browser → proxy → provider**. Th
 6. **Gate the Worker** — `npm test` and `npx tsc --noEmit` both green before hand-off.
 7. **6-persona audit** (Security, Architect, QA, Performance, DevOps, A11y/UX). 0 P0 findings to ship. This is a hard gate.
 8. **Configure + deploy (operator step, held for explicit proceed):** set `PROXY_BASE` + Turnstile sitekey in the tool, `ALLOWED_ORIGINS` + KV id in `wrangler.toml`, `wrangler secret put` the provider keys + `TURNSTILE_SECRET`, then `wrangler deploy`. You (the operator) run deploy — the skill never holds cloud creds.
-   - Upgrading a Worker built from the older template: set the `LOX_PROXY_TOKEN` secret to the value callers already send (it replaced `FF_PROXY_TOKEN`) before deploying, and keep or migrate the Worker name as described in `templates/worker/README.md`.
+   - Upgrading a Worker built from the older template: choose the Worker name first (keep `ff-llm-proxy` to update in place), then set the `LOX_PROXY_TOKEN` secret to the value callers already send (it replaced `FF_PROXY_TOKEN`) and rename the variable in local `.dev.vars`, before deploying. The ordered steps are in `templates/worker/README.md`.
 
 ## The Worker (canonical template)
 

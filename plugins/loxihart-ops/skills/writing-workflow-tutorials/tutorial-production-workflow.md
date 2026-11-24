@@ -1,6 +1,6 @@
 # Tutorial Production Workflow
 
-End-to-end process for producing a FlashFusion workflow tutorial — from idea to delivered output.
+End-to-end process for producing a Loxihart workflow tutorial — from idea to delivered output.
 
 ---
 

@@ -2,7 +2,7 @@
 name: publishing-optimized-content
 version: "1.0.1"
 description: >
-  Runs SEO optimization at two stages of FlashFusion content production: before writing (brief + keyword targeting) and before publishing (on-page audit + metadata + schema). Chains searchfit-seo plugin skills at the right moments so SEO happens during content creation, not as an afterthought or separate pass.
+  Runs SEO optimization at two stages of Loxihart content production: before writing (brief + keyword targeting) and before publishing (on-page audit + metadata + schema). Chains searchfit-seo plugin skills at the right moments so SEO happens during content creation, not as an afterthought or separate pass.
 
   Use when the user mentions: ready to publish, SEO check this, finishing this piece, optimize this before publishing, write a content brief, I'm about to write a post about X, pre-publish check, meta description, title tag, on-page SEO, add schema, internal links, content brief for, or any content piece transitioning from planning to writing, or writing to publishing.
 ---
@@ -15,7 +15,7 @@ Ensures SEO happens at the right moments — not as a separate task you remember
 - **PRE-WRITE** — runs before drafting. Sets keyword target, structure, and gaps to cover.
 - **PRE-PUBLISH** — runs on a finished draft. Audits all on-page elements before going live.
 
-Load `references/ff-seo-context.md` before either mode.
+Load `references/loxihart-seo-context.md` before either mode.
 
 ---
 
@@ -26,7 +26,7 @@ Load `references/ff-seo-context.md` before either mode.
 | `searchfit-seo:content-brief` | Chained plugin skill | PRE-WRITE Step 2 |
 | `searchfit-seo:on-page-seo` | Chained plugin skill | PRE-PUBLISH Step 1 |
 | `searchfit-seo:schema-markup` | Chained plugin skill | PRE-PUBLISH Step 2 |
-| `references/ff-seo-context.md` | Reference file | Both modes |
+| `references/loxihart-seo-context.md` | Reference file | Both modes |
 
 **FAIL_IF:** `searchfit-seo:content-brief` is not loaded → do not call the plugin. Instead, run the content brief steps manually using the PRE-WRITE section below as a checklist. Output the brief as a structured document covering: recommended H1, recommended H2 structure, 4–6 semantic keywords, word count target, and angle recommendation. Note in the output: `[Manual brief — searchfit-seo:content-brief not available]`.
 
@@ -46,7 +46,7 @@ Load `references/ff-seo-context.md` before either mode.
 
 ### Step 1: Confirm keyword target
 
-Check if the topic has an assigned keyword from the quarterly content plan (`researching-content-opportunities` output stored in `FlashFusion/Content/SEO/`).
+Check if the topic has an assigned keyword from the quarterly content plan (`researching-content-opportunities` output stored in `Loxihart/Content/SEO/`).
 
 - Assigned keyword found → use it
 - No assignment → identify the best primary keyword: highest-volume, sub-KD-40 term that matches informational or commercial-investigation intent for this topic
@@ -55,14 +55,14 @@ Check if the topic has an assigned keyword from the quarterly content plan (`res
 
 Call `searchfit-seo:content-brief` with:
 - Target keyword
-- FlashFusion context (audience, tone, content pillar — from `references/ff-seo-context.md`)
+- Loxihart context (audience, tone, content pillar — from `references/loxihart-seo-context.md`)
 - 2–3 top-ranking competitor URLs for this keyword (pull from Ahrefs SERP)
 
 Output includes: recommended H1, recommended H2 structure, 4–6 semantic keywords to weave in, word count target, and a one-sentence angle recommendation that differentiates from what's already ranking.
 
 ### Step 3: Internal link planning
 
-Before writing, identify 2–3 existing FlashFusion pages that should link to or from this piece. Note them in the brief now — retrofitting internal links after publishing is consistently skipped.
+Before writing, identify 2–3 existing Loxihart pages that should link to or from this piece. Note them in the brief now — retrofitting internal links after publishing is consistently skipped.
 
 ### Deliver
 
@@ -85,7 +85,7 @@ Run `searchfit-seo:on-page-seo` on the draft. Verify each element:
 | URL slug | Short · keyword included · no stop words (the, a, in, for, with) |
 | First 100 words | Primary keyword appears naturally in the opening |
 | Image alt text | All images have descriptive alt text · keyword where natural |
-| Internal links | Minimum 2 links to other FlashFusion pages |
+| Internal links | Minimum 2 links to other Loxihart pages |
 | External links | At least 1 link to a credible external source · opens in new tab |
 | Word count | Meets target from content brief · not padded |
 
@@ -117,12 +117,12 @@ Output the JSON-LD block. It goes in the `<head>` of the published page, not inl
 
 ---
 
-## FlashFusion Context Block
+## Loxihart Context Block
 
 Inject this into every `searchfit-seo:*` call:
 
 ```
-Brand: FlashFusion — AI consulting and workflow automation
+Brand: Loxihart — AI consulting and workflow automation
 Audience: AI practitioners, consultants, IT professionals
 Tone: Direct, specific, no filler. Technical when appropriate. First-person where natural.
 Content pillars: AI agents, workflow automation, AI enablement, tool consolidation, consulting operations

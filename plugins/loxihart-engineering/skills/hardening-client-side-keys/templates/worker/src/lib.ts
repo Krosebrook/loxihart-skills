@@ -1,4 +1,4 @@
-// ff-llm-proxy — pure, side-effect-free helpers.
+// lox-llm-proxy — pure, side-effect-free helpers.
 // Deliberately free of any Workers-runtime types so these run under plain Vitest.
 
 export type ProviderId = "anthropic" | "openai" | "google";

@@ -30,7 +30,7 @@ If unclear, ask one question: "Is this for measuring AI adoption at Loxihart, ge
 
 **Purpose:** Establish baseline before an AI enablement initiative. Re-run at 60–90 days to measure change. The delta is your evidence of impact.
 
-**Template:** `templates/ff-ai-adoption-survey.md`
+**Template:** `templates/loxihart-ai-adoption-survey.md`
 
 **When to send:** Before any domain unlock, training rollout, or enablement program AND again 60–90 days after. Save the pre-survey data — it's useless without comparison.
 
@@ -54,7 +54,7 @@ If unclear, ask one question: "Is this for measuring AI adoption at Loxihart, ge
 
 **Purpose:** Measure client satisfaction, collect testimonial-quality quotes, surface improvements for the next engagement. Also creates the raw material for case studies.
 
-**Template:** `templates/ff-post-engagement-survey.md`
+**Template:** `templates/loxihart-post-engagement-survey.md`
 
 **When to send:** Within 48 hours of final delivery. Not at the end of a kickoff call. Not "sometime after." Within 48 hours — response rates drop sharply after a week.
 
@@ -78,7 +78,7 @@ If unclear, ask one question: "Is this for measuring AI adoption at Loxihart, ge
 
 **Purpose:** Operational feedback on content quality and delivery. Anonymous. Used to improve the next session, not to evaluate attendance or measure adoption.
 
-**Template:** `ff-workshop-feedback-survey.md`
+**Template:** `loxihart-workshop-feedback-survey.md`
 
 **When to send:** At the end of the session, before people leave. For remote sessions: drop the link in chat in the last 5 minutes and leave 3–4 minutes for completion. Do not send after the session ends — response rate drops to under 30%.
 
@@ -100,7 +100,7 @@ If unclear, ask one question: "Is this for measuring AI adoption at Loxihart, ge
 
 **Purpose:** Understand what newsletter subscribers and content readers actually want. Feeds directly into `researching-content-opportunities` — this is the qualitative layer that keyword data can't give you.
 
-**Template:** `ff-audience-research-survey.md`
+**Template:** `loxihart-audience-research-survey.md`
 
 **When to send:** Quarterly, to the full newsletter list. Send on a Tuesday or Wednesday morning. Announce it in the newsletter issue — "This week I'd like 5 minutes from you."
 

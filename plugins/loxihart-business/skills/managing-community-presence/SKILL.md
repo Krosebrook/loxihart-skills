@@ -2,18 +2,18 @@
 name: managing-community-presence
 version: "2.0.0"
 description: >
-  Manages FlashFusion's community intelligence and audience engagement using
+  Manages Loxihart's community intelligence and audience engagement using
   HubSpot (MCP connected), Notion (MCP connected), and LinkedIn (manual
   surface — no MCP). Common Room is NOT connected; this skill works without
   it and flags its absence explicitly. Surfaces who is engaging with
-  FlashFusion content, identifies high-intent community members, and guides
+  Loxihart content, identifies high-intent community members, and guides
   community-building decisions for the newsletter audience and LinkedIn
   following. Use when the user mentions: community, audience engagement,
   who's engaging with my content, community building, newsletter audience,
   community intelligence, GTM community, who should I reach out to from my
   audience, Common Room (will surface NOT_CONNECTED status), LinkedIn
   engagement signals, warm prospect identification, or any request to
-  understand or act on who is engaging with FlashFusion.
+  understand or act on who is engaging with Loxihart.
 allowed-tools: Read Write Bash
 ---
 
@@ -31,7 +31,7 @@ DEPENDENCY_DECLARATION for the manual fallback path.
 | Tool | Status | Operational Path | Notes |
 |------|--------|-----------------|-------|
 | HubSpot | MCP ✅ CONNECTED | Create / update contacts, log activity notes, pipeline stage changes | Primary CRM path |
-| Notion | MCP ✅ CONNECTED | Log community intel, update engagement tracker | FlashFusion HQ root: `cda29e98-3f08-4c83-8cfe-4c1e560836ee` |
+| Notion | MCP ✅ CONNECTED | Log community intel, update engagement tracker | Loxihart HQ root: `cda29e98-3f08-4c83-8cfe-4c1e560836ee` |
 | LinkedIn | MANUAL SURFACE | Open browser, pull engagement signals by hand, paste here | No MCP / API available |
 | Common Room | ❌ NOT_CONNECTED | — | Manual URL: https://app.commonroom.io — log in manually; see Section 5 for what to pull |
 
@@ -63,7 +63,7 @@ DEPENDENCY_DECLARATION for the manual fallback path.
 
 **Should NOT trigger:**
 1. "Help me write a LinkedIn post" → use generating-social-posts
-2. "Find new prospects for FlashFusion" → use managing-ff-pipeline
+2. "Find new prospects for Loxihart" → use managing-loxihart-pipeline
 3. "Write my next newsletter edition" → use producing-ai-newsletter
 
 ---
@@ -146,7 +146,7 @@ Action taken: [followed back / messaged / added to pipeline sequence / none]
 
 Signals that don't produce a HubSpot action (non-ICP contacts, audience trends, strategy notes) go to Notion.
 
-**Target:** FlashFusion HQ root → Community Intelligence log
+**Target:** Loxihart HQ root → Community Intelligence log
 Parent page root: `cda29e98-3f08-4c83-8cfe-4c1e560836ee` — navigate from here to the correct sub-page.
 
 **Log entry format:**
@@ -186,7 +186,7 @@ Response is proportional to signal weight. Community trust is the asset — ever
 | Any level, peer / collaborator | Outreach for partnership or guest content conversation |
 
 **DM opener template (not a sales message):**
-> "I've noticed you've been reading the FlashFusion content — what are you working on right now?"
+> "I've noticed you've been reading the Loxihart content — what are you working on right now?"
 
 The opener exists to start a conversation, not to convert. Conversion comes later if fit is real.
 
@@ -217,7 +217,7 @@ Route these through Section 2 (HubSpot) and Section 3 (Notion) exactly as you wo
 
 ## Section 6: Community Building Strategy
 
-FlashFusion's community is currently distributed — newsletter subscribers, LinkedIn followers. Current strategy: newsletter as anchor, LinkedIn as discovery surface, individuals treated as individuals rather than an audience.
+Loxihart's community is currently distributed — newsletter subscribers, LinkedIn followers. Current strategy: newsletter as anchor, LinkedIn as discovery surface, individuals treated as individuals rather than an audience.
 
 **Threshold to evaluate a dedicated community platform (Slack / Discord / Circle):**
 - Newsletter list exceeds 1,000 active subscribers
@@ -248,7 +248,7 @@ Track the threshold check in Notion monthly (Section 3 log entry).
 ## CLAIMS / COUNTEREXAMPLES / CONTRADICTIONS
 
 **CLAIMS**
-- [GENERATED] Outreach referencing specific content the contact engaged with converts at higher rates than cold openers — documented principle in community-led GTM; FlashFusion-specific numbers are not yet measured.
+- [GENERATED] Outreach referencing specific content the contact engaged with converts at higher rates than cold openers — documented principle in community-led GTM; Loxihart-specific numbers are not yet measured.
 - [GENERATED] Newsletter engagement (clicks > opens) is a stronger intent proxy than LinkedIn follows alone, because clicks require deliberate action while opens can be triggered by email clients automatically.
 
 **COUNTEREXAMPLE**

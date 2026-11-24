@@ -31,7 +31,7 @@ spacing/radius/shadow primitives.
   large fills or body text.
 - Fraunces for display/headings only; body text is always Crimson Pro;
   anything monospaced is JetBrains Mono — no fourth family, ever.
-- Sub-brands (FlashFusion surfaces under Abstrekkt) namespace their tokens;
+- Sub-brands (Loxihart surfaces under Abstrekkt) namespace their tokens;
   they never mutate the parent's locked set.
 - Accessibility floor at compile gate: text-on-surface pairs ≥ 4.5:1 (AA);
   brass-on-dark for *text* must be verified per pair, not assumed.

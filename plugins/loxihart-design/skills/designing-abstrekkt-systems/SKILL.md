@@ -3,13 +3,13 @@ name: designing-abstrekkt-systems
 description: >
   Compiles and applies the Abstrekkt brand design system — token-driven,
   accessibility-first, state-machine-correct UI architecture for Abstrekkt
-  and FlashFusion products. Use when building UI, designing components,
+  and Loxihart products. Use when building UI, designing components,
   generating design tokens, applying Abstrekkt visual identity, implementing
   Fraunces display typography, brass color palette (#c8a86a), or producing
   frontend architecture for any Abstrekkt sub-brand. Also triggers on:
   component factory, design system, token system, UX architecture, brand
   voice system, Reading Room aesthetic, accessibility enforcement, anti-slop
-  gate, FlashFusion frontend, Crimson Pro body type, JetBrains Mono code type,
+  gate, Loxihart frontend, Crimson Pro body type, JetBrains Mono code type,
   design handoff package, construction not recovery UI, or any request to
   build, audit, or extend Abstrekkt-branded frontend output.
 version: "1.0.0"

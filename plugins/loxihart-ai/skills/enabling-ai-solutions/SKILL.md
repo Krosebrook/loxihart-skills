@@ -54,7 +54,7 @@ What's the context?
   │   └─ → Read templates/quick-stack-decision.md
   │      → See examples/quick-stack-selection.md for a worked output
   │
-  ├─ Personal project / platform build (FlashFusion, flashnframe, etc.)
+  ├─ Personal project / platform build (Loxihart, flashnframe, etc.)
   │   └─ → Read templates/architecture-diagram.md
   │      → See examples/research-agent-personal.md for a worked output
   │
@@ -78,7 +78,7 @@ What's the context?
 → Scope → RAG pattern → Small tier (solo user) → spec doc. Full worked output: `examples/solo-knowledge-base.md`
 
 **Example 2 — Personal platform build**
-> "I want to add a research agent to FlashFusion — web search, summarize, store results."
+> "I want to add a research agent to Loxihart — web search, summarize, store results."
 
 → Skip discovery. Stack decision: Sonnet 4.6 + Tavily + Supabase. Full worked output: `examples/research-agent-personal.md`
 

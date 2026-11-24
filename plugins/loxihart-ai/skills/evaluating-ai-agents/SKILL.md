@@ -30,7 +30,7 @@ behavioral changes visible before they reach users.
 ## Evals
 
 **Should trigger:**
-1. "I want to verify my FlashFusion intake agent handles edge cases correctly"
+1. "I want to verify my Loxihart intake agent handles edge cases correctly"
 2. "I changed a system prompt and want to make sure nothing regressed"
 3. "How do I know if my n8n workflow agent is actually doing what I think?"
 

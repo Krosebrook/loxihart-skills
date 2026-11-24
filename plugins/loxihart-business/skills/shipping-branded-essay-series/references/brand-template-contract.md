@@ -36,22 +36,22 @@ per-file near-miss. Track which value is canonical in `assets/config.md`.
 
 ---
 
-## FlashFusion (color tokens confirmed; fonts UNCONFIRMED)
+## Loxihart (color tokens confirmed; fonts UNCONFIRMED)
 
 Only run this block after confirming the display/body fonts — do not invent them.
 
 - **Aesthetic:** void-dark dashboard register, semi-transparent blur panels.
-  [SOURCED — building-flashfusion-live-artifacts, FF design tokens]
+  [SOURCED — building-loxihart-live-artifacts, Loxihart design tokens]
 - **Tokens:** `bg1:#0B0B14`, `bg2:#13131F`, `bg3:#1C1C2E`,
   `border:rgba(168,85,247,0.12)`, `borderHi:rgba(168,85,247,0.35)`,
   violet `--v:#A855F7`, magenta `--m:#EC4899`, cyan `--cy:#22D3EE`,
   `t1:#FFFFFF`, `t2:#C7C7D1`, `t3:#9A9AA6`, `ok:#10b981`, `warn:#f59e0b`,
   `err:#ef4444`.
-- **Fonts:** UNCONFIRMED. Ask Kyle or read a shipped FF page before first use.
+- **Fonts:** UNCONFIRMED. Ask Kyle or read a shipped Loxihart page before first use.
   Do not reuse the Load-Bearing font stack by default — different brand.
-- **Masthead / badge / act names:** UNCONFIRMED — derive from the FF series spec
+- **Masthead / badge / act names:** UNCONFIRMED — derive from the Loxihart series spec
   at run time, mirror the Load-Bearing structure, confirm with Kyle.
-- **Footer:** FlashFusion-appropriate line, not the Load-Bearing one.
+- **Footer:** Loxihart-appropriate line, not the Load-Bearing one.
 
 When adding a third brand: copy this block's shape, fill only confirmed values,
 and mark everything unconfirmed as UNCONFIRMED rather than guessing.

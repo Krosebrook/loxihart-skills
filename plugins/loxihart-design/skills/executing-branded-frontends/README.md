@@ -47,7 +47,7 @@ executing-branded-frontends/
 │
 └── examples/
     ├── Loxihart-dashboard.html            ← ticket status panel (HTML artifact)
-    └── FlashFusion-card.jsx          ← feature cards (React artifact)
+    └── Loxihart-card.jsx          ← feature cards (React artifact)
 ```
 
 ---

@@ -1,4 +1,4 @@
-name = "ff-llm-proxy"
+name = "lox-llm-proxy"
 main = "src/index.ts"
 compatibility_date = "2024-09-23"
 
@@ -21,4 +21,4 @@ DAILY_CAP = "1000"
 #   wrangler secret put OPENAI_API_KEY        # optional
 #   wrangler secret put GOOGLE_API_KEY        # optional
 #   wrangler secret put TURNSTILE_SECRET      # browser mode (recommended for public tools)
-#   wrangler secret put FF_PROXY_TOKEN        # server-to-server mode only; never ship in browser
+#   wrangler secret put LOX_PROXY_TOKEN        # server-to-server mode only; never ship in browser

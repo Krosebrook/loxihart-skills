@@ -1,4 +1,4 @@
-// ff-llm-proxy — Cloudflare Worker.
+// lox-llm-proxy — Cloudflare Worker.
 // Server-side LLM proxy so browser tools never hold provider API keys.
 // Fail-closed: refuses to run unless an auth mode is configured.
 
@@ -20,7 +20,7 @@ export interface Env {
   MAX_BODY_BYTES?: string;
   RATE_PER_MIN?: string;
   DAILY_CAP?: string;
-  FF_PROXY_TOKEN?: string;
+  LOX_PROXY_TOKEN?: string;
   TURNSTILE_SECRET?: string;
   ANTHROPIC_API_KEY?: string;
   OPENAI_API_KEY?: string;
@@ -125,7 +125,7 @@ export default {
     }
 
     if (request.method === "GET" && (url.pathname === "/" || url.pathname === "/health")) {
-      return json({ ok: true, service: "ff-llm-proxy" }, 200, cors);
+      return json({ ok: true, service: "lox-llm-proxy" }, 200, cors);
     }
 
     if (request.method !== "POST") {
@@ -169,9 +169,9 @@ export default {
       if (!turnstileToken) return json({ error: "turnstile token required" }, 401, cors);
       const ok = await verifyTurnstile(env.TURNSTILE_SECRET, turnstileToken, ip);
       if (!ok) return json({ error: "turnstile verification failed" }, 401, cors);
-    } else if (env.FF_PROXY_TOKEN) {
+    } else if (env.LOX_PROXY_TOKEN) {
       const tok = parseBearer(request.headers.get("Authorization"));
-      if (!tok || !safeEqual(tok, env.FF_PROXY_TOKEN)) {
+      if (!tok || !safeEqual(tok, env.LOX_PROXY_TOKEN)) {
         return json({ error: "unauthorized" }, 401, cors);
       }
     } else {

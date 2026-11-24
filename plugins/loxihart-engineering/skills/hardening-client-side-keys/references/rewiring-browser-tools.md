@@ -7,7 +7,7 @@ Exact before/after for repointing a single-file HTML tool's `fetch` calls at the
 Near the top of the tool's main `<script>`:
 
 ```js
-const PROXY_BASE = "https://ff-llm-proxy.REPLACE.workers.dev"; // your deployed Worker
+const PROXY_BASE = "https://lox-llm-proxy.REPLACE.workers.dev"; // your deployed Worker
 function getTurnstileToken() {
   try { return (window.turnstile && window.turnstile.getResponse()) || ""; }
   catch (e) { return ""; }

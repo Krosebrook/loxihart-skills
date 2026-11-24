@@ -97,7 +97,7 @@ the stop sequence is the fallback for plain text-completion loops.
 
 ## Base44 Approval Queue
 
-The FlashFusion Agent Control Center has an approval queue panel built into
+The Loxihart Agent Control Center has an approval queue panel built into
 the dashboard artifact. For new approval workflows:
 
 1. Write new pending items to the `approval_queue` Supabase table:

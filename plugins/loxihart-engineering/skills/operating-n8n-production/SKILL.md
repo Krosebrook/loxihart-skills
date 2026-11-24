@@ -5,7 +5,7 @@ description: >
   Manages n8n workflow automation in production — credential management,
   execution monitoring, error handling, workflow versioning, worker health,
   and blocked workflow recovery. Covers the Base44 Bearer credentials pattern
-  and SCH-02 lane field fix for the FlashFusion platform. Use when
+  and SCH-02 lane field fix for the Loxihart platform. Use when
   running n8n in production, fixing blocked or failing workflows, rotating
   n8n credentials, monitoring execution logs, handling silent workflow
   failures, diagnosing n8n errors, setting up error alerting, managing
@@ -95,7 +95,7 @@ What do you need?
 
 **Symptom:** Workflows calling Base44 APIs return 401 Unauthorized or
 silently fail without execution. Affects the 11 workflows connected to
-the FlashFusion platform (app.flashfusion.co).
+the Loxihart platform (app.flashfusion.co).
 
 **Root cause:** Base44 uses short-lived Bearer tokens, not static API keys.
 n8n credential stores treat these as static credentials. When the token
@@ -370,7 +370,7 @@ all execution data (stored in DB), so restarts are safe.
 ## CLAIMS
 - [GENERATED] Base44 uses short-lived Bearer tokens incompatible with n8n's
   static credential model — rotation must be manual until Base44 provides
-  OAuth. Verified through operational behavior of the FlashFusion platform.
+  OAuth. Verified through operational behavior of the Loxihart platform.
 - [GENERATED] Schema drift between workflow nodes is the most common cause
   of silent routing failures in n8n; explicit field normalization nodes
   prevent this. Observed across SCH-02 lane field incidents.

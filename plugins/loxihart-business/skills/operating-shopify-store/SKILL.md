@@ -2,27 +2,27 @@
 name: operating-shopify-store
 version: "1.0.0"
 description: >
-  Manages FlashFusion's Shopify storefront operations — product management,
+  Manages Loxihart's Shopify storefront operations — product management,
   order fulfillment, basic analytics, and storefront health. Note: the Wix
-  store is no longer active; FlashFusion's primary platform is now two Base44
+  store is no longer active; Loxihart's primary platform is now two Base44
   apps. This skill covers Shopify as an active or future e-commerce surface.
   Use when the user mentions: Shopify, storefront, product listing,
   order, fulfillment, inventory, discount, e-commerce, digital products,
-  sell online, or any mention of Shopify operations for FlashFusion.
+  sell online, or any mention of Shopify operations for Loxihart.
 ---
 
 # Shopify Store Operations
 
-Covers Shopify operations for FlashFusion. The primary platform (audit.flashfusion.co
+Covers Shopify operations for Loxihart. The primary platform (audit.flashfusion.co
 and app.flashfusion.co) runs on Base44 — Shopify is the e-commerce layer for
-digital products or physical goods if that becomes an active FlashFusion channel.
+digital products or physical goods if that becomes an active Loxihart channel.
 
 ---
 
 ## Evals
 
 **Should trigger:**
-1. "Add a new digital product to the FlashFusion Shopify store"
+1. "Add a new digital product to the Loxihart Shopify store"
 2. "Check if there are any unfulfilled orders"
 3. "Set up a discount code for newsletter subscribers"
 
@@ -53,7 +53,7 @@ readiness checklist rather than an operational workflow.
 1. Shopify Admin → Products → Add product
 2. Title: clear, searchable, benefit-forward
 3. Description: what it is, who it's for, what they'll be able to do
-4. Price: set based on FlashFusion pricing framework
+4. Price: set based on Loxihart pricing framework
 5. Product type: select `Digital` or appropriate category
 6. For digital downloads:
    - Install Digital Downloads app (free from Shopify App Store)
@@ -91,7 +91,7 @@ For a refund request:
 3. Send confirmation to customer
 
 For a dispute: check Shopify's dispute resolution process if the
-charge was through Shopify Payments. Log in the FlashFusion client
+charge was through Shopify Payments. Log in the Loxihart client
 communication record if relevant.
 
 ---
@@ -102,7 +102,7 @@ communication record if relevant.
 
 Shopify Admin → Discounts → Create discount
 
-Common FlashFusion discount patterns:
+Common Loxihart discount patterns:
 - Newsletter subscriber code: 10–15% off, single use per customer
 - Workshop attendee code: fixed amount or percentage, time-limited
 - Referral code: percentage off, no expiry
@@ -126,7 +126,7 @@ Shopify Analytics (Admin → Analytics) surfaces:
 - Where is traffic coming from? (Newsletter link, LinkedIn, search?)
 - What is the conversion rate? (Industry average for Shopify: ~2–3%)
 
-Connect Shopify revenue to the FlashFusion Finance log (managing-ff-finances)
+Connect Shopify revenue to the Loxihart Finance log (managing-loxihart-finances)
 as a separate revenue stream from consulting income.
 
 ---
@@ -136,7 +136,7 @@ as a separate revenue stream from consulting income.
 Monthly (if store is active):
 - [ ] Unfulfilled orders checked and resolved
 - [ ] Active discount codes reviewed — expired ones deactivated
-- [ ] Revenue logged in managing-ff-finances
+- [ ] Revenue logged in managing-loxihart-finances
 
 Quarterly:
 - [ ] Product descriptions reviewed for accuracy
@@ -157,7 +157,7 @@ Quarterly:
   is an active revenue channel
 
 ## CONTRADICTIONS
-- "Track Shopify revenue in managing-ff-finances" assumes Shopify is
+- "Track Shopify revenue in managing-loxihart-finances" assumes Shopify is
   a separate revenue stream from consulting; if Shopify only sells
   consulting packages or services, it should feed the same invoice
   tracking log rather than a separate one

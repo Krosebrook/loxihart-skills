@@ -62,7 +62,7 @@ right tools, and producing quality outcomes over time.
 ## Evals
 
 **Should trigger:**
-1. "Set up monitoring for my FlashFusion intake agent"
+1. "Set up monitoring for my Loxihart intake agent"
 2. "Is my agent getting worse? I need to see behavioral trends"
 3. "Wire agent telemetry to PostHog"
 4. "Build a dashboard for agent health metrics"
@@ -84,7 +84,7 @@ Every agent interaction must emit at least one structured log entry. This is a s
 ```json
 {
   "event": "agent_interaction",
-  "agent_id": "flashfusion-intake-agent",
+  "agent_id": "loxihart-intake-agent",
   "session_id": "uuid-anonymized",
   "timestamp": "ISO-8601",
   "input_tokens": 1240,
@@ -171,7 +171,7 @@ ph.capture({
   distinctId: sessionId,  // anonymized UUID — not user email, not user name
   event: 'agent_session_completed',
   properties: {
-    agent_id:            'flashfusion-intake-agent',
+    agent_id:            'loxihart-intake-agent',
     outcome:             'completed',  // completed | failed | escalated | timed_out
     turns:               3,
     tools_used:          ['search_kb', 'create_ticket'],
@@ -189,7 +189,7 @@ ph.capture({
   distinctId: sessionId,
   event: 'agent_tool_call',
   properties: {
-    agent_id:    'flashfusion-intake-agent',
+    agent_id:    'loxihart-intake-agent',
     tool_name:   'create_ticket',
     success:     true,
     duration_ms: 340,
@@ -230,7 +230,7 @@ Create these four alerts in PostHog (Insights → Alerts):
 1. In your agent code, emit structured JSON logs to stdout
 2. Datadog agent picks these up when JSON logging is enabled (`DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true` or equivalent)
 3. In Datadog → Logs → Pipelines → create an agent-specific pipeline:
-   - Filter: `service:flashfusion-agent`
+   - Filter: `service:loxihart-agent`
    - Processor: JSON parser on log message
    - Facets: add `outcome`, `agent_id`, `tool_name` as indexed facets
 

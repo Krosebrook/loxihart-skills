@@ -1,6 +1,6 @@
-# ff-llm-proxy
+# lox-llm-proxy
 
-A fail-closed Cloudflare Worker that proxies LLM calls (Anthropic, OpenAI, Google) so **browser tools never hold provider API keys**. Built to harden `flashfusion_3d.html` and `prompt-engineering-guide-v4.html`, which previously called provider APIs directly from the browser.
+A fail-closed Cloudflare Worker that proxies LLM calls (Anthropic, OpenAI, Google) so **browser tools never hold provider API keys**. Built to harden `loxihart_3d.html` and `prompt-engineering-guide-v4.html`, which previously called provider APIs directly from the browser.
 
 ## Why this exists
 
@@ -25,7 +25,7 @@ An open proxy holding your keys is *worse* than BYOK — it's an uncapped wallet
 | **Daily spend cap** | Global `DAILY_CAP` requests/day → 429. |
 | **Timeout** | Upstream calls abort at 30s → 502. |
 
-**Do not ship `FF_PROXY_TOKEN` in client HTML** — a static token on a public page is extractable. For public browser tools use **Turnstile** (the browser proves "a human on my origin" without a reusable secret). Use the bearer token only for server-to-server callers. For a private toolset, put Cloudflare Access in front of the Worker instead.
+**Do not ship `LOX_PROXY_TOKEN` in client HTML** — a static token on a public page is extractable. For public browser tools use **Turnstile** (the browser proves "a human on my origin" without a reusable secret). Use the bearer token only for server-to-server callers. For a private toolset, put Cloudflare Access in front of the Worker instead.
 
 ## Setup
 
@@ -42,7 +42,7 @@ npx wrangler secret put OPENAI_API_KEY        # optional
 npx wrangler secret put GOOGLE_API_KEY        # optional
 npx wrangler secret put TURNSTILE_SECRET      # browser mode (recommended)
 # OR, for server-to-server only:
-npx wrangler secret put FF_PROXY_TOKEN
+npx wrangler secret put LOX_PROXY_TOKEN
 
 # Edit wrangler.toml [vars]: ALLOWED_ORIGINS, caps.
 npm test           # unit tests

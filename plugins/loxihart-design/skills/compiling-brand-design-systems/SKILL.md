@@ -174,7 +174,7 @@ pins versions, pin the same versions in the scratch dir instead.
    z-index above content but below modals/toasts** — or every click on the
    page dies. Place portal layers (modal, toast) above the grain z-index.
 7. **Don't regenerate locked tokens.** If a brand config marks tokens as
-   locked (e.g., FlashFusion v3 violet/magenta/cyan), regeneration —
+   locked (e.g., Loxihart v3 violet/magenta/cyan), regeneration —
    even to "equivalent" OKLCH — is a contract violation. Copy verbatim.
 8. **One brand per session.** The Abstrekkt run produced 19 files at 232KB
    of source. Stacking sub-brands into the same session degrades the

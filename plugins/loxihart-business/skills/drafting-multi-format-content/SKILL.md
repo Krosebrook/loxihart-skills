@@ -19,7 +19,7 @@ Three template libraries in one skill. Each library has a different voice, struc
 |---|---|---|
 | Video/audio scripts | The deliverable is spoken, narrated, or audio-first | `templates/video-audio.md` |
 | Threaded long-form social | The deliverable is a multi-post thread on LinkedIn, X, Threads, or an IG carousel — longer than a caption, shorter and more episodic than a blog | `templates/threaded-social.md` |
-| FlashFusion Customization Service | The deliverable is a customer-facing comm or form for a custom-order workflow (intake, quote, proof, production, shipping, post-sale) | `templates/ff-customization.md` |
+| FlashFusion Customization Service | The deliverable is a customer-facing comm or form for a custom-order workflow (intake, quote, proof, production, shipping, post-sale) | `templates/loxihart-customization.md` |
 | **NOT covered by this skill** | Short social captions, blog long-form essays, KB articles, SOPs, runbooks, The Prompt newsletter editions, persona-specific product listings, chaosclub lyric/liner entries | Use the matching lane-specific skill instead |
 
 ## Scope gates before drafting

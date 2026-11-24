@@ -9,7 +9,7 @@ description: >
   keep the artifact self-contained (no CDN), smoke-test an artifact before
   shipping, headless Playwright check on an HTML artifact. Not for scaffolding
   a new React/shadcn artifact from scratch (use web-artifacts-builder) or
-  FlashFusion dashboards (use building-flashfusion-live-artifacts).
+  Loxihart dashboards (use building-loxihart-live-artifacts).
 metadata:
   version: 1.0.0
 ---
@@ -112,7 +112,7 @@ Should trigger:
 Should NOT trigger:
 1. "build me a dashboard artifact from scratch with shadcn" (→ web-artifacts-builder —
    scaffolding new, not persisting/extending an existing self-contained file)
-2. "update the FlashFusion control center panel" (→ building-flashfusion-live-artifacts —
+2. "update the Loxihart control center panel" (→ building-loxihart-live-artifacts —
    brand-specific artifact, its own skill)
 3. "review this PR for bugs" (→ auditing-logic / code-auditor — review, not shipping)
 ```

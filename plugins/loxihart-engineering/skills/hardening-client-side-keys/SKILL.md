@@ -38,7 +38,7 @@ Who calls the proxy?
   ├─ A PRIVATE tool (you / a known set of people)
   │     → Cloudflare Access in front of the Worker (real identity gate, session cookie not a static secret)
   └─ A SERVER-TO-SERVER caller only (no browser)
-        → Bearer token (FF_PROXY_TOKEN). NEVER embed this in client HTML.
+        → Bearer token (LOX_PROXY_TOKEN). NEVER embed this in client HTML.
 ```
 
 ## Architecture — always present these three

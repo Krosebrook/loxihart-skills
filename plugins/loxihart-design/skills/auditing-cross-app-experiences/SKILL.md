@@ -40,7 +40,7 @@ Scope: apply per project, never blanket-copy one brand/style to unrelated apps. 
 For each app report: app URL; platform; timestamp/SHA; UX mode; observed findings (evidence/confidence); planned and actual edits kept separate; tests performed/not performed; risk; HOLD/GO; next 2-3 concrete actions. No claims of completed improvement without a verified code change and test receipt.
 
 ## Linked governance sources (read before treating rules as brand-canonical)
-- Notion design doctrine (legacy FlashFusion scope): https://app.notion.com/p/3c9ea14fb167811a8bf2cb0c8bbd4a60
+- Notion design doctrine (legacy Loxihart scope): https://app.notion.com/p/3c9ea14fb167811a8bf2cb0c8bbd4a60
 - Notion design governance reference: https://app.notion.com/p/3feea14fb16781e1b0a5ebb2120dd695
 - Cross-app verification registry (50 selected provider surfaces): https://app.notion.com/p/419ea14fb16781278781fffd658b98a1
 

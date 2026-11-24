@@ -2,7 +2,7 @@
 name: administering-supabase
 version: "1.0.1"
 description: >
-  Manages Supabase database operations for FlashFusion's production stack —
+  Manages Supabase database operations for Loxihart's production stack —
   schema design, Row Level Security policies, migrations, Edge Functions, and
   debugging. Active project: flashnframe-app (etctmappdhpjuwptdbeb). Use
   when the user mentions: Supabase, RLS, row level security, migration, schema,
@@ -24,7 +24,7 @@ Deleted project `oorstbwcydxwiojrsoim` — do not use.
 ## Evals
 
 **Should trigger:**
-1. "Add a table to Supabase for storing FlashFusion client records"
+1. "Add a table to Supabase for storing Loxihart client records"
 2. "My query is returning empty results — RLS might be blocking it"
 3. "Write a migration to add a status column to the jobs table"
 

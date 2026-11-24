@@ -13,7 +13,7 @@
 
 ## Should NOT trigger (negative)
 
-1. "Design a logo for FlashFusion" → producing-graphics / canvas-design territory.
+1. "Design a logo for Loxihart" → producing-graphics / canvas-design territory.
 2. "Add a close button to the modal" → trivial utility icon; no cleanup workflow needed.
 3. "Audit this repo for security issues" → code-auditor, not icon work.
 

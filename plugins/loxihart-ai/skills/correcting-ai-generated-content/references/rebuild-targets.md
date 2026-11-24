@@ -42,7 +42,7 @@ reference. When in doubt, match that register.
 
 ---
 
-## ff-b2b (FlashFusion B2B Content)
+## lox-b2b (Loxihart B2B Content)
 
 ### Visual Tokens
 ```css

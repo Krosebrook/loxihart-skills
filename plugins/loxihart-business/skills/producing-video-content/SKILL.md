@@ -2,7 +2,7 @@
 name: producing-video-content
 version: "1.1.0"
 description: >
-  Produces, edits, and repurposes video content for FlashFusion using HeyGen
+  Produces, edits, and repurposes video content for Loxihart using HeyGen
   (scripted avatar/presenter delivery), Descript (recorded content editing),
   and Invideo (written-to-video with stock footage). Routes based on starting
   material and output intent. Always runs the repurposing cascade after any
@@ -20,7 +20,7 @@ description: >
 
 # Video Content Producer
 
-Routes FlashFusion video work through the right tool with the right workflow.
+Routes Loxihart video work through the right tool with the right workflow.
 Three routes, one repurposing cascade, one voice standard.
 
 ---
@@ -71,7 +71,7 @@ Use HeyGen when personal brand presence matters. Use Invideo when speed and volu
 ## Section 1: Video Brief (run when starting from scratch)
 
 1. **Content type** — pick one:
-   - `origin-story` — narrative about Construction over Recovery, FlashFusion backstory → HeyGen
+   - `origin-story` — narrative about Construction over Recovery, Loxihart backstory → HeyGen
    - `avatar-presenter` — scripted delivery of any content using your avatar → HeyGen
    - `explainer` — concept explanation with stock footage → Invideo
    - `newsletter-recap` — visual summary of a newsletter issue → Invideo
@@ -126,7 +126,7 @@ hints in parentheses for review — do not leave them in the final render.
 | n8n | "en-ate-en", "ntn" | Write "N-8-N" and verify in preview |
 | Supabase | "Soopa-base", "Supa-bay-se" | Preview and adjust if needed |
 | Base44 | Usually correct | — |
-| FlashFusion | Usually correct | — |
+| Loxihart | Usually correct | — |
 | Anthropic | Usually correct | — |
 
 Always preview a 30-second sample before full render to catch pronunciation issues.
@@ -211,7 +211,7 @@ If scripting from scratch: `drafting-multi-format-content` → type: `video_scri
    - `social` — short LinkedIn/X clips
 3. Review stock footage — replace generic visuals with screen captures,
    product screenshots, or relevant tech imagery
-4. Add FlashFusion branding: logo, colors in lower thirds
+4. Add Loxihart branding: logo, colors in lower thirds
 
 ### Step 3: Captions and audio
 
@@ -255,7 +255,7 @@ Descript auto-transcribes on import. One pass on technical terms:
 | Anthropic | usually correct | — |
 | Base44 | "base 44", "Bass 44" | Base44 |
 | Claude | usually correct | — |
-| FlashFusion | "flash fusion", "Flash Fusion" | FlashFusion |
+| Loxihart | "lox heart", "locks heart", "Loxy Hart" | Loxihart |
 | MCP | usually correct | — |
 
 Fixes in transcript propagate to captions automatically.
@@ -308,7 +308,7 @@ Export full video and all clips in one session before closing the project.
 - [ ] **YouTube full video** exported with SEO title, description draft, timestamps
 - [ ] **LinkedIn clips** (2–3, 60–120 sec) exported 1:1 or 4:5, captions burned-in
 - [ ] **YouTube Shorts clip** (30–60 sec, 9:16) from strongest moment
-- [ ] **Transcript exported** → `FlashFusion/Content/Video/transcripts/{{title}}.txt`
+- [ ] **Transcript exported** → `Loxihart/Content/Video/transcripts/{{title}}.txt`
        → becomes draft for blog post or newsletter section
 - [ ] **Thumbnail** in Canva: 1280x720, high contrast, readable at small size
 
@@ -353,7 +353,7 @@ The avatar cannot save a script that's performing rather than saying something.
 - Bad: "This AI Workflow CHANGED My Business (You Need to See This)"
 
 **Description:** first 150 chars = hook shown in search. Then: coverage,
-chapters/timestamps, links to FlashFusion content, newsletter signup,
+chapters/timestamps, links to Loxihart content, newsletter signup,
 2–3 sentence transcript excerpt.
 
 **Chapters:** required for any tutorial over 5 min. Format: `0:00 Intro`

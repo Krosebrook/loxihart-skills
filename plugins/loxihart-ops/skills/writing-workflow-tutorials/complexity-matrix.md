@@ -1,4 +1,4 @@
-# Complexity Matrix — FlashFusion Tutorial Levels
+# Complexity Matrix — Loxihart Tutorial Levels
 
 Detailed calibration for Beginner / Intermediate / Advanced. Use this when Rule 2 or Gate 5 are ambiguous.
 

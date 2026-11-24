@@ -251,8 +251,8 @@ Fix: Derive required deliverables from targetPhase entry criteria, or remove
 [HIGH] Pass 4 — allowedPhases manually curated; drifts from RACI chart  ⬡ ROOT CAUSE
 Root: role-matrix.ts → ROLE_CONSTRAINTS
 Surfaces in:
-  - role-tools.ts → ff_invoke_persona() — phase gate passes but RACI returns null
-  - raci-tools.ts → ff_get_raci_position() — position lookup disagrees with gate result
+  - role-tools.ts → lox_invoke_persona() — phase gate passes but RACI returns null
+  - raci-tools.ts → lox_get_raci_position() — position lookup disagrees with gate result
 Diagnosis: allowedPhases is hardcoded independently of RACI_CHART — the two
   sources can contradict each other silently as roles are modified.
 Fix: Derive allowedPhases at startup from RACI_CHART so any phase where the

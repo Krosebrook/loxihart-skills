@@ -78,7 +78,7 @@ Use the user-specified destination or fall back to multi-placement default.
 |---|---|
 | YouTube (subscribe) | "Subscribe to follow the work." |
 | LinkedIn (awareness) | "Follow along on LinkedIn — I post the real process." |
-| Abstrekkt / FlashFusion homepage (book) | "If this is the kind of work you're looking for, FlashFusion.co." |
+| Abstrekkt / Loxihart homepage (book) | "If this is the kind of work you're looking for, FlashFusion.co." |
 | Newsletter (subscribe) | "I publish The Prompt weekly — link in the description." |
 | Multi-placement default | "Find me at FlashFusion.co." |
 

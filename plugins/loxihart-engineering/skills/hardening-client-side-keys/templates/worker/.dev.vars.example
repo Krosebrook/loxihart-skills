@@ -10,4 +10,4 @@ GOOGLE_API_KEY=AIza-REPLACE
 # (A) Public browser tools -> Cloudflare Turnstile (no reusable secret in the browser):
 TURNSTILE_SECRET=0x4AAA-REPLACE
 # (B) Server-to-server callers only -> shared bearer token (do NOT embed in client HTML):
-FF_PROXY_TOKEN=replace-with-a-64-char-random-string
+LOX_PROXY_TOKEN=replace-with-a-64-char-random-string

@@ -76,7 +76,7 @@ export default function ExamplePage() {
         items={[
           { label: 'Design System', href: '#design', isActive: true },
           { label: 'Components', href: '#components' },
-          { label: 'FlashFusion', href: '#ff' },
+          { label: 'Loxihart', href: '#loxihart' },
         ]}
       />
 
@@ -190,7 +190,7 @@ export default function ExamplePage() {
           <Table
             columns={COLUMNS}
             data={SAMPLE_DATA}
-            caption="Current FlashFusion client engagements"
+            caption="Current Loxihart client engagements"
           />
         </section>
 

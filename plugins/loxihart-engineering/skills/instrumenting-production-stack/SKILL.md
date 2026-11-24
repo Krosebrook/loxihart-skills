@@ -392,7 +392,7 @@ Build one Datadog dashboard with four sections: (1) Vercel error rate and P95 la
 
 **CLAIMS**
 - [GENERATED] A per-call cost tracking wrapper on the Anthropic API client provides more granular per-feature attribution than Anthropic's billing dashboard, which aggregates at the API key level only.
-- [GENERATED] PostHog combined with Supabase's built-in dashboard provides adequate production observability for early-stage FlashFusion deployments without requiring Datadog.
+- [GENERATED] PostHog combined with Supabase's built-in dashboard provides adequate production observability for early-stage Loxihart deployments without requiring Datadog.
 
 **COUNTEREXAMPLE**
 - PostHog's alerting for infrastructure-layer metrics (Postgres connection count, Worker latency) is less capable than Datadog. If you need sub-minute P95 latency alerts on every Supabase query, Datadog + Postgres integration is the better choice and is worth the cost at meaningful scale.

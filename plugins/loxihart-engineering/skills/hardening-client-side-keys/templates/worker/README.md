@@ -1,6 +1,6 @@
-# ff-llm-proxy
+# lox-llm-proxy
 
-A fail-closed Cloudflare Worker that proxies LLM calls (Anthropic, OpenAI, Google) so **browser tools never hold provider API keys**. Built to harden `flashfusion_3d.html` and `prompt-engineering-guide-v4.html`, which previously called provider APIs directly from the browser.
+A fail-closed Cloudflare Worker that proxies LLM calls (Anthropic, OpenAI, Google) so **browser tools never hold provider API keys**. Built to harden `loxihart_3d.html` and `prompt-engineering-guide-v4.html`, which previously called provider APIs directly from the browser.
 
 ## Why this exists
 
@@ -25,7 +25,7 @@ An open proxy holding your keys is *worse* than BYOK — it's an uncapped wallet
 | **Daily spend cap** | Global `DAILY_CAP` requests/day → 429. |
 | **Timeout** | Upstream calls abort at 30s → 502. |
 
-**Do not ship `FF_PROXY_TOKEN` in client HTML** — a static token on a public page is extractable. For public browser tools use **Turnstile** (the browser proves "a human on my origin" without a reusable secret). Use the bearer token only for server-to-server callers. For a private toolset, put Cloudflare Access in front of the Worker instead.
+**Do not ship `LOX_PROXY_TOKEN` in client HTML** — a static token on a public page is extractable. For public browser tools use **Turnstile** (the browser proves "a human on my origin" without a reusable secret). Use the bearer token only for server-to-server callers. For a private toolset, put Cloudflare Access in front of the Worker instead.
 
 ## Setup
 
@@ -42,13 +42,21 @@ npx wrangler secret put OPENAI_API_KEY        # optional
 npx wrangler secret put GOOGLE_API_KEY        # optional
 npx wrangler secret put TURNSTILE_SECRET      # browser mode (recommended)
 # OR, for server-to-server only:
-npx wrangler secret put FF_PROXY_TOKEN
+npx wrangler secret put LOX_PROXY_TOKEN
 
 # Edit wrangler.toml [vars]: ALLOWED_ORIGINS, caps.
 npm test           # unit tests
 npm run typecheck  # strict TS, includes the Worker
 npm run deploy
 ```
+
+**Upgrading a Worker deployed from the older template:** the bearer secret is now `LOX_PROXY_TOKEN` (it was `FF_PROXY_TOKEN`) and the Worker name is now `lox-llm-proxy` (it was `ff-llm-proxy`). Do these steps in order, before the new code takes traffic. Skip them and every bearer call fails: with no `LOX_PROXY_TOKEN` set (and no Turnstile secret) the Worker answers 503 "proxy auth not configured", and with a different value it answers 401.
+
+1. Pick the Worker. To update the existing Worker and keep its URL, set `name` in `wrangler.toml` to that Worker's deployed name first (`ff-llm-proxy` only if that is what it is deployed as), because `wrangler secret put` writes to whichever Worker that name points at. To move to a new `lox-llm-proxy` Worker instead, leave the new name and plan to re-run every `wrangler secret put` for it.
+2. Keep the existing Worker's settings. Copy its `[[kv_namespaces]]` id, `ALLOWED_ORIGINS` and cap values (`MAX_TOKENS_CAP`, `MAX_BODY_BYTES`, `RATE_PER_MIN`, `DAILY_CAP`) into `wrangler.toml`, and skip the Setup section's `wrangler kv:namespace create` step. Otherwise every POST gets 403 from the origin lock and the rate and spend counters start over. The origin lock runs before auth, so bearer callers get 403 too: they must send an `Origin` header that is in `ALLOWED_ORIGINS`.
+3. Run `npx wrangler secret put LOX_PROXY_TOKEN` with the same token value your server-to-server callers already send.
+4. Rename `FF_PROXY_TOKEN` to `LOX_PROXY_TOKEN` in any existing local `.dev.vars` file, or `wrangler dev` fails bearer calls the same way locally.
+5. Deploy. If you created a new Worker, repoint each caller's `PROXY_BASE` to it before retiring the old one.
 
 ## API
 

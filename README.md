@@ -43,7 +43,7 @@ Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus ve
 - enforcing-output-formats
 - evaluating-ai-agents
 - facilitating-ai-workshops
-- ff-agent-stack-v199
+- loxihart-agent-stack-v199
 - generating-audience-tier-reports
 - instrumenting-agent-telemetry
 - loxihart-ai-enablement-pm
@@ -65,9 +65,9 @@ Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus ve
 - generating-social-posts
 - launching-digital-products
 - managing-community-presence
-- managing-ff-contracts
-- managing-ff-finances
-- managing-ff-pipeline
+- managing-loxihart-contracts
+- managing-loxihart-finances
+- managing-loxihart-pipeline
 - operating-flashfusion-marketing-crew
 - operating-shopify-store
 - producing-video-content

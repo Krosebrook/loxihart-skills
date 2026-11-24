@@ -6,7 +6,7 @@ unset, ask (AskUserQuestion) or ask directly — never hardcode these in SKILL.m
 ```yaml
 # Which brand this series is. Loads the matching block in
 # references/brand-template-contract.md.
-active_brand: load-bearing        # load-bearing | flashfusion
+active_brand: load-bearing        # load-bearing | loxihart
 
 # The ONE shipped essay every subagent copies the template from.
 # Must be an existing, correct, shipped page for the active brand.
@@ -30,5 +30,5 @@ canonical_accent: "#c9a96e"       # or "#C8A86A" once reconciled
 filename_pattern: "lb-essay-{NN}-{slug}.html"
 ```
 
-If `active_brand: flashfusion`, confirm the FlashFusion display/body fonts and
+If `active_brand: loxihart`, confirm the Loxihart display/body fonts and
 masthead/badge before running — they are UNCONFIRMED in the template contract.

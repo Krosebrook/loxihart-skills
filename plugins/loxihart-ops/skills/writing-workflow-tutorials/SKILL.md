@@ -1,11 +1,11 @@
 ---
 name: writing-workflow-tutorials
 description: >
-  Writes step-by-step workflow tutorials for FlashFusion: automation walkthroughs,
+  Writes step-by-step workflow tutorials for Loxihart: automation walkthroughs,
   AI tool setup guides, and reproducible workflows for newsletter creators.
   Covers tutorial structure, tool-specific patterns, and complexity calibration.
   Use when writing a workflow tutorial, creating a how-to guide, building
-  a step-by-step walkthrough for FlashFusion readers, or producing the Workflow
+  a step-by-step walkthrough for Loxihart readers, or producing the Workflow
   of the Week section.
 when_to_use: >
   Also triggers on: write a tutorial, how-to guide, workflow walkthrough,
@@ -18,9 +18,9 @@ version: "2.0.0"
 allowed-tools: Read Write
 ---
 
-# Writing Workflow Tutorials — FlashFusion How-To System
+# Writing Workflow Tutorials — Loxihart How-To System
 
-Tutorials that readers can complete in the same session they read them. This skill governs structure, complexity calibration, and quality standards for all FlashFusion workflow tutorials.
+Tutorials that readers can complete in the same session they read them. This skill governs structure, complexity calibration, and quality standards for all Loxihart workflow tutorials.
 
 ---
 
@@ -181,6 +181,6 @@ These gates run on every tutorial before delivery. No file reads required. If `r
 
 - **`scripts/` is empty.** This skill produces tutorial text, not code artifacts. No automation scripts exist. A future script could validate step counts and word counts against the Quick-Start Decision Tree targets.
 - **`assets/` is empty.** Intended for screenshot templates and reference images. Any tutorial referencing actual tool screenshots should archive them here for version tracking (UI changes between tool versions).
-- **No FlashFusion voice/tone gate.** The delivery checklist enforces structure but not prose voice. If a FlashFusion brand voice guide exists, a Gate 6 against it would close this gap.
+- **No Loxihart voice/tone gate.** The delivery checklist enforces structure but not prose voice. If a Loxihart brand voice guide exists, a Gate 6 against it would close this gap.
 - **Word count not machine-checked.** Decision tree defines target lengths (≤400 / 600–900 words) but no checklist FAIL condition catches over/under word count, because the skill delivers inline text with no post-tool hook. A `hooks: post-tool-use` entry would make this hard-enforceable.
 - **No staleness trigger.** Tutorials referencing specific tool UIs (n8n, Zapier, Make) go stale when those tools update. No mechanism flags a tutorial for re-testing after N months.

@@ -87,7 +87,7 @@ Time to implement: 20 minutes
 ```
 (No testing note, no tested-on date, no "INITIAL WALKTHROUGH" label)
 
-**Why it fails:** Reader trusts the tutorial because it looks polished. They follow it. It breaks on step 6 because HeyGen's API changed last month. They never try a FlashFusion tutorial again.
+**Why it fails:** Reader trusts the tutorial because it looks polished. They follow it. It breaks on step 6 because HeyGen's API changed last month. They never try a Loxihart tutorial again.
 
 **Fix:** Every tutorial carries one of two lines:
 - `Tested on [date], [tool version].`

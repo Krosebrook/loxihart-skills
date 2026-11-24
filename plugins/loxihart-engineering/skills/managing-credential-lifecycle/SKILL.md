@@ -64,7 +64,7 @@ Run this audit quarterly. Update the table in Notion after each pass.
 ### Anthropic API Key
 
 1. platform.anthropic.com → API Keys → Create new key
-2. Name it: `flashfusion-prod-YYYY-MM` (date-stamped)
+2. Name it: `loxihart-prod-YYYY-MM` (date-stamped)
 3. Update in Vercel: project → Settings → Environment Variables
 4. Update in n8n: Credentials → find Anthropic credential → update key
 5. Deploy a test call to confirm the new key works

@@ -10,7 +10,7 @@ The single decision that determines whether the hardened design is real or theat
 |---|---|---|---|
 | **Public browser tool** — anyone on the internet can open it | **Cloudflare Turnstile** (challenge token per call) + origin lock + caps | The browser proves "a human on my origin" without carrying a reusable secret. The token is single-use and verified server-side. | Do not ship a bearer token — it is extractable from the page and becomes a free key for anyone. |
 | **Private tool** — you, or a known set of people | **Cloudflare Access** (Zero Trust) in front of the Worker | Real identity (Google/GitHub/OTP login) → session cookie, not a static secret. Strongest option when you can enumerate users. | Do not rely on "nobody knows the URL" — obscurity is not a gate. |
-| **Server-to-server** — another backend calls it, no browser | **Bearer token** (`FF_PROXY_TOKEN`), constant-time compared | The secret lives only on servers you control; never rendered to a client. | Never put this token in client HTML/JS, even "temporarily". |
+| **Server-to-server** — another backend calls it, no browser | **Bearer token** (`LOX_PROXY_TOKEN`), constant-time compared | The secret lives only on servers you control; never rendered to a client. | Never put this token in client HTML/JS, even "temporarily". |
 
 ## The who-pays flag (say it out loud every time)
 

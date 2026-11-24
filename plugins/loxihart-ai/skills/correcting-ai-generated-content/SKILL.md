@@ -20,7 +20,7 @@ version: "1.0.0"
 
 Three-phase workflow: **Audit → Search → Rebuild.**
 
-For voice rebuild targets (lb-essay, FlashFusion B2B) and detailed search
+For voice rebuild targets (lb-essay, Loxihart B2B) and detailed search
 protocol, see `references/`.
 
 ---
@@ -70,7 +70,7 @@ See `references/search-protocol.md` for priority ordering and source rules.
 
 Reconstruct in the target surface format with sourced claims replacing assertions.
 
-Surface options: `lb-essay` · `ff-b2b` · `plain-markdown`
+Surface options: `lb-essay` · `lox-b2b` · `plain-markdown`
 
 See `references/rebuild-targets.md` for voice rules, CSS tokens, and
 structure per surface.

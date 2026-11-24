@@ -1,7 +1,7 @@
 ---
 name: use-case-discovery
 description: >
-  Runs FlashFusion AI use-case discovery workshops with enterprise clients to
+  Runs Loxihart AI use-case discovery workshops with enterprise clients to
   produce a ranked, scored backlog of automation and AI opportunities. Use when
   facilitating a discovery call, running an AI ideation or strategy workshop,
   assessing a department for automation candidates, scoring a list of use cases,
@@ -14,13 +14,13 @@ allowed-tools: Read, Write
 license: MIT
 metadata:
   version: "2.0.0"
-  track: flashfusion
+  track: loxihart
   type: procedure
 ---
 
 # Use Case Discovery
 
-FlashFusion consultant-led workshop that turns a client's pain points into a
+Loxihart consultant-led workshop that turns a client's pain points into a
 ranked backlog of 10–15 AI/automation use cases — each scored for feasibility,
 estimated for impact, and prioritized by WSJF. You run this as the facilitator:
 collect, score, estimate, rank, hand back a defensible backlog.
@@ -143,7 +143,7 @@ Before returning the backlog:
 ## CLAIMS
 
 - WSJF (Cost of Delay ÷ Job Size, Fibonacci) is an established SAFe prioritization method. [SOURCED — Scaled Agile Framework]
-- The 1–5 three-axis feasibility rubric (data / complexity / readiness) is a FlashFusion convention defined in this skill. [GENERATED]
+- The 1–5 three-axis feasibility rubric (data / complexity / readiness) is a Loxihart convention defined in this skill. [GENERATED]
 - Deriving Job Size from the feasibility composite (`6 − round(composite)`) is a convenience mapping defined here, not an external standard. [GENERATED]
 
 ## COUNTEREXAMPLE

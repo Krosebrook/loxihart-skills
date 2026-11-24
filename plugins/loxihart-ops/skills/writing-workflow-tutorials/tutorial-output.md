@@ -1,6 +1,6 @@
 # Tutorial Output Template
 
-Fill-in-the-blank format for FlashFusion workflow tutorials. Supplement to the inline template in SKILL.md.
+Fill-in-the-blank format for Loxihart workflow tutorials. Supplement to the inline template in SKILL.md.
 
 ---
 

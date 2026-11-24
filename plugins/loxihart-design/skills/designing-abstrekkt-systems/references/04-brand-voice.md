@@ -157,13 +157,13 @@ const errorMessages = {
 
 ---
 
-## Abstrekkt/FlashFusion Specific Copy
+## Abstrekkt/Loxihart Specific Copy
 
 ### Service Descriptions
 ```
-FlashFusion: "B2B AI enablement. One domain expert trained per engagement."
+Loxihart: "B2B AI enablement. One domain expert trained per engagement."
 Load-Bearing: "AI tools, tested under load. No hype, no sales pitch."
-Abstrekkt: "Holding company for FlashFusion and adjacent products."
+Abstrekkt: "Holding company for Loxihart and adjacent products."
 ```
 
 ### Engagement Process

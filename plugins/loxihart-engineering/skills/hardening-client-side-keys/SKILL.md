@@ -38,7 +38,7 @@ Who calls the proxy?
   ├─ A PRIVATE tool (you / a known set of people)
   │     → Cloudflare Access in front of the Worker (real identity gate, session cookie not a static secret)
   └─ A SERVER-TO-SERVER caller only (no browser)
-        → Bearer token (FF_PROXY_TOKEN). NEVER embed this in client HTML.
+        → Bearer token (LOX_PROXY_TOKEN). NEVER embed this in client HTML.
 ```
 
 ## Architecture — always present these three
@@ -61,6 +61,7 @@ Model the boundaries before writing code: **browser → proxy → provider**. Th
 6. **Gate the Worker** — `npm test` and `npx tsc --noEmit` both green before hand-off.
 7. **6-persona audit** (Security, Architect, QA, Performance, DevOps, A11y/UX). 0 P0 findings to ship. This is a hard gate.
 8. **Configure + deploy (operator step, held for explicit proceed):** set `PROXY_BASE` + Turnstile sitekey in the tool, `ALLOWED_ORIGINS` + KV id in `wrangler.toml`, `wrangler secret put` the provider keys + `TURNSTILE_SECRET`, then `wrangler deploy`. You (the operator) run deploy — the skill never holds cloud creds.
+   - Upgrading a Worker built from the older template: set `name` to the existing Worker's deployed name first to update in place, copy its KV namespace id, `ALLOWED_ORIGINS` and cap values into `wrangler.toml` (and skip creating a new KV namespace), then set the `LOX_PROXY_TOKEN` secret to the value callers already send (it replaced `FF_PROXY_TOKEN`) and rename the variable in local `.dev.vars`, before deploying. The ordered steps are in `templates/worker/README.md`.
 
 ## The Worker (canonical template)
 

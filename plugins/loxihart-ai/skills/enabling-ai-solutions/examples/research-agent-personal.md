@@ -1,18 +1,18 @@
-# Example Output: Personal Build — FlashFusion Research Agent
+# Example Output: Personal Build — Loxihart Research Agent
 
-**Context:** Adding a research agent to FlashFusion. It should search the web, summarize findings, and store results. No client, no compliance requirements. Existing stack: Supabase, Cloudflare, React 19/Vite, PostHog.
+**Context:** Adding a research agent to Loxihart. It should search the web, summarize findings, and store results. No client, no compliance requirements. Existing stack: Supabase, Cloudflare, React 19/Vite, PostHog.
 
 **Output type used:** Architecture Diagram (`templates/architecture-diagram.md`) + component rationale
 
 ---
 
-## FlashFusion Research Agent — Architecture Decision
+## Loxihart Research Agent — Architecture Decision
 
 ### Architecture Diagram
 
 ```mermaid
 graph TB
-    User[FlashFusion UI<br/>React 19 / Vite] -->|HTTPS| CF[Cloudflare Workers<br/>API Layer / Hono]
+    User[Loxihart UI<br/>React 19 / Vite] -->|HTTPS| CF[Cloudflare Workers<br/>API Layer / Hono]
 
     CF --> Auth[Supabase Auth<br/>existing session]
 
@@ -34,7 +34,7 @@ graph TB
 
 | Component | Choice | Rationale |
 |-----------|--------|-----------|
-| LLM | Claude Sonnet 4.6 | Best tool-call reliability for multi-step agent loops; 200K context window handles long research sessions; already default model in FlashFusion |
+| LLM | Claude Sonnet 4.6 | Best tool-call reliability for multi-step agent loops; 200K context window handles long research sessions; already default model in Loxihart |
 | Backend | Cloudflare Workers + Hono | Already in stack; sub-50ms global edge; Cloudflare AI bindings available if needed later |
 | Search | Tavily Search API | Purpose-built for LLM agents; returns clean structured results, not raw HTML; $0 for low volume |
 | Content fetch | Exa Content API | Full article extraction for Tavily results that need depth; use selectively (adds latency + cost) |
@@ -46,7 +46,7 @@ graph TB
 
 - **No routing architecture.** Single-agent, low-volume (personal tool). Overhead of a routing classifier isn't justified. Sonnet 4.6 for all agent steps.
 - **No vector DB.** Research results stored as JSON in Supabase `research_runs`. Semantic search across past runs is a Phase 2 consideration; pgvector can be added to existing Supabase instance if needed.
-- **Custom orchestrator over LangChain.** FlashFusion already has a custom LLM abstraction layer. Dropping LangChain in adds a dependency for what is essentially a 3-step loop: search → fetch → summarize. Keep it in the existing pattern.
+- **Custom orchestrator over LangChain.** Loxihart already has a custom LLM abstraction layer. Dropping LangChain in adds a dependency for what is essentially a 3-step loop: search → fetch → summarize. Keep it in the existing pattern.
 - **SSE streaming, not WebSockets.** One-way flow from agent to UI. SSE is simpler, works on Cloudflare Workers without Durable Objects.
 - **Tavily first, Exa on demand.** Tavily covers 90% of research queries. Exa triggered only when Tavily result is a summary/paywall and full content is needed. Keeps cost predictable.
 

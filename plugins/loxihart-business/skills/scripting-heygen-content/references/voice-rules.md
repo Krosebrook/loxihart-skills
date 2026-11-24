@@ -1,4 +1,4 @@
-# Voice Rules — Kyle Rosebrook / Abstrekkt / FlashFusion
+# Voice Rules — Kyle Rosebrook / Abstrekkt / Loxihart
 
 ## Non-negotiable constraints
 

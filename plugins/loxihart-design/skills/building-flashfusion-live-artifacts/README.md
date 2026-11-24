@@ -1,4 +1,4 @@
-# loxihart-artifacts
+# flashfusion-artifacts
 
 Cowork plugin for building, patching, and maintaining the FlashFusion Agent Control Center live artifact.
 
@@ -6,19 +6,19 @@ Cowork plugin for building, patching, and maintaining the FlashFusion Agent Cont
 
 ## What it does
 
-- One skill (`building-loxihart-live-artifacts`) — ~200-line navigation layer that routes to specs and references on demand
-- One canonical authority document (`sot/LOX-PLAT-CORE-SOT.md`) — Tier 2 source-of-truth for brand tokens, schemas, panel list, CDN whitelist, LOXIHART quarantine rules, artifact identity
+- One skill (`building-flashfusion-live-artifacts`) — ~200-line navigation layer that routes to specs and references on demand
+- One canonical authority document (`sot/FF-PLAT-CORE-SOT.md`) — Tier 2 source-of-truth for brand tokens, schemas, panel list, CDN whitelist, LOXIHART quarantine rules, artifact identity
 - One framework explainer (`sot/INFOGRAPHIC-CORRECTED.md`) — clean reverse-engineering of the FlashFusion-Compliant tier model with Anthropic grounding
 - Three reference files (`references/`) — phase detail, patch playbook, gotcha diagnoses
-- Three slash commands — `/lox-build`, `/lox-patch`, `/lox-smoketest`
+- Three slash commands — `/ff-build`, `/ff-patch`, `/ff-smoketest`
 
-## Tier architecture (per LOX-PLAT-CORE-SOT framework)
+## Tier architecture (per FF-PLAT-CORE-SOT framework)
 
 | Tier | File | Load behavior |
 |---|---|---|
 | 0 — Hard constraints | Your global + project CLAUDE.md | Every turn (untouched by this plugin) |
-| 1 — Skill body | `skills/building-loxihart-live-artifacts/SKILL.md` (~200 lines) | On activation via trigger phrases |
-| 2 — Authority | `sot/LOX-PLAT-CORE-SOT.md` | Selectively, by section anchor (§1–§10) |
+| 1 — Skill body | `skills/building-flashfusion-live-artifacts/SKILL.md` (~200 lines) | On activation via trigger phrases |
+| 2 — Authority | `sot/FF-PLAT-CORE-SOT.md` | Selectively, by section anchor (§1–§10) |
 | 3 — Cold storage | (out of scope for this plugin) | On explicit request |
 
 ## Lane discipline
@@ -27,29 +27,29 @@ PERSONAL lane only. Hard stop if the LOXIHART Supabase project ID (`oorstbwcydxw
 
 ## Install
 
-Drop the `loxihart-artifacts/` folder into your Cowork plugins directory, or zip and install via Cowork plugin management.
+Drop the `flashfusion-artifacts/` folder into your Cowork plugins directory, or zip and install via Cowork plugin management.
 
 ## Structure
 
 ```
-loxihart-artifacts/
+flashfusion-artifacts/
 ├── .claude-plugin/
 │   └── plugin.json
 ├── README.md                                  # You are here
 ├── sot/                                       # Tier 2 — Authority
-│   ├── LOX-PLAT-CORE-SOT.md                   # Canonical specs (§1–§10)
+│   ├── FF-PLAT-CORE-SOT.md                   # Canonical specs (§1–§10)
 │   └── INFOGRAPHIC-CORRECTED.md              # Framework explainer
 ├── skills/
-│   └── building-loxihart-live-artifacts/
+│   └── building-flashfusion-live-artifacts/
 │       ├── SKILL.md                          # Navigation layer (~200 lines)
 │       └── references/                       # Loaded on demand
 │           ├── phases.md                     # Phase 1–7 build detail
 │           ├── patch-playbook.md             # 5-step surgical patch flow
 │           └── gotchas.md                    # 10 gotchas with diagnosis + fix
 └── commands/
-    ├── lox-build.md
-    ├── lox-patch.md
-    └── lox-smoketest.md
+    ├── ff-build.md
+    ├── ff-patch.md
+    └── ff-smoketest.md
 ```
 
 ## Required MCP tools (per SOT §10)
@@ -68,5 +68,5 @@ All file sizes verified against Anthropic Skills authoring best practices:
 
 ## Version History
 
-- **1.1.0** (2026-05-16) — Added `sot/` tier with LOX-PLAT-CORE-SOT canonical authority. Refactored SKILL.md to navigation layer (365 → ~200 lines). Reverse-engineered and corrected the FlashFusion-Compliant infographic framework.
+- **1.1.0** (2026-05-16) — Added `sot/` tier with FF-PLAT-CORE-SOT canonical authority. Refactored SKILL.md to navigation layer (365 → ~200 lines). Reverse-engineered and corrected the FlashFusion-Compliant infographic framework.
 - **1.0.0** (2026-05-15) — Initial release. All content inline in SKILL.md.

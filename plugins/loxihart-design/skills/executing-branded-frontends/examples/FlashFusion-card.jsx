@@ -1,7 +1,7 @@
 /**
- * Loxihart — Feature Card Component
+ * FlashFusion — Feature Card Component
  * 
- * Profile:        Loxihart
+ * Profile:        FlashFusion
  * Component:      Feature highlight card for product/marketing pages
  * Differentiator: Gradient accent border that animates on hover;
  *                 icon uses cyan accent instead of purple to create
@@ -265,7 +265,7 @@ function FeatureCard({ icon, badge, title, description, ctaLabel = "Learn more",
   );
 }
 
-export default function LoxihartCards() {
+export default function FlashFusionCards() {
   const features = [
     {
       icon: "⚡",

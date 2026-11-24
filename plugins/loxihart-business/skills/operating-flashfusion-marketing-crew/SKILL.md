@@ -1,5 +1,5 @@
 ---
-name: operating-loxihart-marketing-crew
+name: operating-flashfusion-marketing-crew
 description: Runs a six-role AI marketing crew (Copywriter, Creative Director, Web Designer, Email Marketer, Marketing Ops, Performance Marketer) for FlashFusion campaigns, mapped onto FlashFusion's actual connected tools (Canva, HubSpot, Zapier, Vercel, Google Ads via Zapier, PostHog) instead of a generic stack. Use whenever the user wants to launch a FlashFusion campaign, build a landing page plus nurture plus ad funnel end to end, or says anything like "run the marketing crew," "launch a FlashFusion funnel," "build me a campaign," "spin up a lead magnet," or references rebuilding an "AI marketing team" pattern for personal use — even if they don't name the roles or tools explicitly. PERSONAL/FlashFusion lane only — do not use for Loxihart or freelance-client campaigns, where this tool mapping does not apply.
 compatibility: Requires Canva, HubSpot, Zapier, Vercel, and PostHog MCP connectors (or Cowork connectors) to be live. The Copywriter role works with zero tools.
 metadata:
@@ -16,7 +16,7 @@ metadata:
   chains:
     - packaging-skills
     - administering-supabase
-    - building-loxihart-live-artifacts
+    - building-flashfusion-live-artifacts
 ---
 
 # Operating the FlashFusion Marketing Crew

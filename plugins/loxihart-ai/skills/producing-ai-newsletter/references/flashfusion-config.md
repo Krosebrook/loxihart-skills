@@ -1,7 +1,7 @@
-# Loxihart Newsletter Configuration
+# FlashFusion Newsletter Configuration
 
 ## Identity
-- **Name:** Loxihart
+- **Name:** FlashFusion
 - **Tagline:** AI tools, workflows, and creator-tech — weekly
 - **Aesthetic:** Dark-mode primary, neon-glass accents
 - **Primary color:** #A855F7 (purple glow)
@@ -17,7 +17,7 @@
 ### Header Block
 ```
 # [Issue Title]
-*Loxihart · Issue [N] · [Date]*
+*FlashFusion · Issue [N] · [Date]*
 ```
 
 ### Section Markers
@@ -90,7 +90,7 @@ Honest about what's working and what isn't. Builds ongoing narrative across issu
 
 ## Depth Layering
 
-Loxihart is single-tier but depth-layered within each section:
+FlashFusion is single-tier but depth-layered within each section:
 
 - **Surface layer** (first sentence of each section): accessible to anyone
 - **Technical layer** (body paragraphs): assumes comfort with AI tools, CLI, APIs

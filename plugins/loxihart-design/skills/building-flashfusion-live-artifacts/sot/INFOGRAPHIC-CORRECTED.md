@@ -17,7 +17,7 @@ The original infographic's right column was unclear (OCR + ambiguous "ideal" fra
 
 | Layer | Current Tool | Tool's Role | Anthropic-Aligned Use |
 |---|---|---|---|
-| **Authority** | LOX-PLAT-CORE-SOT (`sot/LOX-PLAT-CORE-SOT.md`) | Canonical logic, schemas, contracts | Tier 2 reference document; queried selectively |
+| **Authority** | FF-PLAT-CORE-SOT (`sot/FF-PLAT-CORE-SOT.md`) | Canonical logic, schemas, contracts | Tier 2 reference document; queried selectively |
 | **Hard Constraints** | CLAUDE.md (global + project) | Injected on every turn | Rules and forbidden actions only; ≤200 lines |
 | **Execution** | Skills (`skills/*/SKILL.md`) | Workflow + decision logic | Loaded on activation; body <500 lines; references on demand |
 | **Adaptation** | Claude Memory | Cross-session continuity | User preferences, project state, feedback — NOT canonical logic |
@@ -43,7 +43,7 @@ The 4-tier model is sound. Restated with explicit cost and Anthropic-grounded ra
 - **NOT contents:** Other features' workflows, unrelated skills' bodies
 
 ### Tier 2 — Authority
-- **What:** `sot/LOX-PLAT-CORE-SOT.md` and similar canonical documents
+- **What:** `sot/FF-PLAT-CORE-SOT.md` and similar canonical documents
 - **Cost:** Loaded selectively — read specific sections (`§1`, `§6`) rather than the whole file
 - **Contents:** Brand tokens, schemas, panel definitions, CDN whitelists, hard rules
 - **Access pattern:** RAG-style — query by section anchor, never inject fully
@@ -59,7 +59,7 @@ The 4-tier model is sound. Restated with explicit cost and Anthropic-grounded ra
 
 ## Sections 6 & 7 — Implementation Strategy (Deduped, Contradiction Resolved)
 
-The original Section 6 and Section 7 appeared to be two takes on the same rules with Section 7 partially garbled by OCR. The literal text of Section 7 ("✓ Inject entire LOX-PLAT-CORE-SOT") **contradicts** Section 4's Tier 2 rule ("NOT injected fully, Queried selectively"). Logical reconstruction:
+The original Section 6 and Section 7 appeared to be two takes on the same rules with Section 7 partially garbled by OCR. The literal text of Section 7 ("✓ Inject entire FF-PLAT-CORE-SOT") **contradicts** Section 4's Tier 2 rule ("NOT injected fully, Queried selectively"). Logical reconstruction:
 
 ### CLAUDE.md (Hard Constraint Layer) — Final Rules
 
@@ -75,19 +75,19 @@ The original Section 6 and Section 7 appeared to be two takes on the same rules 
 - ✗ Explanations of why a rule exists (move to skill or SOT)
 - ✗ Long examples (move to skill references)
 - ✗ Philosophy or tone guidance (move to skill descriptions)
-- ✗ The entire LOX-PLAT-CORE-SOT (corrupts the Tier 2 retrieval pattern)
+- ✗ The entire FF-PLAT-CORE-SOT (corrupts the Tier 2 retrieval pattern)
 
 **STRATEGY:**
-- ✓ Store authority CHUNKS in SOT (`sot/LOX-PLAT-CORE-SOT.md` sections `§1` through `§10`)
+- ✓ Store authority CHUNKS in SOT (`sot/FF-PLAT-CORE-SOT.md` sections `§1` through `§10`)
 - ✓ Use RAG-style retrieval inside your own system — point skills at specific section anchors
 - ✓ Treat CLAUDE.md as a permanent context tax; pay only for what must run every turn
 
 ### The Resolved Contradiction
 
-| Source | Says about LOX-PLAT-CORE-SOT |
+| Source | Says about FF-PLAT-CORE-SOT |
 |---|---|
 | Section 4, Tier 2 | "NOT injected fully, Queried selectively (RAG-style)" |
-| Section 7 (literal OCR) | "✓ Inject entire LOX-PLAT-CORE-SOT" |
+| Section 7 (literal OCR) | "✓ Inject entire FF-PLAT-CORE-SOT" |
 | **Resolved** | **DO NOT inject. Query selectively.** Section 7's literal text is an OCR/rendering corruption; Section 4 is correct. |
 
 ---
@@ -111,7 +111,7 @@ The original Section 6 and Section 7 appeared to be two takes on the same rules 
 |---|---|
 | Tier 0 CLAUDE.md ≤ 200 lines | Plugin does not modify CLAUDE.md |
 | Tier 1 Skill body ≤ 500 lines | `SKILL.md` v1.1.0 is ~200 lines (navigation layer) |
-| Tier 2 SOT queried selectively | `sot/LOX-PLAT-CORE-SOT.md` with 10 indexed sections (`§1`–`§10`) |
+| Tier 2 SOT queried selectively | `sot/FF-PLAT-CORE-SOT.md` with 10 indexed sections (`§1`–`§10`) |
 | References load on demand | `references/phases.md`, `references/patch-playbook.md`, `references/gotchas.md` — each <500 lines |
 | LOXIHART quarantine enforced | SOT §8 + skill self-verification checklist + grep step before registration |
 | RAG-style retrieval | SKILL.md instructs agent to `Read` SOT by section anchor, not the whole file |
@@ -123,7 +123,7 @@ The original Section 6 and Section 7 appeared to be two takes on the same rules 
 1. **OCR noise:** "Perssittent," "Mutiple," "Ascess to relevantise," "Inteoad," "executiont," "explanseit 'ons'" — clearly auto-generated/OCR'd image; substance survived, typos accumulated
 2. **Section 7 garbled:** literal text reverses Section 4's clear rule. Treat as OCR error
 3. **"Ideal" column unexplained:** Section 1's right column didn't make clear whether it was current state, ideal state, or anti-pattern. Reconstructed above as "Anthropic-aligned use"
-4. **LOX-PLAT-CORE-SOT undefined:** Referenced as a tier but never specified. This SOT document now defines it
+4. **FF-PLAT-CORE-SOT undefined:** Referenced as a tier but never specified. This SOT document now defines it
 5. **Tone × formatting symbol:** Section 4's "Tone× formatting" — unclear if it means "tone AND formatting" or "tone TIMES formatting." Read as "tone + formatting conflicts produce inconsistent execution patterns"
 
 ---
@@ -133,7 +133,7 @@ The original Section 6 and Section 7 appeared to be two takes on the same rules 
 - [SOURCED] Anthropic's 500-line rule for SKILL.md body: [Skill authoring best practices](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices)
 - [SOURCED] CLAUDE.md ≤ 200 lines guidance: confirmed across multiple ecosystem sources
 - [SOURCED] Progressive disclosure 3-layer model: documented Anthropic pattern
-- [GENERATED] LOX-PLAT-CORE-SOT structure (10 sections, anchor-based retrieval): reverse-engineered from infographic + Anthropic patterns; no prior canonical version existed
+- [GENERATED] FF-PLAT-CORE-SOT structure (10 sections, anchor-based retrieval): reverse-engineered from infographic + Anthropic patterns; no prior canonical version existed
 - [GENERATED] Resolution of Section 7 contradiction: logical inference that the literal OCR text is corrupted; Section 4 is the intended rule
 - [GENERATED] Section 1 right-column interpretation: best fit to documented Anthropic patterns
 - !CONTRADICTION (resolved): Section 4 Tier 2 vs Section 7 — resolved by trusting Section 4

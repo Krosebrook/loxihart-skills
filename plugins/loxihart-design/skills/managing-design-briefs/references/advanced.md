@@ -39,7 +39,7 @@ Hex tokens in the profile files are the locked SOT. OKLCH is an upgrade path for
 **Do NOT replace locked hex tokens in profile files with OKLCH.**
 OKLCH is for new work and gradient generation only.
 
-### Loxihart v3 OKLCH Reference (computed, not approximated)
+### FlashFusion v3 OKLCH Reference (computed, not approximated)
 
 ```css
 /* Accents */

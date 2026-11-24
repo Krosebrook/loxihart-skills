@@ -1,20 +1,20 @@
 ---
-description: Surgical patch (1–3 panels) to the Loxihart artifact using the Patch Playbook
+description: Surgical patch (1–3 panels) to the FlashFusion artifact using the Patch Playbook
 ---
 
-# /lox-patch — Surgical Loxihart Artifact Patch
+# /ff-patch — Surgical FlashFusion Artifact Patch
 
-Apply a targeted change to 1–3 panels of the Loxihart Agent Control Center without rebuilding.
+Apply a targeted change to 1–3 panels of the FlashFusion Agent Control Center without rebuilding.
 
 **Use this for:** schema changes, single panel additions, brand token tweaks, SQL bugfixes, Demo slice refreshes.
 
-**Do NOT use for:** layout overhauls, more than 6 affected panels, new CDN libraries, brand redesigns. Run `/lox-build` instead.
+**Do NOT use for:** layout overhauls, more than 6 affected panels, new CDN libraries, brand redesigns. Run `/ff-build` instead.
 
 ## The 5-Step Patch Flow
 
 1. **Identify Affected Panels**
    - List exact panel names from the Required Panels table
-   - If list > 3 entries OR > 6, abandon patch and run `/lox-build`
+   - If list > 3 entries OR > 6, abandon patch and run `/ff-build`
    - Map cross-panel dependencies (shared utility functions, shared Demo data)
 
 2. **Update SQL Query**
@@ -51,6 +51,6 @@ Apply a targeted change to 1–3 panels of the Loxihart Agent Control Center wit
 ## Reference
 
 Full Patch Playbook with templates by change type:
-`skills/building-loxihart-live-artifacts/references/patch-playbook.md`
+`skills/building-flashfusion-live-artifacts/references/patch-playbook.md`
 
 $ARGUMENTS

@@ -1,4 +1,4 @@
-# LOX-PLAT-CORE-SOT — FlashFusion Platform Core Source of Truth
+# FF-PLAT-CORE-SOT — FlashFusion Platform Core Source of Truth
 
 **Version:** 1.0.0
 **Lane:** PERSONAL only
@@ -309,6 +309,6 @@ Even if you just called one in the same conversation, the other is loaded separa
 
 ## Provenance
 
-- Original content extracted from `building-loxihart-live-artifacts` SKILL.md v1.0.0 (2026-05-15)
+- Original content extracted from `building-flashfusion-live-artifacts` SKILL.md v1.0.0 (2026-05-15)
 - Restructured into Tier 2 authority document per FlashFusion-compliant tier model
 - All claims labeled [SOURCED] in the parent skill remain sourced; [GENERATED] claims (e.g. per-panel fallback rationale) are noted in the skill, not duplicated here

@@ -50,6 +50,8 @@ npm run typecheck  # strict TS, includes the Worker
 npm run deploy
 ```
 
+**Upgrading a Worker deployed from the older template:** the bearer secret is now `LOX_PROXY_TOKEN` (it was `FF_PROXY_TOKEN`) and the Worker name is now `lox-llm-proxy` (it was `ff-llm-proxy`). Before the new code takes traffic, run `npx wrangler secret put LOX_PROXY_TOKEN` with the same token value your server-to-server callers already send, or every bearer call returns 401. Then either keep `name = "ff-llm-proxy"` in `wrangler.toml` so the deploy updates the existing Worker and its URL, or deploy `lox-llm-proxy` as a new Worker, re-run every `wrangler secret put` for it, and repoint each caller's `PROXY_BASE` before retiring the old one.
+
 ## API
 
 `POST /v1/anthropic` · `POST /v1/openai` · `POST /v1/google`

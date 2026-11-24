@@ -1,5 +1,5 @@
 ---
-name: building-loxihart-live-artifacts
+name: building-flashfusion-live-artifacts
 metadata:
   version: "1.3.2"
 description: >
@@ -16,7 +16,7 @@ description: >
 
 # Building FlashFusion Live Artifacts
 
-Navigation layer for the full FlashFusion Agent Control Center workflow. Canonical specs live in `sot/LOX-PLAT-CORE-SOT.md`. Phase detail, patch playbook, and gotchas live in `references/`.
+Navigation layer for the full FlashFusion Agent Control Center workflow. Canonical specs live in `sot/FF-PLAT-CORE-SOT.md`. Phase detail, patch playbook, and gotchas live in `references/`.
 
 ## TL;DR
 
@@ -26,7 +26,7 @@ Sandbox enforces strict CDN whitelist (Chart.js 4.5.0, Grid.js, Mermaid), blocks
 
 ## Source of Truth — READ THESE BEFORE WRITING ANY CODE
 
-All canonical FlashFusion specs live in `sot/LOX-PLAT-CORE-SOT.md`. **Query by section anchor — never load the entire SOT.**
+All canonical FlashFusion specs live in `sot/FF-PLAT-CORE-SOT.md`. **Query by section anchor — never load the entire SOT.**
 
 Required SOT reads, by task type:
 
@@ -171,7 +171,7 @@ Run after every build or patch. All 10 must pass before the artifact is producti
 
 ## Version History
 
-- **1.1.0** (2026-05-16) — Refactored to navigation layer. Canonical specs moved to `sot/LOX-PLAT-CORE-SOT.md`. Body reduced from ~365 to ~200 lines per Anthropic progressive disclosure pattern.
+- **1.1.0** (2026-05-16) — Refactored to navigation layer. Canonical specs moved to `sot/FF-PLAT-CORE-SOT.md`. Body reduced from ~365 to ~200 lines per Anthropic progressive disclosure pattern.
 - **1.0.0** (2026-05-15) — Initial release. All content inline.
 
 ## FAIL Conditions

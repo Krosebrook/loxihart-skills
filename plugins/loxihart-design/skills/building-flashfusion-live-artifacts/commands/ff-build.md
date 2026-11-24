@@ -2,7 +2,7 @@
 description: Build the FlashFusion Agent Control Center artifact from scratch (Phase 1–7 full build)
 ---
 
-# /lox-build — Full FlashFusion Artifact Build
+# /ff-build — Full FlashFusion Artifact Build
 
 Run the full Phase 1–7 build of the FlashFusion Agent Control Center as a Cowork live artifact.
 
@@ -49,7 +49,7 @@ Read SKILL.md → Self-Verification Checklist. All boxes must be checkable.
 
 ## Reference Files
 
-- Full phase detail: `skills/building-loxihart-live-artifacts/references/phases.md`
-- All 10 gotchas with diagnosis + fix: `skills/building-loxihart-live-artifacts/references/gotchas.md`
+- Full phase detail: `skills/building-flashfusion-live-artifacts/references/phases.md`
+- All 10 gotchas with diagnosis + fix: `skills/building-flashfusion-live-artifacts/references/gotchas.md`
 
 $ARGUMENTS

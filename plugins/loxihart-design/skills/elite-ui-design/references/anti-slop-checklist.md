@@ -219,8 +219,8 @@ Use when: (a) the build spans >3 screens, (b) multiple sessions are involved, or
 Before running visual tests, check the code directly against design.md rules:
 
 - [ ] No banned fonts in CSS (scan for `font-family: Inter`, `font-family: Geist` in
-  non-Loxihart builds, `font-family: Poppins` in Loxihart builds outside logo context)
-- [ ] No banned hex values (scan for deprecated Loxihart tokens: `#0F0618`, `#1A0B2E`, `#F472B6`)
+  non-FF builds, `font-family: Poppins` in FF builds outside logo context)
+- [ ] No banned hex values (scan for deprecated FF tokens: `#0F0618`, `#1A0B2E`, `#F472B6`)
 - [ ] No `border-radius` inconsistencies (component-level overrides without justification)
 - [ ] Spacing values are multiples of 4px (8-point grid) — no arbitrary px values
 - [ ] Color contrast ratios ≥ 4.5:1 body / ≥ 3:1 large text — verify programmatically, not by eye
@@ -267,7 +267,7 @@ pass existing flawed code. Tests are the pins — implementation must conform to
 ```typescript
 import { test, expect } from '@playwright/test';
 
-test('primary button uses correct Loxihart violet token', async ({ page }) => {
+test('primary button uses correct FF violet token', async ({ page }) => {
   await page.goto('/');
   const btn = page.locator('[data-testid="primary-cta"]');
   const bg = await btn.evaluate(el =>

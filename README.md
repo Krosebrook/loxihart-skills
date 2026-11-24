@@ -68,7 +68,7 @@ Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus ve
 - managing-loxihart-contracts
 - managing-loxihart-finances
 - managing-loxihart-pipeline
-- operating-loxihart-marketing-crew
+- operating-flashfusion-marketing-crew
 - operating-shopify-store
 - producing-video-content
 - publishing-optimized-content
@@ -81,7 +81,7 @@ Claude Code marketplace of Loxihart skills, grouped by domain: 5 plugins plus ve
 - auditing-cross-app-experiences
 - advanced-visual-design
 - applying-web-design-standards
-- building-loxihart-live-artifacts
+- building-flashfusion-live-artifacts
 - building-parallax-scroll-effects
 - compiling-brand-design-systems
 - design-system-builder

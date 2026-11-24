@@ -2,9 +2,9 @@
 description: Run the 10-item smoke test against the current FlashFusion artifact
 ---
 
-# /lox-smoketest — FlashFusion Artifact Smoke Test
+# /ff-smoketest — FlashFusion Artifact Smoke Test
 
-Run the 10-item smoke test against the currently registered `flashfusion-control-center` artifact. Use after every build (`/lox-build`) or patch (`/lox-patch`).
+Run the 10-item smoke test against the currently registered `flashfusion-control-center` artifact. Use after every build (`/ff-build`) or patch (`/ff-patch`).
 
 ## The Checklist
 
@@ -42,7 +42,7 @@ Walk the user through each item. Do NOT declare the artifact production-ready un
 
 ## Failure Triage
 
-If any item fails, consult `skills/building-loxihart-live-artifacts/references/gotchas.md` and use the Diagnosis Quick-Reference table:
+If any item fails, consult `skills/building-flashfusion-live-artifacts/references/gotchas.md` and use the Diagnosis Quick-Reference table:
 
 | Symptom | Likely Gotcha # |
 |---|---|

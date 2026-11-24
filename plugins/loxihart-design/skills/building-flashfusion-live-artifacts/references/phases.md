@@ -1,7 +1,7 @@
 # Build Phases — FlashFusion Agent Control Center
 
 Seven phases for a from-scratch build. **SOT section numbers are canonical**
-(`sot/LOX-PLAT-CORE-SOT.md`) — phase names here are working labels; on any
+(`sot/FF-PLAT-CORE-SOT.md`) — phase names here are working labels; on any
 conflict the SOT wins.
 
 | # | Phase | Reads | Exit criterion |

@@ -1,0 +1,22 @@
+# Narrowly scoped Gitleaks fingerprint baseline for Issue #4
+# All 16 entries are verified upstream unit-test and Terraform cost-estimation fixtures
+# synced byte-for-byte from tonone-ai/tonone@f0987b5a310bf49e434ae92869d866cd8c2ed4b4 in commit e9f47bdc.
+# Format: <commit_sha>:<file_path>:<rule_id>:<start_line>
+# Do NOT replace with path or vendor/ directory wildcards so new or modified files remain scanned.
+
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/forge/tests/fixtures/terraform_sample/main.tf:hashicorp-tf-password:35
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:aws-access-token:124
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:aws-access-token:408
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:aws-access-token:442
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:aws-access-token:488
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:aws-access-token:666
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:141
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:147
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:148
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:149
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:150
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:151
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:152
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:generic-api-key:561
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:github-pat:126
+e9f47bdc7d3b1bcb40885f796ae0c66691f5c1ee:vendor/tonone/team/warden/tests/test-warden-guard.js:slack-bot-token:127

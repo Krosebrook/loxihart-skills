@@ -10,6 +10,7 @@ Patches (see vendor/tonone/LOXIHART-PATCHES.md):
   5. Move a plugin-root CLAUDE.md to docs/CLAUDE.md. --strict treats the
      "CLAUDE.md at the plugin root is not loaded as project context"
      warning as an error.
+  6. Preserve unsupported legacy hook arrays under a non-hook filename.
 
 Usage:
   python3 .github/scripts/patch_tonone.py apply
@@ -203,6 +204,30 @@ def relocate_root_claude(vendor: Path):
     return (src, dest)
 
 
+def relocate_legacy_hooks(vendor: Path):
+    moves = []
+    for src in sorted(vendor.rglob("hooks/hooks.json")):
+        if any(part in COPY_IGNORE for part in src.parts):
+            continue
+        data = load_json(src)
+        hooks = data.get("hooks") if isinstance(data, dict) else None
+        if not (isinstance(hooks, list) and hooks
+                and any(isinstance(h, dict) and h.get("event") == "post_install" for h in hooks)
+                and all(isinstance(h, dict) and (
+                    h.get("event") == "post_install"
+                    or (h.get("event") == "PostToolUse" and h.get("tool") == "Agent"
+                        and isinstance(h.get("prompt"), str))
+                ) for h in hooks)):
+            continue
+        dest = src.with_name("post-install.upstream.json")
+        if dest.exists():
+            if dest.read_bytes() != src.read_bytes():
+                raise SystemExit(f"{dest}: conflicting legacy hook metadata")
+            dest = None
+        moves.append((src, dest))
+    return moves
+
+
 def apply(vendor: Path, check=False):
     if not vendor.is_dir():
         raise SystemExit(f"vendor directory not found: {vendor}")
@@ -237,6 +262,13 @@ def apply(vendor: Path, check=False):
         if claude_move[1] is not None:
             planned.append(claude_move[1])
 
+    hook_moves = relocate_legacy_hooks(vendor)
+    stats["legacy_hooks"] = len(hook_moves)
+    for src, dest in hook_moves:
+        planned.append(src)
+        if dest is not None:
+            planned.append(dest)
+
     if check:
         if planned:
             print("would change:")
@@ -258,6 +290,11 @@ def apply(vendor: Path, check=False):
         else:
             dest.parent.mkdir(parents=True, exist_ok=True)
             src.replace(dest)
+    for src, dest in hook_moves:
+        if dest is None:
+            src.unlink()
+        else:
+            src.replace(dest)
     summarize(stats, written=len(planned))
     return 0
 
@@ -274,7 +311,8 @@ def summarize(stats, *, check=False, clean=False, written=None):
         f"{stats['versioned']} version sync(s), "
         f"stripped type from {stats['catalog_type']} catalog entries "
         f"and {stats['plugin_type']} plugin.json files, "
-        f"{stats['claude_md']} CLAUDE.md relocate(s)"
+        f"{stats['claude_md']} CLAUDE.md relocate(s), "
+        f"{stats['legacy_hooks']} legacy hook relocate(s)"
         + (f", {written} file(s) written" if written is not None else "")
     )
 
